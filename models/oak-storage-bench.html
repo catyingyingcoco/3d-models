@@ -1,0 +1,817 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Oak Storage Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: full-bleed 3D stage, a quiet spec header top-left, a control rail along the bottom */
+:root {
+  --bg: #e6e8e8;
+  --bg-2: #d8dbdb;
+  --fg: #23262a;
+  --muted: #646a70;
+  --oak: #b9773f;
+  --line: rgba(35,38,42,.14);
+  --chip: rgba(255,255,255,.72);
+  --on-oak: #ffffff;
+  --warn: #a4461f;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1a1c1e; --bg-2: #232628; --fg: #eceeef; --muted: #9aa0a5; --oak: #d79a60;
+  --line: rgba(236,238,239,.14); --chip: rgba(40,43,46,.8); --on-oak: #1a1c1e; --warn: #f0a477; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1a1c1e; --bg-2: #232628; --fg: #eceeef; --muted: #9aa0a5; --oak: #d79a60;
+  --line: rgba(236,238,239,.14); --chip: rgba(40,43,46,.8); --on-oak: #1a1c1e; --warn: #f0a477; color-scheme: dark }
+
+html, body { height: 100%; }
+body {
+  background: radial-gradient(ellipse at 50% 35%, var(--bg) 0%, var(--bg-2) 100%);
+  background-color: var(--bg);
+  color: var(--fg); font-family: var(--mono); overflow: hidden;
+}
+.stage { position: fixed; inset: 0; }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+canvas:active { cursor: grabbing; }
+
+header {
+  position: fixed; left: 0; right: 0; top: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 0;
+  display: flex; flex-direction: column; gap: 6px; pointer-events: none;
+}
+h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(22px, 4vw, 32px); letter-spacing: -.01em; text-wrap: balance; }
+.spec { font-size: 12px; color: var(--muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.spec b { color: var(--oak); font-weight: 500; }
+
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  padding: 0 16px calc(env(safe-area-inset-bottom, 0px) + 18px);
+  display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+}
+.rail { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.rail button, .shoes { pointer-events: auto; }
+button {
+  font: 500 13px/1 var(--mono); color: var(--fg);
+  background: var(--chip); border: 1px solid var(--line);
+  padding: 11px 14px; border-radius: 999px; cursor: pointer;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+button:hover { border-color: var(--oak); }
+button:focus-visible { outline: 2px solid var(--oak); outline-offset: 2px; }
+button[aria-pressed="true"] { border-color: var(--oak); }
+button[aria-pressed="true"]::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--oak); }
+.shoes {
+  position: fixed; right: 16px; top: calc(env(safe-area-inset-top, 0px) + 16px);
+  width: 296px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px; border: 1px solid var(--line); border-radius: 14px;
+  background: var(--chip); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+[hidden] { display: none !important; }
+.ver { display: flex; width: max-content; max-width: 100%; margin-top: 6px; pointer-events: auto;
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--chip); }
+.ver button { border: 0; border-radius: 0; background: transparent; padding: 8px 12px; font-size: 12px; }
+.ver button[aria-checked="true"] { background: var(--oak); color: var(--on-oak); }
+.shoes-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.shoes h2 { margin: 0; font: 700 16px/1.2 var(--display); }
+.shoes button { border-radius: 10px; padding: 9px 10px; font-size: 12px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.chips button { justify-content: flex-start; white-space: nowrap; min-width: 0; }
+.sw { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line); flex: none; }
+.where { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.shoes .where button { flex: 1; border: 0; border-radius: 0; background: transparent; padding: 8px 4px; justify-content: center; }
+.shoes .where button[aria-checked="true"] { background: var(--oak); color: var(--on-oak); }
+.shoes .link { background: none; border: 0; padding: 0; color: var(--oak); text-decoration: underline; text-underline-offset: 3px; }
+.status { margin: 0; font-size: 12px; line-height: 1.45; min-height: 2.9em; }
+.status.warn { color: var(--warn); }
+.counts, .tip { margin: 0; font-size: 11px; line-height: 1.45; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) {
+  .shoes { position: static; width: auto; padding: 12px; gap: 8px; }
+  .chips { display: flex; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+  .chips button { flex: none; }
+  .tip, .counts { display: none; }
+  .status { min-height: 0; }
+  .rail button { padding: 9px 11px; font-size: 12px; }
+}
+</style>
+
+<div class="stage"><canvas id="c" aria-label="3D model of an oak storage bench with a cushion top"></canvas></div>
+
+<header>
+  <h1>Oak Storage Bench</h1>
+  <div class="spec">W <b>120</b> × D <b>40</b> × H <b>46</b> cm · estimated from photo</div>
+  <div class="ver" role="radiogroup" aria-label="Model version">
+    <button type="button" role="radio" data-ver="1" aria-checked="false">V1 · Tilt-out bin</button>
+    <button type="button" role="radio" data-ver="2" aria-checked="true">V2 · Open top shelf</button>
+  </div>
+</header>
+<div class="dock">
+<aside class="shoes" aria-label="Add shoes">
+  <div class="shoes-head"><h2>Add shoes</h2><button type="button" id="bClear" class="link">Clear all</button></div>
+  <div class="where" role="radiogroup" aria-label="Where to put them">
+    <button type="button" role="radio" data-where="auto" aria-checked="true">Best fit</button>
+    <button type="button" role="radio" data-where="shelf" aria-checked="false">Shelf</button>
+    <button type="button" role="radio" data-where="bin" aria-checked="false">Bin</button>
+    <button type="button" role="radio" data-where="cab" aria-checked="false">Cabinet</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <p class="status" id="status" aria-live="polite"></p>
+  <p class="counts" id="counts"></p>
+  <p class="tip">Click a pair in the model to take it out. Drag to orbit, scroll or pinch to zoom.</p>
+</aside>
+<nav class="rail">
+  <button id="bDrawer" aria-pressed="false">Drawer</button>
+  <button id="bDoor" aria-pressed="false">Door</button>
+  <button id="bTray" aria-pressed="false">Add shoe tray</button>
+  <button id="bCushion" aria-pressed="true">Cushion</button>
+  <button id="bSpin" aria-pressed="false">Turntable</button>
+  <button id="bReset">Front view</button>
+</nav>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 1, 2000);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.target.set(0, 20, 0);
+  controls.minDistance = 70; controls.maxDistance = 450;
+  controls.maxPolarAngle = Math.PI * 0.49;
+
+  // ---------- lights ----------
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a7a6a, 0.75));
+  const sun = new THREE.DirectionalLight(0xfff3e6, 1.15);
+  sun.position.set(60, 140, 110);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -110, right: 110, top: 110, bottom: -110, near: 10, far: 400 });
+  sun.shadow.bias = -0.0006;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xdfe8ff, 0.35);
+  fill.position.set(-120, 60, 40); scene.add(fill);
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.ShadowMaterial({ opacity: 0.18 }));
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+  // ---------- procedural textures ----------
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  function woodCanvas(seed) {
+    const W = 1024, H = 512, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d'), r = rng(seed);
+    g.fillStyle = '#d6a068'; g.fillRect(0, 0, W, H);
+    // broad tonal bands
+    for (let i = 0; i < 14; i++) {
+      const y = r() * H, h = 20 + r() * 70;
+      g.fillStyle = `rgba(${150 + r()*40|0},${85 + r()*30|0},${40 + r()*20|0},${0.05 + r()*0.08})`;
+      g.fillRect(0, y, W, h);
+    }
+    // grain lines
+    for (let i = 0; i < 260; i++) {
+      const y0 = r() * H, amp = 2 + r() * 8, freq = 0.002 + r() * 0.006, ph = r() * 6.28;
+      g.strokeStyle = `rgba(${110 + r()*50|0},${60 + r()*25|0},${25 + r()*15|0},${0.05 + r()*0.18})`;
+      g.lineWidth = 0.5 + r() * 1.6;
+      g.beginPath();
+      for (let x = 0; x <= W; x += 8) {
+        const y = y0 + Math.sin(x * freq + ph) * amp + Math.sin(x * freq * 3.1 + ph) * amp * 0.25;
+        x ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.stroke();
+    }
+    // a couple of knots
+    for (let k = 0; k < 2; k++) {
+      const cx = 100 + r() * (W - 200), cy = 60 + r() * (H - 120);
+      for (let i = 9; i > 0; i--) {
+        g.strokeStyle = `rgba(120,65,28,${0.06 + (9 - i) * 0.025})`;
+        g.lineWidth = 1.2;
+        g.beginPath(); g.ellipse(cx, cy, i * 5.5, i * 2.2, 0, 0, Math.PI * 2); g.stroke();
+      }
+      g.fillStyle = 'rgba(105,55,22,.55)';
+      g.beginPath(); g.ellipse(cx, cy, 4, 2, 0, 0, Math.PI * 2); g.fill();
+    }
+    // fine pores
+    for (let i = 0; i < 9000; i++) {
+      g.fillStyle = `rgba(90,50,20,${r() * 0.12})`;
+      g.fillRect(r() * W, r() * H, 1 + r() * 3, 1);
+    }
+    return c;
+  }
+  function tex(canvas, { vertical = false, rx = 1, ry = 1, ox = 0, oy = 0 } = {}) {
+    const t = new THREE.CanvasTexture(canvas);
+    t.encoding = THREE.sRGBEncoding;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    t.center.set(0.5, 0.5);
+    if (vertical) t.rotation = Math.PI / 2;
+    t.repeat.set(rx, ry); t.offset.set(ox, oy);
+    return t;
+  }
+  const woodA = woodCanvas(7), woodB = woodCanvas(91), woodC = woodCanvas(2024);
+  const woodMat = (canvas, opts) => new THREE.MeshStandardMaterial({ map: tex(canvas, opts), roughness: 0.62, metalness: 0 });
+  const frameMat = woodMat(woodA);
+  const frameVMat = woodMat(woodA, { vertical: true });
+  const doorMat = woodMat(woodC, { vertical: true });
+  const innerMat = new THREE.MeshStandardMaterial({ map: tex(woodB, { rx: 0.6, ry: 0.6 }), roughness: 0.7, color: 0xe9d8c6 });
+
+  function leatherCanvas() {
+    const S = 512, c = document.createElement('canvas'); c.width = c.height = S;
+    const g = c.getContext('2d'), r = rng(33);
+    g.fillStyle = '#e9dccb'; g.fillRect(0, 0, S, S);
+    for (let i = 0; i < 2600; i++) {
+      const x = r() * S, y = r() * S, s = 2 + r() * 6;
+      g.strokeStyle = `rgba(150,128,100,${0.04 + r() * 0.08})`; g.lineWidth = 0.6;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + s * (r() - .5) * 2, y + s * (r() - .5) * 2); g.stroke();
+    }
+    return c;
+  }
+  const leatherTex = tex(leatherCanvas(), { rx: 0.02, ry: 0.02 });
+  const leatherMat = new THREE.MeshStandardMaterial({ map: leatherTex, roughness: 0.48, metalness: 0, bumpMap: leatherTex, bumpScale: 0.12 });
+
+  function treadCanvas() {
+    const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+    const g = c.getContext('2d');
+    g.fillStyle = '#26282b'; g.fillRect(0, 0, S, S);
+    const step = 32;
+    for (let y = 0; y < S; y += step) for (let x = 0; x < S; x += step) {
+      const flip = ((x + y) / step) % 2 === 0;
+      g.save(); g.translate(x + step / 2, y + step / 2); g.rotate(flip ? Math.PI / 4 : -Math.PI / 4);
+      g.fillStyle = '#3a3d41'; g.fillRect(-11, -3, 22, 6);
+      g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(-11, 2, 22, 1.5);
+      g.restore();
+    }
+    return c;
+  }
+  const treadTex = tex(treadCanvas(), { rx: 6, ry: 2.4 });
+  const matMat = new THREE.MeshStandardMaterial({ map: treadTex, bumpMap: treadTex, bumpScale: 0.35, roughness: 0.85 });
+  const rimMat = new THREE.MeshStandardMaterial({ color: 0x1f2124, roughness: 0.6 });
+
+  // ---------- geometry ----------
+  const W = 120, D = 40, H = 33.3, T = 1.8;
+  const zF = D / 2;
+  const bench = new THREE.Group(); scene.add(bench);
+
+  function box(w, h, d, x, y, z, mat, parent = bench) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z); m.castShadow = m.receiveShadow = true;
+    parent.add(m); return m;
+  }
+
+  const xDiv = 31.4;                         // centre of the vertical divider
+  // carcass
+  box(W, T, D, 0, T / 2, 0, frameMat);                         // bottom
+  box(W, T, D, 0, H - T / 2, 0, frameMat);                     // top
+  box(T, H - 2 * T, D, -W / 2 + T / 2, H / 2, 0, frameVMat);   // left side
+  box(T, H - 2 * T, D, W / 2 - T / 2, H / 2, 0, frameVMat);    // right side
+  box(W - 2 * T, H - 2 * T, 0.8, 0, H / 2, -D / 2 + 0.4, innerMat); // back
+  box(T, H - 2 * T, D - 0.8, xDiv, H / 2, 0.4, frameVMat);     // divider
+  const lx0 = -W / 2 + T, lx1 = xDiv - T / 2;
+  box(lx1 - lx0, T, D - 0.8, (lx0 + lx1) / 2, 17.05, 0.4, frameMat); // shelf
+  // shelf inside right cabinet
+  const cabShelf = box(W / 2 - T - (xDiv + T / 2), T, D - 4, (W / 2 - T + xDiv + T / 2) / 2, 16.5, -1, innerMat);
+
+  // shoe tray
+  const mx0 = -57.1, mx1 = 30.2, mw = mx1 - mx0, md = 32, mcx = (mx0 + mx1) / 2, mcz = zF - md / 2 - 1.2;
+  const tray = new THREE.Group(); bench.add(tray);
+  box(mw, 0.5, md, mcx, T + 0.25, mcz, matMat, tray);
+  box(mw, 1.4, 1, mcx, T + 0.7, mcz + md / 2 - 0.5, rimMat, tray);
+  box(mw, 1.4, 1, mcx, T + 0.7, mcz - md / 2 + 0.5, rimMat, tray);
+  box(1, 1.4, md, mx0 + 0.5, T + 0.7, mcz, rimMat, tray);
+  box(1, 1.4, md, mx1 - 0.5, T + 0.7, mcz, rimMat, tray);
+
+  // drawer (front with finger notch + box)
+  const dx0 = -58.0, dx1 = 30.4, dy0 = 18.3, dy1 = 31.3;
+  const fw = dx1 - dx0, fh = dy1 - dy0, dcx = (dx0 + dx1) / 2, dcy = (dy0 + dy1) / 2;
+  // tilt-out bin: pivots on its bottom front edge
+  const drawer = new THREE.Group(); drawer.position.set(dcx, dy0, zF); bench.add(drawer);
+  // at 35° the bin must be shallower so its back clears the cabinet top
+  const BIN_D = 18, BACK_H = 2.8, TILT = 35 * Math.PI / 180;
+  const stayMat = new THREE.MeshStandardMaterial({ color: 0xa7abb0, metalness: 0.8, roughness: 0.35 });
+  const stays = [], binHardware = [];
+  {
+    const s = new THREE.Shape(), hw = fw / 2, hh = fh / 2;
+    const nc = 9.9, nw = 4.8, nd = 1.4;            // notch centre, half-width, depth
+    s.moveTo(-hw, -hh); s.lineTo(hw, -hh); s.lineTo(hw, hh);
+    s.lineTo(nc + nw, hh);
+    s.quadraticCurveTo(nc + nw - 0.9, hh - nd, nc + nw - 2, hh - nd);
+    s.lineTo(nc - nw + 2, hh - nd);
+    s.quadraticCurveTo(nc - nw + 0.9, hh - nd, nc - nw, hh);
+    s.lineTo(-hw, hh); s.closePath();
+    const g = new THREE.ExtrudeGeometry(s, { depth: T, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.08, bevelSegments: 1 });
+    const fm = new THREE.MeshStandardMaterial({ map: tex(woodB, { rx: 1 / fw, ry: 1 / fh, ox: 0.5, oy: 0.5 }), roughness: 0.6 });
+    fm.map.center.set(0, 0);
+    const front = new THREE.Mesh(g, fm);
+    front.position.set(0, hh, -T - 0.1); front.castShadow = front.receiveShadow = true;
+    front.userData.part = 'drawer'; drawer.add(front);
+    // wedge-shaped sides so the back clears the cabinet top when tilted
+    const prof = new THREE.Shape();
+    prof.moveTo(T, 0.4); prof.lineTo(BIN_D, 0.4); prof.lineTo(BIN_D, BACK_H); prof.lineTo(T, fh - 1.4); prof.closePath();
+    const sideGeo = new THREE.ExtrudeGeometry(prof, { depth: 1.2, bevelEnabled: false });
+    sideGeo.rotateY(Math.PI / 2);
+    [-fw / 2 + 2.0, fw / 2 - 3.2].forEach(x => {
+      const m = new THREE.Mesh(sideGeo, innerMat);
+      m.position.x = x; m.castShadow = m.receiveShadow = true; m.userData.part = 'drawer'; drawer.add(m);
+    });
+    const parts = [
+      box(fw - 4, 0.9, BIN_D - T, 0, 0.85, -(BIN_D + T) / 2, innerMat, drawer),        // flat floor for shoes
+      box(fw - 4, BACK_H - 0.4, 1.2, 0, 0.4 + (BACK_H - 0.4) / 2, -BIN_D + 0.6, innerMat, drawer) // low back lip
+    ];
+    parts.forEach(m => m.userData.part = 'drawer');
+    // the two small tabs are the pivot hinges, fixed to the cabinet
+    const tabMat = new THREE.MeshStandardMaterial({ color: 0xe2b98d, roughness: 0.45 });
+    [-25.0, 21.6].forEach(x => binHardware.push(box(4.2, 0.9, 0.6, x, dy0 - 0.2, zF + 0.1, tabMat)));
+    // folding stay on each side: one end on the bin side, the other on the cabinet
+    [-fw / 2 + 3.6, fw / 2 - 3.6].forEach(sx => {
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 1, 8), stayMat);
+      rod.castShadow = true; bench.add(rod);
+      const a = new THREE.Vector3(sx, 7, -5);                              // on bin (local)
+      const b = new THREE.Vector3(dcx + sx, dy0 + 11.2, zF - 16);          // on cabinet (bench space)
+      stays.push({ rod, a, b });
+    });
+  }
+  const _A = new THREE.Vector3(), _up = new THREE.Vector3(0, 1, 0), _dir = new THREE.Vector3();
+  function updateStays() {
+    drawer.updateMatrix();
+    stays.forEach(({ rod, a, b }) => {
+      _A.copy(a).applyMatrix4(drawer.matrix);
+      _dir.subVectors(b, _A);
+      const len = _dir.length();
+      rod.position.copy(_A).addScaledVector(_dir, 0.5);
+      rod.scale.set(1, len, 1);
+      rod.quaternion.setFromUnitVectors(_up, _dir.normalize());
+    });
+  }
+
+  // door on the right, hinged at its outer edge
+  const ox0 = xDiv + T / 2 + 0.15, ox1 = W / 2 - T - 0.15 + T, oy0 = 1.9, oy1 = 31.3;
+  const doorW = W / 2 - 0.15 - ox0, doorH = oy1 - oy0;
+  const hinge = new THREE.Group(); hinge.position.set(W / 2 - 0.15, 0, zF); bench.add(hinge);
+  const door = box(doorW, doorH, T, -doorW / 2, oy0 + doorH / 2, -T / 2, doorMat, hinge);
+  door.userData.part = 'door';
+  // close the face where the door sits so the side frame reads as a reveal
+  box(T, H - 2 * T, 0.01, 0, 0, 0, frameMat).visible = false;
+
+  // cushion: rounded slab
+  const cushion = new THREE.Group(); bench.add(cushion);
+  {
+    const bev = 2.6, cw = W - 1.2, cd = D - 0.6, ch = 11.5, r = 2.2;
+    const iw = cw - 2 * bev, id = cd - 2 * bev;
+    const s = new THREE.Shape(), x = -iw / 2, y = -id / 2;
+    s.moveTo(x + r, y); s.lineTo(x + iw - r, y); s.quadraticCurveTo(x + iw, y, x + iw, y + r);
+    s.lineTo(x + iw, y + id - r); s.quadraticCurveTo(x + iw, y + id, x + iw - r, y + id);
+    s.lineTo(x + r, y + id); s.quadraticCurveTo(x, y + id, x, y + id - r);
+    s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+    const g = new THREE.ExtrudeGeometry(s, { depth: ch - 2 * bev, bevelEnabled: true, bevelThickness: bev, bevelSize: bev, bevelSegments: 8, curveSegments: 10 });
+    g.rotateX(-Math.PI / 2);
+    g.computeVertexNormals();
+    const m = new THREE.Mesh(g, leatherMat);
+    m.position.y = H + bev + 0.05; m.castShadow = m.receiveShadow = true;
+    cushion.add(m);
+    // welt seam around the top edge
+    const seam = new THREE.Mesh(
+      new THREE.TorusGeometry(1, 0.22, 6, 4), new THREE.MeshStandardMaterial({ color: 0xcdbca5, roughness: 0.6 }));
+    seam.visible = false;
+    const pts = [[-cw / 2 + 0.5, -cd / 2 + 0.5], [cw / 2 - 0.5, -cd / 2 + 0.5], [cw / 2 - 0.5, cd / 2 - 0.5], [-cw / 2 + 0.5, cd / 2 - 0.5]];
+    const sy = H + ch - bev * 0.55;
+    const curve = new THREE.CurvePath();
+    for (let i = 0; i < 4; i++) {
+      const a = pts[i], b = pts[(i + 1) % 4];
+      curve.add(new THREE.LineCurve3(new THREE.Vector3(a[0], sy, a[1]), new THREE.Vector3(b[0], sy, b[1])));
+    }
+    const weltGeo = new THREE.TubeGeometry(curve, 200, 0.18, 6, true);
+    const welt = new THREE.Mesh(weltGeo, new THREE.MeshStandardMaterial({ color: 0xd9c8b0, roughness: 0.55 }));
+    cushion.add(welt);
+  }
+
+  // ---------- interaction ----------
+  const state = { drawer: false, door: false, spin: false, cushion: true };
+  const bD = document.getElementById('bDrawer'), bO = document.getElementById('bDoor');
+  const bC = document.getElementById('bCushion'), bS = document.getElementById('bSpin');
+  const sync = () => {
+    bD.setAttribute('aria-pressed', state.drawer); bO.setAttribute('aria-pressed', state.door);
+    bS.setAttribute('aria-pressed', state.spin); bC.setAttribute('aria-pressed', state.cushion);
+    bD.textContent = state.drawer ? 'Close bin' : 'Tilt bin out 35°';
+    bO.textContent = state.door ? 'Close door' : 'Open door';
+    bC.textContent = state.cushion ? 'Hide cushion' : 'Show cushion';
+  };
+  bD.onclick = () => { state.drawer = !state.drawer; sync(); };
+  bO.onclick = () => { state.door = !state.door; sync(); };
+  bC.onclick = () => { state.cushion = !state.cushion; sync(); };
+  bS.onclick = () => { state.spin = !state.spin; controls.autoRotate = state.spin; sync(); };
+  const home = () => { camera.position.set(95, 75, 165); controls.target.set(0, 20, 0); };
+  document.getElementById('bReset').onclick = () => { state.spin = false; controls.autoRotate = false; sync(); home(); };
+  controls.autoRotateSpeed = 1.6;
+  sync(); home();
+
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  let downAt = null;
+  canvas.addEventListener('pointerdown', e => downAt = [e.clientX, e.clientY]);
+  canvas.addEventListener('pointerup', e => {
+    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return;
+    const r = canvas.getBoundingClientRect();
+    ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ptr, camera);
+    const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+    const hit = ray.intersectObjects(bench.children, true).find(h => h.object.userData.part && shown(h.object));
+    if (!hit) return;
+    const ud = hit.object.userData;
+    if (ud.part === 'shoe') { removePair(ud.rec); return; }
+    state[ud.part] = !state[ud.part]; sync();
+  });
+
+  // ---------- shoes ----------
+  const LINING = 0x2a211c, NT = 44, NP = 16;
+  const matCache = {};
+  function mat(hex, rough = 0.6) {
+    const k = hex + '_' + rough;
+    if (!matCache[k]) matCache[k] = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(hex).convertSRGBToLinear(), roughness: rough, side: THREE.DoubleSide });
+    return matCache[k];
+  }
+  const mk = (geo, m) => { const o = new THREE.Mesh(geo, m); o.castShadow = o.receiveShadow = true; return o; };
+  const ss = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const env = t => Math.sqrt(Math.max(0, 1 - Math.pow(2 * t - 1, 8)));
+  // foot outline: t runs heel (0) to toe (1), toe points +z
+  function footFn(L, w, side) {
+    return {
+      L, w,
+      hw: t => (w / 2) * (0.7 + 0.3 * Math.exp(-Math.pow((t - 0.66) / 0.28, 2))) * env(t),
+      cx: t => -side * 0.06 * w * ss(0.45, 1, t),
+      z: t => (t - 0.5) * L
+    };
+  }
+  function loft(rings, closed) {
+    const n = rings[0].length, pos = [], idx = [];
+    rings.forEach(r => r.forEach(p => pos.push(p[0], p[1], p[2])));
+    const segs = closed ? n : n - 1;
+    for (let i = 0; i < rings.length - 1; i++) for (let j = 0; j < segs; j++) {
+      const a = i * n + j, b = i * n + (j + 1) % n, c = (i + 1) * n + j, d = (i + 1) * n + (j + 1) % n;
+      idx.push(a, c, b, b, c, d);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx); g.computeVertexNormals();
+    return g;
+  }
+  function sole(f, th, m, lift = () => 0) {
+    const rings = [];
+    for (let i = 0; i <= NT; i++) {
+      const t = i / NT, hw = f.hw(t), cx = f.cx(t), z = f.z(t), y = lift(t);
+      rings.push([[cx + hw * 0.9, y, z], [cx + hw, y + th * 0.4, z], [cx + hw * 0.97, y + th, z],
+                  [cx - hw * 0.97, y + th, z], [cx - hw, y + th * 0.4, z], [cx - hw * 0.9, y, z]]);
+    }
+    return mk(loft(rings, true), m);
+  }
+  function upper(f, base, prof, m, lift = () => 0, k = 0.97) {
+    const top = t => base + lift(t) + prof(t) * Math.pow(env(t), 0.3);
+    const rings = [];
+    for (let i = 0; i <= NT; i++) {
+      const t = i / NT, hw = f.hw(t) * k, hh = prof(t) * Math.pow(env(t), 0.3), cx = f.cx(t), z = f.z(t), y0 = base + lift(t);
+      const ring = [];
+      for (let j = 0; j <= NP; j++) {
+        const ph = Math.PI * j / NP, c = Math.cos(ph), s = Math.sin(ph);
+        ring.push([cx + hw * Math.sign(c) * Math.pow(Math.abs(c), 0.55), y0 + hh * Math.pow(s, 0.7), z]);
+      }
+      rings.push(ring);
+    }
+    return { mesh: mk(loft(rings, false), m), top };
+  }
+  function collar(f, top, t, rx, rz) {
+    const c = new THREE.Mesh(new THREE.CircleGeometry(1, 28).rotateX(-Math.PI / 2), mat(LINING, 0.9));
+    const a = Math.max(0.02, t - 0.07), b = Math.min(0.98, t + 0.07);
+    c.scale.set(rx, 1, rz);
+    c.position.set(f.cx(t), top(t) + 0.06, f.z(t));
+    c.rotation.x = Math.atan2(-(top(b) - top(a)), f.z(b) - f.z(a));
+    return c;
+  }
+
+  function buildSneaker(p, side, c) {
+    const f = footFn(p.L, p.w, side), g = new THREE.Group();
+    g.add(sole(f, p.sole, mat(c.sole, 0.7)));
+    const u = upper(f, p.sole - 0.15, t => p.toe + (p.ankle - p.toe) * ss(0.9, 0.36, t), mat(c.upper, 0.55));
+    g.add(u.mesh, collar(f, u.top, 0.2, f.hw(0.2) * 0.62, p.L * 0.12));
+    const lm = mat(c.lace || 0xf4f4f2, 0.8);
+    for (let i = 0; i < 4; i++) {
+      const t = 0.47 + i * 0.06, b = mk(new THREE.BoxGeometry(f.hw(t) * 0.9, 0.28, 0.55), lm);
+      b.position.set(f.cx(t), u.top(t) + 0.04, f.z(t)); g.add(b);
+    }
+    return g;
+  }
+  function buildBoot(p, side, c) {
+    const f = footFn(p.L, p.w, side), g = new THREE.Group(), um = mat(c.upper, 0.55);
+    g.add(sole(f, p.sole, mat(c.sole, 0.85)));
+    const u = upper(f, p.sole - 0.15, t => p.toe + (p.ankle - p.toe) * ss(0.85, 0.4, t), mat(c.shell || c.upper, 0.5));
+    g.add(u.mesh);
+    const tc = 0.24, rx = f.hw(tc) * 0.98, rz = p.L * p.shaftZ, yb = p.sole + 1, yt = p.top, x = f.cx(tc), z = f.z(tc);
+    const shaft = mk(new THREE.CylinderGeometry(1, 1.04, yt - yb, 28, 1, true), um);
+    shaft.scale.set(rx, 1, rz); shaft.position.set(x, (yb + yt) / 2, z); g.add(shaft);
+    const lid = mk(new THREE.CircleGeometry(1, 28).rotateX(-Math.PI / 2), mat(LINING, 0.9));
+    lid.scale.set(rx * 0.97, 1, rz * 0.97); lid.position.set(x, yt - 0.6, z); g.add(lid);
+    if (p.cuff) {
+      const cuff = mk(new THREE.TorusGeometry(1, 0.2, 10, 36).rotateX(Math.PI / 2), mat(c.cuff, 1));
+      cuff.scale.set(rx * 1.02, 4.5, rz * 1.02); cuff.position.set(x, yt, z); g.add(cuff);
+    }
+    if (p.tab) {
+      const tab = mk(new THREE.BoxGeometry(1.5, 2.6, 0.3), um);
+      tab.position.set(x, yt + 0.4, z - rz + 0.1); g.add(tab);
+      [1, -1].forEach(s => {
+        const gore = mk(new THREE.BoxGeometry(0.12, 6, 3.2), mat(0x151515, 0.9));
+        gore.position.set(x + s * rx, yt - 4.2, z); g.add(gore);
+      });
+    }
+    return g;
+  }
+  function buildFlip(p, side, c) {
+    const f = footFn(p.L, p.w, side), g = new THREE.Group(), th = p.sole, sm = mat(c.strap, 0.5);
+    g.add(sole(f, th, mat(c.sole, 0.8)));
+    const tp = 0.8, px = f.cx(tp) - side * 0.1 * p.w, pz = f.z(tp);
+    [1, -1].forEach(s => {
+      const ts = 0.5, ex = f.cx(ts) + s * f.hw(ts) * 0.92, ez = f.z(ts);
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(px, th, pz),
+        new THREE.Vector3(px, th + 1.6, pz - 1.4),
+        new THREE.Vector3(px + (ex - px) * 0.6, th + 1.45, pz + (ez - pz) * 0.55),
+        new THREE.Vector3(ex, th + 0.15, ez)]);
+      g.add(mk(new THREE.TubeGeometry(curve, 28, 0.32, 6, false), sm));
+    });
+    return g;
+  }
+  function buildSlide(p, side, c) {
+    const f = footFn(p.L, p.w, side), g = new THREE.Group();
+    g.add(sole(f, p.sole, mat(c.sole, 0.85)));
+    const tb = 0.6, r = f.hw(tb) * 1.04;
+    const band = mk(new THREE.CylinderGeometry(r, r, p.band, 28, 1, true, Math.PI / 2, Math.PI).rotateX(Math.PI / 2), mat(c.band, 0.55));
+    band.scale.y = 0.6; band.position.set(f.cx(tb), p.sole - 0.1, f.z(tb)); g.add(band);
+    return g;
+  }
+  function buildLoafer(p, side, c) {
+    const f = footFn(p.L, p.w, side), g = new THREE.Group();
+    g.add(sole(f, p.sole, mat(c.sole, 0.7)));
+    const u = upper(f, p.sole - 0.1, t => p.toe + (p.ankle - p.toe) * ss(0.85, 0.35, t), mat(c.upper, 0.4));
+    g.add(u.mesh, collar(f, u.top, 0.27, f.hw(0.27) * 0.74, p.L * 0.19));
+    const strap = mk(new THREE.BoxGeometry(f.hw(0.6) * 1.1, 0.3, 1.5), mat(c.trim, 0.5));
+    strap.position.set(f.cx(0.6), u.top(0.6) + 0.02, f.z(0.6)); g.add(strap);
+    return g;
+  }
+  function buildHeel(p, side, c) {
+    const f = footFn(p.L, p.w, side), g = new THREE.Group(), lift = t => p.heelH * ss(0.62, 0.16, t);
+    g.add(sole(f, p.sole, mat(c.sole, 0.6), lift));
+    const u = upper(f, p.sole - 0.1, t => p.toe + (p.ankle - p.toe) * ss(0.8, 0.3, t), mat(c.upper, 0.35), lift);
+    g.add(u.mesh, collar(f, u.top, 0.33, f.hw(0.33) * 0.8, p.L * 0.24));
+    const ht = 0.07, hy = lift(ht) + 0.2;
+    const heel = mk(new THREE.CylinderGeometry(0.8, 0.45, hy, 16), mat(c.sole, 0.5));
+    heel.position.set(f.cx(ht), hy / 2, f.z(ht)); g.add(heel);
+    return g;
+  }
+
+  // real-world sizes in cm
+  const TYPES = [
+    { label: 'Sneakers', build: buildSneaker, p: { L: 28, w: 10.5, sole: 2.8, toe: 3.4, ankle: 7.8 },
+      ways: [{ upper: 0xf1f0ec, sole: 0xffffff }, { upper: 0x2e3a52, sole: 0xf3f1ea }, { upper: 0x8f979c, sole: 0xf3f1ea }, { upper: 0x1d1e20, sole: 0x1d1e20, lace: 0x2a2b2e }] },
+    { label: 'Snow boots', build: buildBoot, p: { L: 30, w: 11.5, sole: 3.2, toe: 4.6, ankle: 8.6, top: 23, shaftZ: 0.2, cuff: true },
+      ways: [{ upper: 0x5a4636, shell: 0x2a2420, sole: 0x1c1c1c, cuff: 0xeee4d4 }, { upper: 0x24272b, shell: 0x1a1b1d, sole: 0x151515, cuff: 0xd9d4cc }, { upper: 0x8a7258, shell: 0x4a3a2c, sole: 0x2a211b, cuff: 0xf1e9dc }] },
+    { label: 'Ankle boots', build: buildBoot, p: { L: 28, w: 10, sole: 2.4, toe: 3.6, ankle: 7, top: 15.5, shaftZ: 0.18, tab: true },
+      ways: [{ upper: 0x5b3a24, sole: 0x2a1e17 }, { upper: 0x1e1e1f, sole: 0x141414 }, { upper: 0x8b6b4d, sole: 0x3a2a1f }] },
+    { label: 'Flip-flops', build: buildFlip, stack: true, p: { L: 25.5, w: 9.8, sole: 1.5 },
+      ways: [{ sole: 0x2b6f8f, strap: 0x1b1b1b }, { sole: 0xe3ab35, strap: 0x4b301b }, { sole: 0x1f1f1f, strap: 0xeeeeee }, { sole: 0xd5685a, strap: 0x1b1b1b }] },
+    { label: 'Slides', build: buildSlide, p: { L: 27, w: 10.4, sole: 2.4, band: 8 },
+      ways: [{ sole: 0x1f1f22, band: 0x1f1f22 }, { sole: 0xd9d0c4, band: 0xd9d0c4 }, { sole: 0xf1efe9, band: 0x6a7f6a }] },
+    { label: 'Loafers', build: buildLoafer, p: { L: 28, w: 10, sole: 1.8, toe: 2.9, ankle: 5.6 },
+      ways: [{ upper: 0x6b3b22, sole: 0x2a1a12, trim: 0x4a2816 }, { upper: 0x1c1a19, sole: 0x121110, trim: 0x2c2826 }, { upper: 0x8a6a4a, sole: 0x3a2a1c, trim: 0x6a4e34 }] },
+    { label: 'Heels', build: buildHeel, p: { L: 24.5, w: 8.4, sole: 0.8, heelH: 7, toe: 3, ankle: 4.4 },
+      ways: [{ upper: 0x161616, sole: 0x0e0e0e }, { upper: 0xc9a48a, sole: 0x7a5a46 }, { upper: 0x8e1f2b, sole: 0x2a0d10 }] },
+    { label: "Kids' shoes", build: buildSneaker, p: { L: 18, w: 7.4, sole: 2, toe: 2.6, ankle: 5.6 },
+      ways: [{ upper: 0xe0563d, sole: 0xf6f4ef }, { upper: 0x3d73d6, sole: 0xf6f4ef }, { upper: 0xefc24a, sole: 0xf6f4ef, lace: 0x3d73d6 }] },
+  ];
+
+  // one shoe, centred on x/z with its lowest point at y = 0
+  function makeShoe(Ty, side, colors) {
+    const inner = Ty.build(Ty.p, side, colors), box = new THREE.Box3().setFromObject(inner);
+    const c = box.getCenter(new THREE.Vector3()), outer = new THREE.Group();
+    inner.position.set(-c.x, -box.min.y, -c.z); outer.add(inner);
+    return outer;
+  }
+  TYPES.forEach(Ty => {
+    Ty.next = 0;
+    const v = new THREE.Box3().setFromObject(makeShoe(Ty, -1, Ty.ways[0])).getSize(new THREE.Vector3());
+    Ty.dims = { l: v.z, w: v.x, h: v.y };
+  });
+
+  function footprint(Ty, orient) {
+    const { l, w, h } = Ty.dims, g = 1.2;
+    if (orient === 'fwd') return { fx: 2 * w + g, fz: l, h, layout: 'fwd' };          // toes to the front
+    if (Ty.stack) return { fx: l, fz: w, h: h + Ty.p.sole, layout: 'stack' };         // sole to sole
+    return { fx: 2 * l + g, fz: w, h, layout: 'line' };                               // lying sideways
+  }
+  function buildPair(Ty, fp, colors) {
+    const g = new THREE.Group(), { l, w, h } = Ty.dims;
+    const a = makeShoe(Ty, -1, colors), b = makeShoe(Ty, 1, colors);
+    if (fp.layout === 'fwd') { a.position.x = -(w / 2 + 0.6); b.position.x = w / 2 + 0.6; }
+    else {
+      g.rotation.y = Math.PI / 2;
+      if (fp.layout === 'line') { a.position.z = -(l / 2 + 0.6); b.position.z = l / 2 + 0.6; }
+      else { b.rotation.x = Math.PI; b.position.y = h + Ty.p.sole; }
+    }
+    g.add(a, b);
+    return g;
+  }
+
+  // the bin swings on its bottom front edge; whatever is inside has to pass under the cabinet top
+  const sweep = (y, d) => { let m = 0; for (let a = 0; a <= TILT + 1e-6; a += Math.PI / 180) m = Math.max(m, y * Math.cos(a) + d * Math.sin(a)); return m; };
+  const binX = fw / 2 - 3.5, cabX0 = xDiv + T / 2 + 0.3, cabX1 = W / 2 - T - 0.3;
+  const cab = (floor, clear) => ({ label: 'side cabinet', parent: bench, x0: cabX0, x1: cabX1, zFront: zF - T - 0.5,
+    depth: D - T - 1.6, floor, orient: 'fwd', center: true, fits: fp => fp.h <= clear });
+  const Z = {
+    bin: { label: 'tilt-out bin', parent: drawer, x0: -binX, x1: binX, zFront: -2.1, depth: 14.6, floor: 1.3, orient: 'side',
+           fits: fp => sweep(1.3 + fp.h, 2.1 + fp.fz) <= (H - T) - dy0 - 0.2 },
+    shelf: { label: 'open shelf', parent: bench, x0: mx0 + 1.2, x1: mx1 - 1.2, zFront: zF - 2.4, depth: md - 2.4,
+             floor: T + 0.5, orient: 'fwd', clear: 13.6, fits: fp => fp.h <= Z.shelf.clear },
+    cabLow: cab(T, 13.55),
+    cabHigh: cab(17.4, 13.85),
+    cabTall: cab(T, 29.3),
+    // version 2: no bin, the top compartment is an open shelf
+    upper: { label: 'open top shelf', parent: bench, x0: lx0 + 0.4, x1: lx1 - 0.4, zFront: zF - 1, depth: D - 3,
+             floor: 17.05 + T / 2, orient: 'fwd', fits: fp => fp.h <= 13.3 },
+  };
+  Object.values(Z).forEach(z => z.items = []);
+  let version = 2, where = 'auto';
+  const zonesFor = w => {
+    const cabs = ['cabLow', 'cabHigh', 'cabTall'];
+    if (w === 'shelf') return ['shelf'];
+    if (w === 'bin') return [version === 1 ? 'bin' : 'upper'];
+    if (w === 'cab') return cabs;
+    return version === 1 ? ['bin', 'shelf', ...cabs] : ['shelf', 'upper', ...cabs];
+  };
+
+  const used = z => z.items.reduce((s, r) => s + r.fp.fx + 1.5, 0);
+  const isBlocked = id => id === 'cabTall' ? Z.cabLow.items.length + Z.cabHigh.items.length > 0
+                                            : id.startsWith('cab') && Z.cabTall.items.length > 0;
+  function layout(z) {
+    let x = z.x0;
+    z.items.forEach(r => {
+      const cx = z.center && z.items.length === 1 ? (z.x0 + z.x1) / 2 : x + r.fp.fx / 2;
+      r.group.position.set(cx, z.floor, z.zFront - r.fp.fz / 2);
+      x += r.fp.fx + 1.5;
+    });
+  }
+
+  const statusEl = document.getElementById('status'), countsEl = document.getElementById('counts');
+  const say = (msg, warn) => { statusEl.textContent = msg; statusEl.classList.toggle('warn', !!warn); };
+  const hex = n => '#' + n.toString(16).padStart(6, '0');
+  function refresh() {
+    cabShelf.visible = Z.cabTall.items.length === 0;
+    const n = id => Z[id].items.length;
+    countsEl.textContent = version === 1
+      ? `Pairs: shelf ${n('shelf')} · bin ${n('bin')} · cabinet ${n('cabLow') + n('cabHigh') + n('cabTall')}`
+      : `Pairs: shelf ${n('shelf')} · top ${n('upper')} · cabinet ${n('cabLow') + n('cabHigh') + n('cabTall')}`;
+    TYPES.forEach(Ty => {
+      const c = Ty.ways[Ty.next % Ty.ways.length];
+      Ty.btn.firstChild.style.background = hex(c.upper ?? c.band ?? c.sole);
+    });
+  }
+
+  function addPair(Ty) {
+    const name = Ty.label.toLowerCase(), fitIds = [];
+    let tallBlocked = false;
+    for (const id of zonesFor(where)) {
+      const z = Z[id], fp = footprint(Ty, z.orient);
+      if (fp.fx > z.x1 - z.x0 || fp.fz > z.depth || !z.fits(fp)) continue;
+      fitIds.push(id);
+      if (isBlocked(id)) { if (id === 'cabTall') tallBlocked = true; continue; }
+      if (used(z) + fp.fx > z.x1 - z.x0 + 0.01) continue;
+      const group = buildPair(Ty, fp, Ty.ways[Ty.next++ % Ty.ways.length]);
+      const rec = { Ty, fp, group, zone: id };
+      group.traverse(o => { if (o.isMesh) { o.userData.part = 'shoe'; o.userData.rec = rec; } });
+      z.parent.add(group); z.items.push(rec); layout(z);
+      if (id === 'bin') state.drawer = true;
+      if (id.startsWith('cab')) state.door = true;
+      sync(); refresh();
+      say(`Added ${name} to the ${z.label}.` + (id === 'cabTall' ? ' The cabinet shelf comes out to make room.' : ''));
+      return;
+    }
+    if (!fitIds.length) {
+      say(where === 'bin' && version === 1 ? `${Ty.label} are too tall for the tilt-out bin. At 35° it only takes low shoes, like flip-flops and slides.`
+        : where === 'bin' ? `${Ty.label} are too tall for the open top shelf. It has about 13.5 cm of clearance.`
+        : where === 'shelf' ? `${Ty.label} are too tall for the open shelf. It has about 13.5 cm of clearance.`
+        : `${Ty.label} don't fit in this bench.`, true);
+    } else if (tallBlocked && fitIds.every(id => id === 'cabTall')) {
+      say(`${Ty.label} need the full cabinet height. Take out the shoes in the side cabinet first.`, true);
+    } else {
+      say(where === 'auto' ? `No room left for ${name}. Click a pair in the model to take it out.`
+        : `No room left for ${name} in the ${Z[zonesFor(where)[0]].label}.`, true);
+    }
+  }
+  function removePair(rec) {
+    const z = Z[rec.zone];
+    z.parent.remove(rec.group); z.items.splice(z.items.indexOf(rec), 1); layout(z); refresh();
+    say(`Took the ${rec.Ty.label.toLowerCase()} out of the ${z.label}.`);
+  }
+  function clearAll() {
+    Object.values(Z).forEach(z => { z.items.forEach(r => z.parent.remove(r.group)); z.items = []; });
+    refresh(); say('All shoes cleared. Pick a shoe type to add a pair.');
+  }
+
+  const chipsEl = document.getElementById('chips');
+  TYPES.forEach(Ty => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = `<span class="sw" aria-hidden="true"></span>${Ty.label}`;
+    b.onclick = () => addPair(Ty);
+    Ty.btn = b; chipsEl.appendChild(b);
+  });
+  const whereBtns = document.querySelectorAll('.where button');
+  whereBtns.forEach(b => b.onclick = () => {
+    where = b.dataset.where;
+    whereBtns.forEach(x => x.setAttribute('aria-checked', x === b));
+  });
+  document.getElementById('bClear').onclick = clearAll;
+
+  // version switch: 1 = tilt-out bin, 2 = open top shelf (no bin front, no hinges)
+  const verBtns = document.querySelectorAll('.ver button');
+  const whereTop = document.querySelector('.where button[data-where="bin"]');
+  function setVersion(v, quiet) {
+    version = v;
+    const v1 = v === 1;
+    verBtns.forEach(b => b.setAttribute('aria-checked', +b.dataset.ver === v));
+    drawer.visible = v1;
+    binHardware.forEach(m => m.visible = v1);
+    stays.forEach(s => s.rod.visible = v1);
+    bD.hidden = !v1;
+    if (!v1) state.drawer = false;
+    whereTop.textContent = v1 ? 'Bin' : 'Top';
+    const gone = Z[v1 ? 'upper' : 'bin'], n = gone.items.length;
+    gone.items.forEach(r => gone.parent.remove(r.group)); gone.items = [];
+    sync(); refresh();
+    if (!quiet) say((v1 ? 'Version 1: tilt-out bin with hinge stays.' : 'Version 2: open top shelf, with no bin front or hinges.')
+      + (n ? ` Took ${n} pair${n > 1 ? 's' : ''} out of the ${gone.label}.` : ''));
+  }
+  verBtns.forEach(b => b.onclick = () => setVersion(+b.dataset.ver));
+  setVersion(2, true);
+
+  // optional rubber shoe tray on the bottom shelf
+  let trayOn = false;
+  const bTray = document.getElementById('bTray');
+  function setTray(on, quiet) {
+    trayOn = on; tray.visible = on;
+    Object.assign(Z.shelf, on
+      ? { x0: mx0 + 1.2, x1: mx1 - 1.2, zFront: zF - 2.4, depth: md - 2.4, floor: T + 0.5, clear: 13.6 }
+      : { x0: lx0 + 0.4, x1: lx1 - 0.4, zFront: zF - 1, depth: D - 3, floor: T, clear: 14.1 });
+    bTray.setAttribute('aria-pressed', on);
+    bTray.textContent = on ? 'Remove shoe tray' : 'Add shoe tray';
+    const z = Z.shelf, keep = [], out = [];
+    z.items.forEach(r => {
+      const room = keep.reduce((s, k) => s + k.fp.fx + 1.5, 0) + r.fp.fx <= z.x1 - z.x0 + 0.01;
+      (z.fits(r.fp) && r.fp.fz <= z.depth && room ? keep : out).push(r);
+    });
+    out.forEach(r => z.parent.remove(r.group));
+    z.items = keep; layout(z); refresh();
+    if (!quiet) say((on ? 'Added the rubber shoe tray to the bottom shelf.' : 'Removed the shoe tray. Shoes now sit on the wood shelf.')
+      + (out.length ? ` Took out ${out.length} pair${out.length > 1 ? 's' : ''} that no longer fit.` : ''));
+  }
+  bTray.onclick = () => setTray(!trayOn);
+  setTray(false, true);
+
+  // sample setup so the first view shows each space in use
+  [['Sneakers', 'shelf'], ["Kids' shoes", 'shelf'], ['Flip-flops', 'bin'], ['Loafers', 'bin'], ['Snow boots', 'cab']]
+    .forEach(([l, w]) => { where = w; addPair(TYPES.find(Ty => Ty.label === l)); });
+  where = 'auto';
+  say('Showing a sample setup. Pick a shoe type to add a pair.');
+
+  // ---------- loop ----------
+  function resize() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.fov = w < 600 ? 44 : 32;
+    camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize); resize();
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ease = reduce ? 1 : 0.12;
+  let cushionY = 0;
+  renderer.setAnimationLoop(() => {
+    drawer.rotation.x += ((state.drawer ? TILT : 0) - drawer.rotation.x) * ease;
+    updateStays();
+    hinge.rotation.y += ((state.door ? 1.75 : 0) - hinge.rotation.y) * ease;
+    cushionY += ((state.cushion ? 0 : 30) - cushionY) * ease;
+    cushion.position.y = cushionY;
+    cushion.visible = cushionY < 29;
+    controls.update();
+    renderer.render(scene, camera);
+  });
+})();
+</script>
+
+</body></html>

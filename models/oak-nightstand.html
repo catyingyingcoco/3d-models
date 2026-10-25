@@ -1,0 +1,609 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico Oak Nightstand</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one framed 3D window on the left, a sidebar of controls and specs beside it; stacks on phones */
+:root {
+  --bg: #efe9e1;
+  --stage: #f6f2ec;
+  --panel: #faf7f2;
+  --ink: #2b241d;
+  --muted: #7a6c5d;
+  --line: #d6cab9;
+  --oak: #9c7146;
+  --accent: #1d1a17;
+  --accent-ink: #f6efe4;
+  --warn: #9a3b1f;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1c1915; --stage: #24201b; --panel: #24201b;
+    --ink: #f1e9dd; --muted: #a8998a; --line: #3e362d; --oak: #c79a66;
+    --accent: #e9dcc7; --accent-ink: #1c1915; --warn: #f0a07f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1c1915; --stage: #24201b; --panel: #24201b;
+  --ink: #f1e9dd; --muted: #a8998a; --line: #3e362d; --oak: #c79a66;
+  --accent: #e9dcc7; --accent-ink: #1c1915; --warn: #f0a07f; color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-display); }
+
+.app {
+  height: 100%; box-sizing: border-box;
+  display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px;
+  padding-block: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.viewer {
+  position: relative; min-width: 0; min-height: 0;
+  background: var(--stage); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+}
+#stage { position: absolute; inset: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+#loading[hidden] { display: none; }
+#loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); pointer-events: none; }
+.viewer-hint { position: absolute; left: 14px; bottom: 12px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); pointer-events: none; }
+
+.side { min-width: 0; min-height: 0; overflow-y: auto; display: grid; gap: 12px; align-content: start; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 10px; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; text-wrap: balance; }
+.swatches { display: flex; gap: 8px 12px; flex-wrap: wrap; }
+.sw { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); }
+.sw i { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); display: inline-block; }
+.note { font-size: 0.72rem; color: var(--muted); line-height: 1.4; margin: 0; }
+
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.btn, .item {
+  font: 500 0.82rem var(--font-display); color: var(--ink); text-align: left;
+  background: transparent; border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 10px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+}
+.btn:hover, .item:hover { background: var(--line); }
+.btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.35; }
+.btn[aria-pressed="true"] .dot { opacity: 1; }
+
+.head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; }
+.seg button { font: 500 0.75rem var(--font-display); color: var(--ink); background: transparent; border: 0; border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.seg button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
+.items { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.75rem; color: var(--muted); }
+.link-btn { font: 500 0.75rem var(--font-display); color: var(--ink); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link-btn:disabled { opacity: 0.4; cursor: default; }
+.tip { margin: 0; font-family: var(--font-mono); font-size: 0.66rem; color: var(--muted); line-height: 1.5; }
+#msg { margin: 0; font-size: 0.75rem; color: var(--warn); }
+#msg:empty { display: none; }
+
+.dims { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; font-family: var(--font-mono); font-size: 0.76rem; }
+.dims dt { color: var(--muted); }
+.dims dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+.btn:focus-visible, .item:focus-visible, .seg button:focus-visible, .link-btn:focus-visible { outline: 2px solid var(--oak); outline-offset: 2px; }
+
+@media (max-width: 760px) {
+  html, body { height: auto; }
+  .app { height: auto; grid-template-columns: minmax(0, 1fr); }
+  .viewer { height: 62vh; min-height: 340px; }
+}
+</style>
+
+<main class="app">
+  <section class="viewer" aria-label="3D model">
+    <div id="stage"></div>
+    <div id="loading">Building the nightstand…</div>
+    <div class="viewer-hint">Drag to orbit · Scroll or pinch to zoom</div>
+  </section>
+
+  <aside class="side">
+    <section class="card">
+      <div class="eyebrow">Jalico · Bedside cabinet</div>
+      <h1>Oak Nightstand, 2 drawers + cubby</h1>
+      <div class="swatches">
+        <span class="sw"><i style="background:#9c7146"></i>Medium oak</span>
+        <span class="sw"><i style="background:#f1eee8"></i>White front</span>
+        <span class="sw"><i style="background:#1b1a19"></i>Black + brass pull</span>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Drawer controls">
+      <div class="eyebrow">Drawers</div>
+      <div class="btns">
+        <button class="btn" id="b0" type="button" aria-pressed="false"><span class="dot"></span>Top drawer</button>
+        <button class="btn" id="b1" type="button" aria-pressed="false"><span class="dot"></span>Bottom drawer</button>
+        <button class="btn" id="ball" type="button" aria-pressed="false">Open both</button>
+        <button class="btn" id="bview" type="button">Reset view</button>
+      </div>
+      <p class="tip">You can also click a drawer front in the model to open or close it.</p>
+    </section>
+
+    <section class="card" aria-label="Put things in a drawer">
+      <div class="head">
+        <span class="eyebrow">Put in drawer</span>
+        <div class="seg" role="radiogroup" aria-label="Which drawer">
+          <button type="button" role="radio" aria-checked="true" data-d="0" id="seg0">Top</button>
+          <button type="button" role="radio" aria-checked="false" data-d="1" id="seg1">Bottom</button>
+        </div>
+      </div>
+      <div class="items" id="items"></div>
+      <div class="foot"><span id="count"></span><button class="link-btn" id="clear" type="button">Empty drawer</button></div>
+      <p id="msg" role="status"></p>
+      <p class="tip">Click an item inside a drawer to take it out.</p>
+    </section>
+
+    <section class="card" aria-label="Dimensions">
+      <div class="eyebrow">Dimensions</div>
+      <dl class="dims">
+        <dt>Width</dt><dd>500 mm</dd>
+        <dt>Depth</dt><dd>400 mm</dd>
+        <dt>Height</dt><dd>580 mm</dd>
+        <dt>Drawer front</dt><dd>458 × 145 mm</dd>
+        <dt>Drawer travel</dt><dd>300 mm</dd>
+        <dt>Open cubby</dt><dd>220 mm</dd>
+        <dt>Pull centres</dt><dd>128 mm</dd>
+      </dl>
+      <p class="note">Sizes are estimated from the photos. Measure the real piece to lock them in.</p>
+    </section>
+  </aside>
+</main>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const stage = document.getElementById('stage');
+const CM = 0.01; // model is authored in centimetres
+
+// ---------- renderer / scene ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(35, 1, 0.05, 50);
+// look down into the open drawers; on phones aim lower so the piece sits above the tray
+const narrow = stage.clientWidth < 640;
+const HOME = narrow
+  ? { pos: new THREE.Vector3(-0.62, 1.2, 1.28), target: new THREE.Vector3(0, 0.27, 0.12) }
+  : { pos: new THREE.Vector3(-0.8, 1.42, 1.5), target: new THREE.Vector3(0, 0.3, 0.12) };
+camera.position.copy(HOME.pos);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME.target);
+controls.enableDamping = true;
+controls.minDistance = 0.6; controls.maxDistance = 4;
+controls.maxPolarAngle = Math.PI * 0.49;
+
+scene.add(new THREE.HemisphereLight(0xfff6ea, 0x8a7a66, 0.55));
+const sun = new THREE.DirectionalLight(0xfff1df, 1.6);
+sun.position.set(-1.0, 2.4, 1.8);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -0.8; sun.shadow.camera.right = 0.8;
+sun.shadow.camera.top = 0.8; sun.shadow.camera.bottom = -0.8;
+sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.01;
+scene.add(sun);
+
+const floorMat = new THREE.ShadowMaterial({ opacity: 0.22 });
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), floorMat);
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
+scene.add(floor);
+
+function applyTheme() {
+  const cs = getComputedStyle(document.documentElement);
+  scene.background = new THREE.Color(cs.getPropertyValue('--stage').trim());
+}
+applyTheme();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// ---------- procedural oak, medium tone ----------
+function oakCanvas(vertical) {
+  const S = 1024, c = document.createElement('canvas'); c.width = c.height = S;
+  const g = c.getContext('2d');
+  g.fillStyle = '#9c7146'; g.fillRect(0, 0, S, S);
+  let seed = vertical ? 7 : 3; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  // broad tonal bands
+  for (let i = 0; i < 26; i++) {
+    const y = rnd() * S, h = 10 + rnd() * 60;
+    g.fillStyle = rnd() > 0.5 ? 'rgba(104,70,38,0.22)' : 'rgba(184,142,96,0.18)';
+    g.fillRect(0, y, S, h);
+  }
+  // fine wavy grain lines
+  for (let i = 0; i < 260; i++) {
+    const y0 = rnd() * S, amp = 2 + rnd() * 10, freq = 0.002 + rnd() * 0.006, ph = rnd() * 6.28;
+    g.strokeStyle = `rgba(${84 + rnd() * 30 | 0},${54 + rnd() * 22 | 0},${28 + rnd() * 16 | 0},${0.14 + rnd() * 0.26})`;
+    g.lineWidth = 0.6 + rnd() * 1.6;
+    g.beginPath();
+    for (let x = 0; x <= S; x += 8) {
+      const y = y0 + Math.sin(x * freq + ph) * amp + Math.sin(x * freq * 3.1 + ph) * amp * 0.25;
+      x ? g.lineTo(x, y) : g.moveTo(x, y);
+    }
+    g.stroke();
+  }
+  // oak ray flecks
+  for (let i = 0; i < 140; i++) {
+    g.fillStyle = 'rgba(196,158,112,0.32)';
+    g.fillRect(rnd() * S, rnd() * S, 6 + rnd() * 26, 1 + rnd() * 2);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  if (vertical) { t.center.set(0.5, 0.5); t.rotation = Math.PI / 2; }
+  return t;
+}
+const oakH = new THREE.MeshStandardMaterial({ map: oakCanvas(false), roughness: 0.55, metalness: 0, envMapIntensity: 0.6 });
+const oakV = new THREE.MeshStandardMaterial({ map: oakCanvas(true), roughness: 0.55, metalness: 0, envMapIntensity: 0.6 });
+const oakDrawer = new THREE.MeshStandardMaterial({ map: oakCanvas(false), color: 0xf3e6d6, roughness: 0.7, envMapIntensity: 0.4 });
+const hardboard = new THREE.MeshStandardMaterial({ color: 0x8a6c4e, roughness: 0.9 });
+const whiteFront = new THREE.MeshStandardMaterial({ color: 0xf1eee8, roughness: 0.38, envMapIntensity: 0.7 });
+const blackMatte = new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.55, metalness: 0.2 });
+const brass = new THREE.MeshStandardMaterial({ color: 0xf3cf78, roughness: 0.25, metalness: 0.9, envMapIntensity: 2.0 });
+
+function part(geo, mat, x, y, z, parent) {
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x * CM, y * CM, z * CM);
+  m.castShadow = m.receiveShadow = true;
+  parent.add(m);
+  return m;
+}
+const box = (w, h, d) => new THREE.BoxGeometry(w * CM, h * CM, d * CM);
+const rbox = (w, h, d, r) => new RoundedBoxGeometry(w * CM, h * CM, d * CM, 4, r * CM);
+
+// ---------- dimensions (cm) ----------
+const W = 50, D = 40, H = 58, T = 1.8, TOP = 2.6;
+const innerW = W - 2 * T;
+const BASE = 2.0;           // bottom panel
+const CUBBY = 22;           // open shelf clear height
+const SHELF = 1.8;          // divider above cubby
+const FRONT_H = 14.5, GAP = 0.3, FRONT_T = 1.8;
+
+const cabinet = new THREE.Group();
+scene.add(cabinet);
+
+// carcass
+part(rbox(W, TOP, D, 1.1), oakH, 0, H - TOP / 2, 0, cabinet);                 // top, softly rounded
+part(rbox(T, H - TOP + 0.6, D, 0.5), oakV, -(W - T) / 2, (H - TOP + 0.6) / 2, 0, cabinet); // left side
+part(rbox(T, H - TOP + 0.6, D, 0.5), oakV, (W - T) / 2, (H - TOP + 0.6) / 2, 0, cabinet);  // right side
+part(box(innerW, BASE, D - 0.6), oakH, 0, BASE / 2, -0.3, cabinet);           // bottom
+part(box(innerW, SHELF, D - 0.6), oakH, 0, BASE + CUBBY + SHELF / 2, -0.3, cabinet); // shelf over cubby
+part(box(innerW, H - TOP, 0.6), oakV, 0, (H - TOP) / 2, -D / 2 + 0.3, cabinet); // back panel
+// slim runners inside the drawer bay
+const bayBottom = BASE + CUBBY + SHELF;
+for (const s of [-1, 1]) {
+  for (const k of [0, 1]) {
+    part(box(0.6, 1.2, D - 3), hardboard, s * (innerW / 2 - 0.3), bayBottom + 1.5 + k * (FRONT_H + GAP), 0, cabinet);
+  }
+}
+
+// ---------- drawers ----------
+function makePull() {
+  const g = new THREE.Group();
+  const L = 15, C = 12.8, STAND = 2.8;
+  // brass posts
+  for (const s of [-1, 1]) part(box(0.9, 0.9, STAND), brass, s * C / 2, 0, STAND / 2, g);
+  // black bar
+  part(rbox(L, 1.25, 0.95, 0.15), blackMatte, 0, 0, STAND + 0.45, g);
+  // brass inlay strip on the top face + end caps
+  part(box(L - 1.6, 0.12, 0.5), brass, 0, 0.66, STAND + 0.3, g);
+  for (const s of [-1, 1]) part(box(0.5, 1.3, 1.0), brass, s * (L / 2 - 0.05), 0, STAND + 0.45, g);
+  return g;
+}
+
+function makeDrawer(yBottom) {
+  const g = new THREE.Group();
+  const fw = innerW - 2 * GAP, boxW = innerW - 2.6, boxH = 11, boxD = 34, st = 1.2;
+  const zFront = D / 2 - FRONT_T / 2;
+  // white front (flush inset)
+  part(rbox(fw, FRONT_H, FRONT_T, 0.25), whiteFront, 0, FRONT_H / 2, zFront, g);
+  // drawer box: oak sides/back, hardboard floor
+  const zb = zFront - FRONT_T / 2 - boxD / 2;
+  part(box(st, boxH, boxD), oakDrawer, -(boxW - st) / 2, 1 + boxH / 2, zb, g);
+  part(box(st, boxH, boxD), oakDrawer, (boxW - st) / 2, 1 + boxH / 2, zb, g);
+  part(box(boxW, boxH, st), oakDrawer, 0, 1 + boxH / 2, zb - boxD / 2 + st / 2, g);
+  part(box(boxW, boxH, st), oakDrawer, 0, 1 + boxH / 2, zFront - FRONT_T / 2 - st / 2, g);
+  part(box(boxW - 2 * st, 0.5, boxD - st), hardboard, 0, 1.25, zb + st / 2 - 0.0, g);
+  const pull = makePull();
+  pull.position.set(0, FRONT_H / 2 * CM, D / 2 * CM);
+  g.add(pull);
+  g.position.y = yBottom * CM;
+  g.userData = { open: 0, target: 0, inner: {
+    x0: -(boxW / 2 - st), x1: boxW / 2 - st,
+    z0: zb - boxD / 2 + st, z1: zFront - FRONT_T / 2 - st, y: 1.5 } };
+  g.traverse(o => { if (o.isMesh) o.userData.drawer = g; });
+  cabinet.add(g);
+  return g;
+}
+
+const lower = makeDrawer(bayBottom + GAP);
+const upper = makeDrawer(bayBottom + GAP + FRONT_H + GAP);
+const drawers = [upper, lower]; // index 0 = top drawer
+const TRAVEL = 30 * CM;
+
+// ---------- interaction ----------
+const btns = [document.getElementById('b0'), document.getElementById('b1')];
+const ball = document.getElementById('ball');
+function sync() {
+  drawers.forEach((d, i) => btns[i].setAttribute('aria-pressed', d.userData.target ? 'true' : 'false'));
+  const both = drawers.every(d => d.userData.target);
+  ball.setAttribute('aria-pressed', both ? 'true' : 'false');
+  ball.textContent = both ? 'Close both' : 'Open both';
+}
+function toggle(i) { const d = drawers[i]; d.userData.target = d.userData.target ? 0 : 1; sync(); }
+btns.forEach((b, i) => b.addEventListener('click', () => toggle(i)));
+ball.addEventListener('click', () => {
+  const v = drawers.every(d => d.userData.target) ? 0 : 1;
+  drawers.forEach(d => d.userData.target = v); sync();
+});
+// ---------- things to put in the drawers (sizes in cm: w across, d front-to-back, h tall) ----------
+const matCache = {};
+const mat = (hex, rough = 0.6, metal = 0, extra = {}) => {
+  const k = hex + rough + metal + JSON.stringify(extra);
+  return matCache[k] || (matCache[k] = new THREE.MeshStandardMaterial({ color: hex, roughness: rough, metalness: metal, ...extra }));
+};
+const pages = mat('#efe6d2', 0.9);
+function bookish(g, w, d, h, color) {
+  part(box(w, 0.18, d), mat(color, 0.55), 0, h - 0.09, 0, g);
+  part(box(w, 0.18, d), mat(color, 0.55), 0, 0.09, 0, g);
+  part(box(0.22, h, d), mat(color, 0.55), -w / 2 + 0.11, h / 2, 0, g);
+  part(box(w - 0.5, h - 0.36, d - 0.4), pages, 0.1, h / 2, 0, g);
+}
+const CATALOG = [
+  { type: 'book', name: 'Paperback', w: 13, d: 20, h: 2.6, stack: true, colors: ['#2a2622', '#7b2d26', '#2f4a5c', '#c9a24a', '#3d5a3c'],
+    build: (g, c) => bookish(g, 13, 20, 2.6, c) },
+  { type: 'notebook', name: 'Notebook', w: 15, d: 21, h: 1.4, stack: true, colors: ['#b08a5a', '#1f2a36', '#8c3b3b'],
+    build: (g, c) => { bookish(g, 15, 21, 1.4, c); part(box(0.5, 1.45, 21.02), mat('#1c1b1a'), 4, 0.72, 0, g); } },
+  { type: 'phone', name: 'Phone', w: 7.5, d: 15.5, h: 0.9, stack: true,
+    build: g => { part(rbox(7.5, 0.9, 15.5, 0.4), mat('#151515', 0.4, 0.3), 0, 0.45, 0, g);
+                  part(box(6.8, 0.04, 14.6), mat('#0a0d12', 0.08, 0.2), 0, 0.91, 0, g); } },
+  { type: 'glasses', name: 'Glasses case', w: 16, d: 6.5, h: 4.5, stack: false,
+    build: g => { const m = part(new THREE.CapsuleGeometry(2.25 * CM, 11.5 * CM, 6, 16), mat('#efe6d6', 0.75), 0, 2.25, 0, g);
+                  m.rotation.z = Math.PI / 2; m.scale.set(1, 1, 6.5 / 4.5); } },
+  { type: 'remote', name: 'Remote', w: 4.6, d: 17, h: 2, stack: false,
+    build: g => { part(rbox(4.6, 1.8, 17, 0.6), mat('#2b2b2d', 0.6), 0, 0.9, 0, g);
+                  for (let i = 0; i < 6; i++) part(new THREE.CylinderGeometry(0.45 * CM, 0.45 * CM, 0.3 * CM, 12), mat(i ? '#5a5a5e' : '#b33a2c', 0.5), (i % 2 ? 1 : -1) * 1, 1.85, -5 + Math.floor(i / 2) * 2.4, g); } },
+  { type: 'pen', name: 'Pen', w: 1.2, d: 14, h: 1.2, stack: false,
+    build: g => { const m = part(new THREE.CylinderGeometry(0.5 * CM, 0.5 * CM, 14 * CM, 16), mat('#1e2c4a', 0.35, 0.4), 0, 0.55, 0, g); m.rotation.x = Math.PI / 2;
+                  part(box(0.25, 0.25, 4), brass, 0, 1.05, -4.5, g); } },
+  { type: 'candle', name: 'Candle jar', w: 8, d: 8, h: 8.5, stack: false,
+    build: g => { part(new THREE.CylinderGeometry(4 * CM, 4 * CM, 8.5 * CM, 32), mat('#8a5a2b', 0.15, 0, { transparent: true, opacity: 0.8 }), 0, 4.25, 0, g);
+                  part(new THREE.CylinderGeometry(3.6 * CM, 3.6 * CM, 6 * CM, 32), mat('#f1e7d4', 0.8), 0, 3.3, 0, g); } },
+  { type: 'cream', name: 'Hand cream', w: 4.2, d: 15, h: 2.6, stack: false,
+    build: g => { part(rbox(4.2, 2.2, 12.5, 0.9), mat('#e8c9c0', 0.5), 0, 1.3, 1.2, g);
+                  const c = part(new THREE.CylinderGeometry(1.3 * CM, 1.3 * CM, 2.5 * CM, 20), mat('#f4efe9', 0.4), 0, 1.3, -6.2, g); c.rotation.x = Math.PI / 2; } },
+  { type: 'charger', name: 'Charger', w: 9, d: 9, h: 2.4, stack: false,
+    build: g => { const t = part(new THREE.TorusGeometry(3.4 * CM, 0.3 * CM, 10, 40), mat('#f5f5f3', 0.5), 0, 0.3, 0.6, g); t.rotation.x = Math.PI / 2;
+                  part(rbox(2.4, 2.4, 2.4, 0.3), mat('#f5f5f3', 0.5), 2.8, 1.2, -3.2, g); } },
+  { type: 'earbuds', name: 'Earbuds', w: 6, d: 5, h: 2.5, stack: false,
+    build: g => part(rbox(6, 2.5, 5, 1.1), mat('#fafafa', 0.3), 0, 1.25, 0, g) },
+];
+const BY_TYPE = Object.fromEntries(CATALOG.map(c => [c.type, c]));
+const MAX_H = 10.5; // clearance inside a drawer
+
+let placed = [];   // { id, drawer, type, color, cx, cz, y, rot, fw, fd, h, stack, below, obj }
+let nextId = 1;
+
+function buildItem(e) {
+  const spec = BY_TYPE[e.type];
+  const g = new THREE.Group();
+  spec.build(g, e.color);
+  g.rotation.y = e.rot ? Math.PI / 2 : 0;
+  const inner = drawers[e.drawer].userData.inner;
+  g.position.set(e.cx * CM, (inner.y + e.y) * CM, e.cz * CM);
+  g.userData.itemId = e.id;
+  drawers[e.drawer].add(g);
+  e.obj = g;
+  return g;
+}
+
+function findSpot(di, spec) {
+  const inner = drawers[di].userData.inner;
+  const here = placed.filter(p => p.drawer === di);
+  const floorItems = here.filter(p => p.y === 0);
+  const orients = [[spec.w, spec.d, 0], [spec.d, spec.w, 1]];
+  for (const [fw, fd, rot] of orients) {
+    for (let z = inner.z0 + 0.3; z + fd <= inner.z1 - 0.3 + 1e-6; z += 0.5) {
+      for (let x = inner.x0 + 0.3; x + fw <= inner.x1 - 0.3 + 1e-6; x += 0.5) {
+        const hit = floorItems.some(p => Math.abs(p.cx - (x + fw / 2)) < (p.fw + fw) / 2 + 0.3 && Math.abs(p.cz - (z + fd / 2)) < (p.fd + fd) / 2 + 0.3);
+        if (!hit) return { cx: x + fw / 2, cz: z + fd / 2, y: 0, rot, fw, fd, below: null };
+      }
+    }
+  }
+  if (!spec.stack) return null;
+  const tops = here.filter(p => p.stack && !here.some(q => q.below === p.id)).sort((a, b) => a.y - b.y);
+  for (const p of tops) {
+    for (const [fw, fd, rot] of orients) {
+      if (fw <= p.fw + 0.01 && fd <= p.fd + 0.01 && p.y + p.h + spec.h <= MAX_H)
+        return { cx: p.cx, cz: p.cz, y: p.y + p.h, rot, fw, fd, below: p.id };
+    }
+  }
+  return null;
+}
+
+let target = 0;
+const msg = document.getElementById('msg');
+const countEl = document.getElementById('count');
+const clearBtn = document.getElementById('clear');
+const dName = i => (i ? 'Bottom' : 'Top') + ' drawer';
+
+function save() {
+  try {
+    localStorage.setItem('jalico-nightstand-items', JSON.stringify(placed.map(({ obj, ...rest }) => rest)));
+  } catch (e) {}
+}
+function refresh() {
+  const n = placed.filter(p => p.drawer === target).length;
+  countEl.textContent = `${dName(target)} · ${n} ${n === 1 ? 'item' : 'items'}`;
+  clearBtn.disabled = n === 0;
+  save();
+}
+
+function addItem(type, di = target, quiet = false) {
+  const spec = BY_TYPE[type];
+  const spot = findSpot(di, spec);
+  if (!spot) {
+    msg.textContent = `No room for the ${spec.name.toLowerCase()} in the ${dName(di).toLowerCase()}. Take something out or switch drawers.`;
+    return false;
+  }
+  msg.textContent = '';
+  const colors = spec.colors || [null];
+  const used = placed.filter(p => p.type === type).length;
+  const e = { id: nextId++, drawer: di, type, color: colors[used % colors.length], ...spot, h: spec.h, stack: spec.stack };
+  placed.push(e);
+  const g = buildItem(e);
+  if (!quiet) {
+    g.userData.anim = { t: 0, from: g.position.y + 14 * CM, to: g.position.y };
+    g.position.y += 14 * CM;
+    drawers[di].userData.target = 1; sync();
+  }
+  refresh();
+  return true;
+}
+
+function removeItem(id) {
+  const e = placed.find(p => p.id === id);
+  if (!e) return;
+  // anything stacked on it comes out too
+  const above = placed.filter(p => p.below === id);
+  above.forEach(p => removeItem(p.id));
+  placed = placed.filter(p => p !== e);
+  e.obj.userData.anim = { t: 0, from: e.obj.position.y, to: e.obj.position.y + 16 * CM, remove: true };
+  msg.textContent = '';
+  refresh();
+}
+
+// tray UI
+const itemsEl = document.getElementById('items');
+for (const c of CATALOG) {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'item';
+  b.textContent = c.name;
+  b.addEventListener('click', () => addItem(c.type));
+  itemsEl.appendChild(b);
+}
+const segs = [document.getElementById('seg0'), document.getElementById('seg1')];
+function setTarget(i) {
+  target = i;
+  segs.forEach((s, k) => s.setAttribute('aria-checked', k === i ? 'true' : 'false'));
+  msg.textContent = '';
+  refresh();
+}
+segs.forEach((s, i) => s.addEventListener('click', () => setTarget(i)));
+clearBtn.addEventListener('click', () => {
+  placed.filter(p => p.drawer === target && p.below === null).forEach(p => removeItem(p.id));
+});
+
+// restore this viewer's last arrangement, or start with what's in the photo
+let restored = false;
+try {
+  const saved = JSON.parse(localStorage.getItem('jalico-nightstand-items') || 'null');
+  if (Array.isArray(saved)) {
+    for (const e of saved) if (BY_TYPE[e.type] && drawers[e.drawer]) { placed.push(e); buildItem(e); nextId = Math.max(nextId, e.id + 1); }
+    restored = true;
+  }
+} catch (e) {}
+if (!restored) ['book', 'phone', 'glasses'].forEach(t => addItem(t, 0, true));
+refresh();
+
+let viewAnim = null;
+document.getElementById('bview').addEventListener('click', () => {
+  viewAnim = { t: 0, p0: camera.position.clone(), c0: controls.target.clone() };
+});
+
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+let downAt = null;
+function pick(e) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObjects(drawers, true)[0];
+  if (!hit) return null;
+  for (let o = hit.object; o; o = o.parent) {
+    if (o.userData.itemId) return { item: o.userData.itemId };
+    if (drawers.includes(o)) return { drawer: o };
+  }
+  return null;
+}
+renderer.domElement.addEventListener('pointerdown', e => { downAt = { x: e.clientX, y: e.clientY }; });
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 5) return;
+  const h = pick(e); if (!h) return;
+  if (h.item) removeItem(h.item); else toggle(drawers.indexOf(h.drawer));
+});
+renderer.domElement.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  renderer.domElement.style.cursor = pick(e) ? 'pointer' : 'grab';
+});
+
+
+// ---------- loop ----------
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.fov = w / h < 0.9 ? 46 : 35;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clock = new THREE.Clock();
+const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  for (const d of drawers) {
+    const u = d.userData;
+    const step = reduce ? 1 : dt * 2.2;
+    u.open += Math.sign(u.target - u.open) * Math.min(step, Math.abs(u.target - u.open));
+    d.position.z = ease(u.open) * TRAVEL;
+    for (const o of [...d.children]) {
+      const a = o.userData.anim; if (!a) continue;
+      a.t = Math.min(1, a.t + (reduce ? 1 : dt * 3));
+      const k = a.remove ? a.t * a.t : 1 - Math.pow(1 - a.t, 3);
+      o.position.y = a.from + (a.to - a.from) * k;
+      if (a.t >= 1) { if (a.remove) d.remove(o); else delete o.userData.anim; }
+    }
+  }
+  if (viewAnim) {
+    viewAnim.t = Math.min(1, viewAnim.t + (reduce ? 1 : dt * 1.5));
+    const k = ease(viewAnim.t);
+    camera.position.lerpVectors(viewAnim.p0, HOME.pos, k);
+    controls.target.lerpVectors(viewAnim.c0, HOME.target, k);
+    if (viewAnim.t >= 1) viewAnim = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+});
+document.getElementById('loading').hidden = true;
+
+// open the top drawer once on load so the moving part is obvious
+setTimeout(() => { drawers[0].userData.target = 1; sync(); }, 500);
+</script>
+
+</body></html>

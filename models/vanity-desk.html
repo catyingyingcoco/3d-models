@@ -1,0 +1,427 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico Vanity Desk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: full-height 3D stage, title card top-left, tool strip along the bottom */
+:root {
+  --bg: #e6e7e4;
+  --fg: #1d2022;
+  --muted: #5d6468;
+  --panel: rgba(255,255,255,.78);
+  --line: rgba(29,32,34,.16);
+  --accent: #a9822f;
+  --accent-fg: #ffffff;
+  --floor: #d3bd98;
+  --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16181a; --fg: #eceeef; --muted: #9aa2a7;
+    --panel: rgba(30,33,35,.82); --line: rgba(236,238,239,.16);
+    --accent: #d8b660; --accent-fg: #1a1608; --floor: #4a4034;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16181a; --fg: #eceeef; --muted: #9aa2a7;
+  --panel: rgba(30,33,35,.82); --line: rgba(236,238,239,.16);
+  --accent: #d8b660; --accent-fg: #1a1608; --floor: #4a4034;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+#stage { position: relative; flex: 1; min-height: 0; border-radius: 10px; overflow: hidden; touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; }
+.card {
+  position: absolute; top: 10px; left: 10px; max-width: min(300px, calc(100% - 20px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  backdrop-filter: blur(6px); pointer-events: none;
+}
+.card h1 { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+.card p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.card .dim { font-variant-numeric: tabular-nums; letter-spacing: .02em; color: var(--fg); }
+.tools {
+  position: absolute; left: 10px; right: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px 14px;
+  justify-content: center; pointer-events: none;
+}
+.grp { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 8px; padding: 6px; pointer-events: auto; backdrop-filter: blur(6px); }
+.grp span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 0 4px; }
+button {
+  font: inherit; font-weight: 500; color: var(--fg); background: transparent; border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 10px; cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 520px) { .card p { display: none; } .card { padding: 8px 10px; } }
+</style>
+
+<div id="stage">
+  <div class="card">
+    <h1>Jalico Vanity Desk</h1>
+    <p class="dim">120 × 55 × 76 cm · two drawers</p>
+    <p>Click a drawer to open it. Drag items across the desktop or move the stool. Drag empty space to orbit, scroll to zoom.</p>
+  </div>
+  <div class="tools">
+    <div class="grp"><span>Drawers</span>
+      <button id="dl" aria-pressed="false">Left</button>
+      <button id="dr" aria-pressed="false">Right</button>
+    </div>
+    <div class="grp"><span>Add</span>
+      <button data-add="laptop">Laptop</button>
+      <button data-add="mug">Mug</button>
+      <button data-add="plant">Plant</button>
+      <button data-add="book">Books</button>
+    </div>
+    <div class="grp">
+      <button id="reset">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = false;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(38, 1, 0.05, 30);
+  camera.position.set(1.5, 1.45, 2.4);
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0.5, 0.1);
+  controls.enableDamping = true;
+  controls.maxPolarAngle = Math.PI / 2 - 0.04;
+  controls.minDistance = 0.9; controls.maxDistance = 5;
+  controls.update();
+  var home = { pos: camera.position.clone(), tgt: controls.target.clone() };
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8478, 0.75));
+  var sun = new THREE.DirectionalLight(0xffffff, 0.85);
+  sun.position.set(1.8, 3.2, 2.4);
+  sun.castShadow = false;
+  sun.shadow.mapSize.set(2048, 2048);
+  var sc = sun.shadow.camera; sc.left = -2; sc.right = 2; sc.top = 2; sc.bottom = -2; sc.near = 0.5; sc.far = 9;
+  sun.shadow.bias = -0.0006;
+  scene.add(sun);
+
+  /* materials */
+  function M(c, r, m) { return new THREE.MeshStandardMaterial({ color: c, roughness: r == null ? 0.6 : r, metalness: m || 0 }); }
+  var white = M(0xf4f2ee, 0.5), black = M(0x1c1c1e, 0.42, 0.1), gold = M(0xcaa24b, 0.28, 0.9);
+  var inner = M(0xe6dfd2, 0.7), walnut = M(0x7c604a, 0.6), walnutLt = M(0x8d6f57, 0.6);
+  var birch = M(0xe6cca3, 0.55);
+
+  var floorMat = M(0xd3bd98, 0.85);
+  var floor = new THREE.Mesh(new THREE.CircleGeometry(2.6, 64), floorMat);
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+  function box(w, h, d, mat, x, y, z, parent) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+    (parent || scene).add(m); return m;
+  }
+  function cyl(rt, rb, h, mat, x, y, z, parent, seg) {
+    var m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 24), mat);
+    m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+    (parent || scene).add(m); return m;
+  }
+  function rr(p, w, h, r) {
+    var x = -w / 2, y = -h / 2;
+    p.moveTo(x + r, y); p.lineTo(x + w - r, y); p.quadraticCurveTo(x + w, y, x + w, y + r);
+    p.lineTo(x + w, y + h - r); p.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    p.lineTo(x + r, y + h); p.quadraticCurveTo(x, y + h, x, y + h - r);
+    p.lineTo(x, y + r); p.quadraticCurveTo(x, y, x + r, y); return p;
+  }
+
+  /* ---------- desk ---------- */
+  var desk = new THREE.Group(); scene.add(desk);
+  var TOP_Y = 0.76;
+  // separate top slab, overhangs the carcass on all visible sides
+  box(1.2, 0.03, 0.55, white, 0, 0.745, 0, desk);
+  // carcass: 4 panels + divider, open at the front
+  var cy = 0.66;
+  box(0.015, 0.14, 0.51, white, -0.5725, cy, 0, desk);
+  box(0.015, 0.14, 0.51, white, 0.5725, cy, 0, desk);
+  box(1.13, 0.14, 0.015, white, 0, cy, -0.2475, desk);
+  box(1.16, 0.015, 0.51, white, 0, 0.5975, 0, desk);
+  box(0.015, 0.125, 0.5, white, 0, 0.6675, 0, desk);
+  // shadow-line strip under the top so the slab reads as its own piece
+  box(1.12, 0.004, 0.5, M(0xd9d6cf, 0.8), 0, 0.728, 0, desk);
+
+  // legs: tapered, splayed, with gold ferrules
+  var tx = 0.0873, tz = 0.0698; // ~5 deg sideways, 4 deg front/back
+  var L = 0.6;
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) {
+    var g = new THREE.Group();
+    g.position.set(s[0] * 0.5, 0.595, s[1] * 0.19);
+    g.rotation.z = s[0] * 0.12; g.rotation.x = -s[1] * 0.07;
+    var body = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.013, L, 20), black);
+    body.position.y = -L / 2; body.castShadow = true; g.add(body);
+    cyl(0.0148, 0.0148, 0.05, gold, 0, -L * 0.9, 0, g, 20);
+    cyl(0.0142, 0.0142, 0.022, black, 0, -L + 0.011, 0, g, 20);
+    desk.add(g);
+  });
+
+  // drawers
+  var drawers = [];
+  function makeDrawer(x) {
+    var g = new THREE.Group(); g.position.set(x, 0.6675, 0); desk.add(g);
+    // front panel stands 6 mm proud of the carcass edge, with a 3 mm reveal around it
+    box(0.5515, 0.113, 0.018, white, 0, 0, 0.252, g);
+    // tray
+    box(0.52, 0.008, 0.4, inner, 0, -0.0505, 0.04, g);
+    box(0.008, 0.09, 0.4, inner, -0.256, -0.005, 0.04, g);
+    box(0.008, 0.09, 0.4, inner, 0.256, -0.005, 0.04, g);
+    box(0.52, 0.09, 0.008, inner, 0, -0.005, -0.16, g);
+    // handle: two gold posts, black bar, gold inlay, all standing off the face
+    box(0.012, 0.012, 0.022, gold, -0.065, 0, 0.272, g);
+    box(0.012, 0.012, 0.022, gold, 0.065, 0, 0.272, g);
+    box(0.15, 0.015, 0.012, black, 0, 0, 0.289, g);
+    box(0.118, 0.004, 0.002, gold, 0, 0, 0.296, g);
+    var d = { group: g, cur: 0, target: 0 };
+    g.userData.drawer = d; drawers.push(d); return d;
+  }
+  makeDrawer(-0.28625); makeDrawer(0.28625);
+  var OPEN = 0.28;
+
+  /* ---------- items ---------- */
+  var items = [], extras = [];
+
+  function mirrorItem() {
+    var g = new THREE.Group();
+    box(0.2, 0.01, 0.075, white, 0, 0.005, 0, g);
+    box(0.01, 0.1, 0.012, white, -0.12, 0.055, 0, g);
+    box(0.01, 0.1, 0.012, white, 0.12, 0.055, 0, g);
+    var tg = new THREE.Group(); tg.position.set(0, 0.1, 0); tg.rotation.x = -0.12; g.add(tg);
+    var s = rr(new THREE.Shape(), 0.23, 0.28, 0.035); s.holes.push(rr(new THREE.Path(), 0.2, 0.25, 0.02));
+    var fr = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 0.016, bevelEnabled: false }), white);
+    fr.position.set(0, 0.06, -0.008); fr.castShadow = true; tg.add(fr);
+    var rs = rr(new THREE.Shape(), 0.2, 0.25, 0.02); rs.holes.push(rr(new THREE.Path(), 0.185, 0.235, 0.015));
+    var led = new THREE.Mesh(new THREE.ExtrudeGeometry(rs, { depth: 0.004, bevelEnabled: false }),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.9 }));
+    led.position.set(0, 0.06, 0); tg.add(led);
+    var gl = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.25), M(0xc9d1d6, 0.12, 0.35));
+    gl.position.set(0, 0.06, -0.004); tg.add(gl);
+    var mg = cyl(0.027, 0.027, 0.008, M(0xe9eef2, 0.2, 0.4), 0.07, -0.02, 0.003, tg, 32);
+    mg.rotation.x = Math.PI / 2;
+    g.userData = { drag: 'desk', half: [0.125, 0.05] };
+    return g;
+  }
+  function jewelryItem() {
+    var g = new THREE.Group();
+    box(0.22, 0.1, 0.1, walnut, 0, 0.05, 0, g);
+    [0.017, 0.05, 0.083].forEach(function (y) {
+      box(0.2, 0.027, 0.004, walnutLt, 0, y, 0.051, g);
+      cyl(0.006, 0.006, 0.006, gold, 0, y, 0.056, g, 12).rotation.x = Math.PI / 2;
+    });
+    g.userData = { drag: 'desk', half: [0.11, 0.05] };
+    return g;
+  }
+  function globeItem() {
+    var g = new THREE.Group();
+    cyl(0.03, 0.034, 0.03, M(0x2a62a8, 0.5), 0, 0.015, 0, g);
+    var gl = new THREE.Mesh(new THREE.SphereGeometry(0.034, 24, 16),
+      new THREE.MeshStandardMaterial({ color: 0xcfe6f2, transparent: true, opacity: 0.38, roughness: 0.05 }));
+    gl.position.y = 0.062; g.add(gl);
+    cyl(0, 0.014, 0.034, M(0x6b7b86, 0.8), 0, 0.045, 0, g, 12);
+    g.userData = { drag: 'desk', half: [0.035, 0.035] };
+    return g;
+  }
+  function laptopItem() {
+    var g = new THREE.Group(), al = M(0xb9bec3, 0.35, 0.7);
+    box(0.32, 0.012, 0.22, al, 0, 0.006, 0, g);
+    box(0.28, 0.002, 0.1, M(0x2b2e31, 0.6), 0, 0.013, 0.03, g);
+    var hg = new THREE.Group(); hg.position.set(0, 0.012, -0.11); hg.rotation.x = -0.3; g.add(hg);
+    box(0.32, 0.2, 0.008, al, 0, 0.1, 0, hg);
+    box(0.30, 0.18, 0.002, new THREE.MeshStandardMaterial({ color: 0x14202b, emissive: 0x1d3a55, emissiveIntensity: 0.6 }), 0, 0.1, 0.005, hg);
+    g.userData = { drag: 'desk', half: [0.16, 0.12] };
+    return g;
+  }
+  function mugItem() {
+    var g = new THREE.Group(), c = M(0x2f5d50, 0.4);
+    cyl(0.04, 0.036, 0.09, c, 0, 0.045, 0, g, 28);
+    var h = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.006, 10, 20, Math.PI), c);
+    h.position.set(0.04, 0.047, 0); h.rotation.z = -Math.PI / 2; h.castShadow = true; g.add(h);
+    cyl(0.034, 0.034, 0.002, M(0x2a1a12, 0.2), 0, 0.085, 0, g, 24);
+    g.userData = { drag: 'desk', half: [0.06, 0.042] };
+    return g;
+  }
+  function plantItem() {
+    var g = new THREE.Group();
+    cyl(0.05, 0.038, 0.08, M(0xc9c3b8, 0.8), 0, 0.04, 0, g, 24);
+    var lm = M(0x3f7a4a, 0.7);
+    for (var i = 0; i < 8; i++) {
+      var a = i / 8 * Math.PI * 2, leaf = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 10), lm);
+      leaf.scale.set(0.55, 2.1, 0.3);
+      leaf.position.set(Math.cos(a) * 0.035, 0.145, Math.sin(a) * 0.035);
+      leaf.rotation.z = -Math.cos(a) * 0.5; leaf.rotation.x = Math.sin(a) * 0.5;
+      leaf.castShadow = true; g.add(leaf);
+    }
+    g.userData = { drag: 'desk', half: [0.07, 0.07] };
+    return g;
+  }
+  function bookItem() {
+    var g = new THREE.Group(), cols = [0x274a6b, 0xa4472f, 0xd9c38a];
+    cols.forEach(function (c, i) { box(0.22 - i * 0.015, 0.03, 0.15 - i * 0.01, M(c, 0.7), 0, 0.015 + i * 0.03, 0, g); });
+    g.userData = { drag: 'desk', half: [0.11, 0.075] };
+    return g;
+  }
+
+  function place(g, x, z, ry) { g.position.set(x, TOP_Y, z); g.rotation.y = ry || 0; scene.add(g); items.push(g); return g; }
+  var base = [];
+  function seed(g, x, z, ry) { place(g, x, z, ry); base.push({ g: g, x: x, z: z, ry: ry || 0 }); }
+  seed(jewelryItem(), -0.4, -0.13, 0.05);
+  seed(mirrorItem(), -0.02, -0.16, 0);
+  seed(globeItem(), 0.5, -0.08, 0);
+
+  /* ---------- stool ---------- */
+  var stool = new THREE.Group(); scene.add(stool);
+  (function () {
+    var R = 0.17, pts = [90, 210, 330].map(function (d) { var a = d * Math.PI / 180; return new THREE.Vector2(Math.cos(a) * R, Math.sin(a) * R); });
+    var mid = function (a, b) { return new THREE.Vector2((a.x + b.x) / 2, (a.y + b.y) / 2); };
+    var s = new THREE.Shape(), m0 = mid(pts[0], pts[1]);
+    s.moveTo(m0.x, m0.y);
+    for (var i = 1; i <= 3; i++) { var c = pts[i % 3], n = mid(pts[i % 3], pts[(i + 1) % 3]); s.quadraticCurveTo(c.x, c.y, n.x, n.y); }
+    var seat = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: 0.02, bevelEnabled: false }), birch);
+    seat.rotation.x = Math.PI / 2; seat.position.y = 0.46; seat.castShadow = seat.receiveShadow = true; stool.add(seat);
+    [90, 210, 330].forEach(function (d) {
+      var a = d * Math.PI / 180, dx = Math.cos(a), dz = -Math.sin(a);
+      var pp = [[0.09, 0.455], [0.12, 0.36], [0.16, 0.2], [0.19, 0.012]].map(function (p) { return new THREE.Vector3(dx * p[0], p[1], dz * p[0]); });
+      var tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pp), 24, 0.017, 10), birch);
+      tube.castShadow = true; stool.add(tube);
+    });
+    stool.userData = { drag: 'floor', half: [0.2, 0.2] };
+  })();
+  var stoolBase = { x: 0.05, z: 0.78, ry: 0.3 };
+  stool.position.set(stoolBase.x, 0, stoolBase.z); stool.rotation.y = stoolBase.ry;
+  var draggable = function () { return items.concat([stool]); };
+
+  /* ---------- interaction ---------- */
+  var ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  function setNdc(e) {
+    var r = renderer.domElement.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, camera);
+  }
+  function ancestor(o, key) { while (o) { if (o.userData && o.userData[key]) return o; o = o.parent; } return null; }
+  function pickItem() {
+    var hits = ray.intersectObjects(draggable(), true);
+    return hits.length ? ancestor(hits[0].object, 'drag') : null;
+  }
+  function pickDrawer() {
+    var hits = ray.intersectObjects(drawers.map(function (d) { return d.group; }), true);
+    if (!hits.length) return null;
+    // an item standing in front of the drawer wins
+    var it = ray.intersectObjects(draggable(), true);
+    if (it.length && it[0].distance < hits[0].distance) return null;
+    var g = ancestor(hits[0].object, 'drawer'); return g ? g.userData.drawer : null;
+  }
+  var drag = null, plane = new THREE.Plane(), hit = new THREE.Vector3(), downXY = null, moved = false;
+
+  stage.addEventListener('pointerdown', function (e) {
+    if (e.target !== renderer.domElement) return;
+    setNdc(e); downXY = [e.clientX, e.clientY]; moved = false;
+    var it = pickItem();
+    if (it) {
+      var y = it.userData.drag === 'desk' ? TOP_Y : 0;
+      plane.set(new THREE.Vector3(0, 1, 0), -y);
+      if (ray.ray.intersectPlane(plane, hit)) {
+        drag = { it: it, ox: it.position.x - hit.x, oz: it.position.z - hit.z };
+        controls.enabled = false; renderer.domElement.style.cursor = 'grabbing';
+      }
+    }
+  }, true);
+
+  window.addEventListener('pointermove', function (e) {
+    if (downXY && Math.abs(e.clientX - downXY[0]) + Math.abs(e.clientY - downXY[1]) > 5) moved = true;
+    setNdc(e);
+    if (drag) {
+      if (ray.ray.intersectPlane(plane, hit)) {
+        var it = drag.it, h = it.userData.half, x = hit.x + drag.ox, z = hit.z + drag.oz;
+        if (it.userData.drag === 'desk') {
+          x = Math.max(-0.6 + h[0], Math.min(0.6 - h[0], x));
+          z = Math.max(-0.275 + h[1], Math.min(0.275 - h[1], z));
+        } else {
+          x = Math.max(-1.8, Math.min(1.8, x)); z = Math.max(-0.2, Math.min(1.8, z));
+        }
+        it.position.x = x; it.position.z = z;
+      }
+    } else if (e.target === renderer.domElement) {
+      renderer.domElement.style.cursor = pickItem() ? 'grab' : (pickDrawer() ? 'pointer' : 'default');
+    }
+  });
+  window.addEventListener('pointerup', function (e) {
+    if (drag) { drag = null; controls.enabled = true; renderer.domElement.style.cursor = 'grab'; downXY = null; return; }
+    if (downXY && !moved && e.target === renderer.domElement) {
+      setNdc(e); var d = pickDrawer(); if (d) toggle(d);
+    }
+    downXY = null;
+  });
+
+  var bl = document.getElementById('dl'), br = document.getElementById('dr');
+  function sync() {
+    bl.setAttribute('aria-pressed', drawers[0].target > 0 ? 'true' : 'false');
+    br.setAttribute('aria-pressed', drawers[1].target > 0 ? 'true' : 'false');
+  }
+  function toggle(d) { d.target = d.target > 0 ? 0 : OPEN; sync(); }
+  bl.onclick = function () { toggle(drawers[0]); };
+  br.onclick = function () { toggle(drawers[1]); };
+
+  var makers = { laptop: laptopItem, mug: mugItem, plant: plantItem, book: bookItem };
+  var slots = [[0.38, 0.1], [-0.38, 0.12], [0.1, 0.12], [-0.12, 0.05], [0.48, 0.12]], slotI = 0;
+  document.querySelectorAll('[data-add]').forEach(function (b) {
+    b.onclick = function () {
+      var s = slots[slotI++ % slots.length], g = makers[b.dataset.add]();
+      var h = g.userData.half;
+      place(g, Math.max(-0.6 + h[0], Math.min(0.6 - h[0], s[0])), Math.max(-0.275 + h[1], Math.min(0.275 - h[1], s[1])), 0);
+      extras.push(g);
+    };
+  });
+  document.getElementById('reset').onclick = function () {
+    extras.forEach(function (g) { scene.remove(g); items.splice(items.indexOf(g), 1); });
+    extras.length = 0; slotI = 0;
+    base.forEach(function (b) { b.g.position.set(b.x, TOP_Y, b.z); b.g.rotation.y = b.ry; });
+    stool.position.set(stoolBase.x, 0, stoolBase.z); stool.rotation.y = stoolBase.ry;
+    drawers.forEach(function (d) { d.target = 0; }); sync();
+    camera.position.copy(home.pos); controls.target.copy(home.tgt);
+  };
+
+  /* ---------- theme + sizing + loop ---------- */
+  function applyTheme() {
+    var v = getComputedStyle(document.documentElement).getPropertyValue('--floor').trim();
+    if (v) floorMat.color.set(v);
+  }
+  applyTheme();
+  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {}
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  function resize() {
+    var w = stage.clientWidth || 800, h = stage.clientHeight || 500;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.fov = w / h < 0.9 ? 62 : 38; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage); resize();
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    drawers.forEach(function (d) { d.cur += (d.target - d.cur) * 0.14; d.group.position.z = d.cur; });
+    controls.update();
+    renderer.render(scene, camera);
+  })();
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,903 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico Nightstand 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&display=swap">
+<style>
+/* Store preview page. The section itself is a deliberate single light look, matching the store. */
+:root { --page-bg: #f4efe8; --page-ink: #2a221b; --page-muted: #76685a; color-scheme: light; }
+body {
+  background: var(--page-bg); color: var(--page-ink);
+  --jl3d-font: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  font-family: var(--jl3d-font);
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.preview-note { max-width: 1280px; margin: 0 auto 12px; font-size: 0.8rem; color: var(--page-muted); font-family: ui-monospace, Menlo, monospace; }
+/* Jalico 3D nightstand. Every rule is scoped under .jl3d so it cannot touch the store theme. */
+/* Layout: 3D window + sidebar on top, fit tools in two columns under it, inquiry last; stacks on phones */
+.jl3d {
+  --jl-bg: #f4efe8;
+  --jl-panel: #fbf8f4;
+  --jl-stage: #efe8de;
+  --jl-ink: #2a221b;
+  --jl-muted: #76685a;
+  --jl-line: #dccfbe;
+  --jl-accent: #2a221b;
+  --jl-accent-ink: #faf5ee;
+  --jl-good: #2f6b3c;
+  --jl-bad: #9a3b1f;
+  --jl-wa: #1f7a4d;
+  --jl-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color: var(--jl-ink);
+  font-family: var(--jl3d-font, inherit);
+  font-size: 15px;
+  line-height: 1.45;
+  display: grid;
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.jl3d *, .jl3d *::before, .jl3d *::after { box-sizing: border-box; }
+.jl3d [hidden] { display: none !important; }
+.jl3d h2, .jl3d h3, .jl3d p { margin: 0; }
+.jl3d h2 { font-size: 1.4rem; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.jl3d h3 { font-size: 1.05rem; font-weight: 700; }
+.jl3d .jl-eyebrow { font-family: var(--jl-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--jl-muted); }
+.jl3d .jl-small { font-size: 0.78rem; color: var(--jl-muted); }
+.jl3d .jl-card { background: var(--jl-panel); border: 1px solid var(--jl-line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+
+.jl3d .jl-top { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; }
+.jl3d .jl-viewer { position: relative; min-width: 0; height: clamp(420px, 72vh, 760px); background: var(--jl-stage); border: 1px solid var(--jl-line); border-radius: 16px; overflow: hidden; }
+.jl3d .jl-stage { position: absolute; inset: 0; }
+.jl3d .jl-stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.jl3d .jl-loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--jl-mono); font-size: 0.8rem; color: var(--jl-muted); pointer-events: none; }
+.jl3d .jl-hint { position: absolute; left: 14px; bottom: 12px; right: 190px; font-family: var(--jl-mono); font-size: 0.68rem; color: var(--jl-muted); pointer-events: none; }
+.jl3d .jl-caption {
+  position: absolute; top: 14px; right: 14px; max-width: min(320px, calc(100% - 28px));
+  background: rgba(42, 34, 27, 0.86); color: #faf5ee; border-radius: 12px; padding: 10px 14px; display: grid; gap: 4px;
+  pointer-events: none;
+}
+.jl3d .jl-caption .jl-step { font-family: var(--jl-mono); font-size: 0.66rem; letter-spacing: 0.1em; opacity: 0.75; }
+.jl3d .jl-caption p { font-size: 0.92rem; font-weight: 600; line-height: 1.3; }
+.jl3d .jl-ar {
+  position: absolute; right: 14px; bottom: 12px;
+  font: 600 0.85rem/1 inherit; font-family: inherit; color: var(--jl-accent-ink); background: var(--jl-accent);
+  border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+}
+.jl3d .jl-ar svg { width: 16px; height: 16px; }
+.jl3d .jl-ar-note { position: absolute; right: 14px; bottom: 14px; font-size: 0.72rem; color: var(--jl-muted); background: var(--jl-panel); border: 1px solid var(--jl-line); border-radius: 999px; padding: 6px 12px; }
+
+.jl3d .jl-side { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.jl3d .jl-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.jl3d .jl-btn {
+  font: inherit; font-size: 0.85rem; font-weight: 500; color: var(--jl-ink); text-align: left;
+  background: transparent; border: 1px solid var(--jl-line); border-radius: 10px;
+  padding: 8px 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; min-height: 40px;
+}
+.jl3d .jl-btn:hover { background: var(--jl-line); }
+.jl3d .jl-btn[aria-pressed="true"], .jl3d .jl-btn[aria-checked="true"] { background: var(--jl-accent); color: var(--jl-accent-ink); border-color: var(--jl-accent); }
+.jl3d .jl-btn:disabled { opacity: 0.45; cursor: default; }
+.jl3d .jl-swatch { width: 18px; height: 18px; border-radius: 5px; border: 1px solid rgba(0,0,0,0.25); flex: none; }
+.jl3d .jl-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.jl3d .jl-slider { display: grid; grid-template-columns: 92px 1fr 58px; align-items: center; gap: 8px; font-size: 0.8rem; }
+.jl3d .jl-slider output { font-family: var(--jl-mono); font-size: 0.75rem; text-align: right; font-variant-numeric: tabular-nums; }
+.jl3d input[type="range"] { width: 100%; accent-color: var(--jl-accent); }
+.jl3d .jl-check { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
+.jl3d .jl-check input { width: 18px; height: 18px; accent-color: var(--jl-accent); }
+.jl3d .jl-dims { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-family: var(--jl-mono); font-size: 0.76rem; }
+.jl3d .jl-dims dt { color: var(--jl-muted); }
+.jl3d .jl-dims dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.jl3d .jl-badge { font-family: var(--jl-mono); font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--jl-line); border-radius: 999px; padding: 3px 8px; color: var(--jl-muted); }
+.jl3d .jl-badge.is-custom { border-color: var(--jl-accent); color: var(--jl-ink); }
+.jl3d .jl-link { font: inherit; font-size: 0.78rem; color: var(--jl-ink); background: none; border: 0; padding: 2px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+.jl3d .jl-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.jl3d .jl-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.jl3d label.jl-field { display: grid; gap: 4px; font-size: 0.76rem; color: var(--jl-muted); }
+.jl3d .jl-field input, .jl3d .jl-field select, .jl3d .jl-field textarea {
+  font: inherit; font-size: 0.92rem; color: var(--jl-ink); background: #fff;
+  border: 1px solid var(--jl-line); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0;
+}
+.jl3d .jl-field textarea { min-height: 96px; resize: vertical; }
+.jl3d .jl-result { border-radius: 10px; padding: 10px 12px; display: grid; gap: 4px; font-size: 0.86rem; background: var(--jl-bg); border: 1px solid var(--jl-line); }
+.jl3d .jl-result strong { font-size: 0.95rem; }
+.jl3d .jl-result.is-good strong { color: var(--jl-good); }
+.jl3d .jl-result.is-bad strong { color: var(--jl-bad); }
+.jl3d .jl-result .jl-out { font-family: var(--jl-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.jl3d .jl-primary {
+  font: inherit; font-size: 0.88rem; font-weight: 600; color: var(--jl-accent-ink); background: var(--jl-accent);
+  border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer; justify-self: start;
+}
+.jl3d .jl-primary:disabled { opacity: 0.45; cursor: default; }
+
+.jl3d .jl-inquiry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
+.jl3d .jl-summary { margin: 0; font-family: var(--jl-mono); font-size: 0.78rem; white-space: pre-wrap; background: var(--jl-bg); border: 1px solid var(--jl-line); border-radius: 10px; padding: 10px 12px; }
+.jl3d .jl-form { display: grid; gap: 10px; }
+.jl3d .jl-intro { align-content: start; }
+.jl3d .jl-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.jl3d .jl-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.jl3d .jl-wa {
+  font: inherit; font-size: 0.88rem; font-weight: 600; color: #fff; background: var(--jl-wa);
+  border-radius: 10px; padding: 10px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.jl3d .jl-wa svg { width: 18px; height: 18px; }
+.jl3d .jl-notice { font-size: 0.82rem; border-radius: 10px; padding: 8px 12px; background: var(--jl-bg); border: 1px solid var(--jl-line); }
+.jl3d .jl-notice.is-good { color: var(--jl-good); border-color: var(--jl-good); }
+.jl3d .jl-notice.is-bad { color: var(--jl-bad); border-color: var(--jl-bad); }
+
+.jl3d .jl-modal { position: fixed; inset: 0; z-index: 1000; background: rgba(20, 15, 10, 0.6); display: grid; place-items: center; padding: 16px; }
+.jl3d .jl-modal-box { background: var(--jl-panel); border-radius: 16px; width: min(720px, 100%); display: grid; gap: 10px; padding: 14px; }
+.jl3d .jl-modal model-viewer { width: 100%; height: min(60vh, 520px); background: var(--jl-stage); border-radius: 12px; }
+
+.jl3d button:focus-visible, .jl3d a:focus-visible, .jl3d input:focus-visible, .jl3d select:focus-visible, .jl3d textarea:focus-visible { outline: 2px solid #b07a3e; outline-offset: 2px; }
+
+@media (max-width: 900px) {
+  .jl3d .jl-top, .jl3d .jl-tools, .jl3d .jl-inquiry { grid-template-columns: minmax(0, 1fr); }
+  .jl3d .jl-viewer { height: clamp(360px, 62vh, 560px); }
+}
+@media (max-width: 480px) {
+  .jl3d .jl-hint { display: none; }
+  .jl3d .jl-form-row { grid-template-columns: 1fr; }
+  .jl3d .jl-caption { left: 14px; right: 14px; max-width: none; }
+}
+
+</style>
+<p class="preview-note">Store preview · This is the section that will sit under the Nightstand product on jalicodesign.com</p>
+<div class="jl3d" data-mode="preview" data-whatsapp="1XXXXXXXXXX">
+  <div class="jl-top">
+    <section class="jl-viewer" aria-label="3D model of the nightstand">
+      <div class="jl-stage"></div>
+      <div class="jl-loading">Loading 3D model…</div>
+      <div class="jl-caption" hidden aria-live="polite"><span class="jl-step"></span><p></p></div>
+      <div class="jl-hint">Drag to rotate · Scroll or pinch to zoom · Tap a drawer to open it</div>
+      <button class="jl-ar" type="button" >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>
+        View in your room
+      </button>
+      <span class="jl-ar-note" hidden>Open this page on your phone to see it in your room</span>
+    </section>
+
+    <aside class="jl-side">
+      <section class="jl-card">
+        <span class="jl-eyebrow">Jalico · Made in the GTA</span>
+        <h2>Pet-Friendly Nightstand</h2>
+        <span class="jl-small">Finish</span>
+        <div class="jl-choices" role="radiogroup" aria-label="Finish">
+          <button class="jl-btn" type="button" role="radio" aria-checked="true" data-finish="birch"><span class="jl-swatch" style="background:#d6ad72"></span>Natural birch</button>
+          <button class="jl-btn" type="button" role="radio" aria-checked="false" data-finish="walnut"><span class="jl-swatch" style="background:#4e3221"></span>Dark walnut</button>
+        </div>
+        <span class="jl-small">Drawer fronts</span>
+        <div class="jl-choices" role="radiogroup" aria-label="Drawer fronts">
+          <button class="jl-btn" type="button" role="radio" aria-checked="true" data-fronts="white"><span class="jl-swatch" style="background:#f1eee8"></span>White</button>
+          <button class="jl-btn" type="button" role="radio" aria-checked="false" data-fronts="wood"><span class="jl-swatch jl-swatch-wood" style="background:#d6ad72"></span>Same wood</button>
+        </div>
+      </section>
+
+      <section class="jl-card" aria-label="Drawers">
+        <span class="jl-eyebrow">Drawers</span>
+        <div class="jl-choices">
+          <button class="jl-btn" type="button" aria-pressed="false" data-toggle="0">Open top</button>
+          <button class="jl-btn" type="button" aria-pressed="false" data-toggle="1">Open bottom</button>
+        </div>
+        <label class="jl-slider"><span>Top drawer</span><input type="range" min="0" max="100" value="0" data-slider="0" id="jl-slider-top"><output data-out="0">0 mm</output></label>
+        <label class="jl-slider"><span>Bottom drawer</span><input type="range" min="0" max="100" value="0" data-slider="1" id="jl-slider-bottom"><output data-out="1">0 mm</output></label>
+        <label class="jl-check"><input type="checkbox" id="jl-show-bed" checked>Show pet bed in the nook</label>
+      </section>
+
+      <section class="jl-card" aria-label="How it works">
+        <span class="jl-eyebrow">How it works</span>
+        <div class="jl-row">
+          <button class="jl-primary" type="button" data-demo>Play demo</button>
+          <label class="jl-check"><input type="checkbox" id="jl-loop">Loop</label>
+        </div>
+      </section>
+
+      <section class="jl-card" aria-label="Size">
+        <div class="jl-row"><span class="jl-eyebrow">Size</span><span class="jl-badge" data-size-badge>Standard size</span></div>
+        <dl class="jl-dims" data-dims></dl>
+        <button class="jl-link" type="button" data-reset-size hidden>Back to standard size</button>
+      </section>
+    </aside>
+  </div>
+
+  <div class="jl-tools">
+    <section class="jl-card" aria-label="Will it fit">
+      <h3>Will it fit?</h3>
+      <p class="jl-small">Enter your pet bed (or anything you want to store) to check it against the current size.</p>
+      <label class="jl-field">Where will it go?
+        <select id="jl-target" data-target>
+          <option value="nook">Pet bed in the sleeping nook</option>
+          <option value="drawer">Item in a drawer</option>
+        </select>
+      </label>
+      <div class="jl-fields">
+        <label class="jl-field">Width (mm)<input id="jl-item-w" type="number" inputmode="numeric" min="10" step="1" value="400" data-item="w"></label>
+        <label class="jl-field">Depth (mm)<input id="jl-item-d" type="number" inputmode="numeric" min="10" step="1" value="350" data-item="d"></label>
+        <label class="jl-field">Height (mm)<input id="jl-item-h" type="number" inputmode="numeric" min="10" step="1" value="90" data-item="h"></label>
+      </div>
+      <div class="jl-result" data-fit-result></div>
+    </section>
+
+    <section class="jl-card" aria-label="Resize to fit">
+      <h3>Resize the nightstand to fit it</h3>
+      <p class="jl-small">We build every piece to order. This works out the outside size that fits the item above.</p>
+      <div class="jl-result" data-resize-result></div>
+      <button class="jl-primary" type="button" data-apply-size>Show this size in 3D</button>
+    </section>
+  </div>
+
+  <section class="jl-card jl-inquiry" id="jl3d-inquiry" aria-label="Send an inquiry">
+    <div class="jl-form jl-intro">
+      <h3>Ask us about your nightstand</h3>
+      <p class="jl-small">Your choices fill in automatically. We usually reply within one business day.</p>
+      <pre class="jl-summary" data-summary></pre>
+      <div class="jl-actions">
+        <a class="jl-wa" data-whatsapp-link href="https://wa.me/1XXXXXXXXXX" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.1-1.2-.2-.2-.5-.3z"/></svg>
+          Chat on WhatsApp
+        </a>
+        <span class="jl-small">+1 XXX XXX XXXX</span>
+      </div>
+    </div>
+    <form class="jl-form jl-contact">
+      <p class="jl-notice" data-form-note hidden>This is a preview, so nothing was sent. On your store this form sends through Shopify's contact form to your store email.</p>
+      <input type="hidden" name="contact[Product]" value="Nightstand">
+      <input type="hidden" name="contact[Finish]" data-h="finish">
+      <input type="hidden" name="contact[Drawer fronts]" data-h="fronts">
+      <input type="hidden" name="contact[Size W x D x H (mm)]" data-h="size">
+      <input type="hidden" name="contact[Pet bed or item]" data-h="item">
+      <div class="jl-form-row">
+        <label class="jl-field">Name<input type="text" name="contact[name]" id="jl-name" autocomplete="name" required></label>
+        <label class="jl-field">Email<input type="email" name="contact[email]" id="jl-email" autocomplete="email" required></label>
+      </div>
+      <label class="jl-field">Phone (optional)<input type="tel" name="contact[phone]" id="jl-phone" autocomplete="tel"></label>
+      <label class="jl-field">Message<textarea name="contact[body]" id="jl-body" placeholder="Anything else? Delivery area, timing, a different size or hardware."></textarea></label>
+      <button class="jl-primary" type="submit">Send inquiry</button>
+    </form>
+  </section>
+  <div class="jl-modal" hidden role="dialog" aria-label="View in your room">
+    <div class="jl-modal-box">
+      <div class="jl-row"><strong data-ar-title></strong><button class="jl-link" data-close type="button">Close</button></div>
+      <model-viewer ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1" exposure="1" alt="3D model of the nightstand"></model-viewer>
+      <p class="jl-small">On a phone, tap the cube button inside the viewer to place the nightstand in your room. AR may not open from this private preview; on your store it uses the 3D files on the product.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/+esm';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js/+esm';
+import { RoundedBoxGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js/+esm';
+import { RoomEnvironment } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js/+esm';
+
+const root = document.querySelector('.jl3d');
+const $ = s => root.querySelector(s);
+const $$ = s => [...root.querySelectorAll(s)];
+const MODE = root.dataset.mode || 'preview';           // 'preview' (artifact) or 'shopify'
+const WA = root.dataset.whatsapp || '1XXXXXXXXXX';
+
+// ------------------------------------------------------------------
+// Sizes in millimetres. STANDARD is estimated from photos of the real piece.
+// ------------------------------------------------------------------
+const T = 18;          // board thickness
+const BACK = 6;        // back panel
+const GAP = 3;         // gap around drawer fronts
+const SLIDE = 13;      // side clearance for each drawer slide
+const DRAWER_SIDE = 12;
+const STANDARD = { W: 500, D: 400, H: 580, N: 220 };   // N = clear height of the sleeping nook
+const LIMITS = { W: [350, 900], D: [300, 600], H: [450, 900] };
+const BED_SIDE_CLEAR = 10;   // each side
+const BED_HEADROOM = 120;    // space kept above the pet bed
+const ITEM_CLEAR = 5;        // each side, for drawer items
+
+function derive(p) {
+  const innerW = p.W - 2 * T;
+  const bay = p.H - 3 * T - p.N;                // top + bottom + shelf boards
+  const frontH = (bay - 3 * GAP) / 2;
+  const boxW = innerW - 2 * SLIDE;
+  const boxH = Math.max(40, frontH - 40);
+  const boxD = p.D - BACK - T - 30;
+  return {
+    ...p, innerW, bay, frontH, boxW, boxH, boxD,
+    travel: Math.round(boxD * 0.87),
+    nookIn: { w: innerW, d: p.D - BACK, h: p.N },
+    drawerIn: { w: boxW - 2 * DRAWER_SIDE, d: boxD - 2 * DRAWER_SIDE, h: boxH - 6 },
+  };
+}
+
+const state = {
+  size: { ...STANDARD },
+  finish: 'birch',
+  fronts: 'white',
+  open: [0, 0], target: [0, 0],
+  showBed: true,
+  item: { w: 400, d: 350, h: 90 },
+  where: 'nook',
+};
+let dims = derive(state.size);
+
+// ------------------------------------------------------------------
+// Renderer and scene
+// ------------------------------------------------------------------
+const stage = $('.jl-stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#efe8de');
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(35, 1, 0.02, 50);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.maxPolarAngle = Math.PI * 0.495;
+controls.minDistance = 0.4; controls.maxDistance = 5;
+
+scene.add(new THREE.HemisphereLight(0xfff6ea, 0x8a7a66, 0.6));
+const sun = new THREE.DirectionalLight(0xfff1df, 1.5);
+sun.position.set(-1.1, 2.4, 1.8);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -1, right: 1, top: 1, bottom: -1 });
+sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.01;
+scene.add(sun);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: 0.2 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
+scene.add(floor);
+
+// ------------------------------------------------------------------
+// Wood finishes: procedural grain, planar UVs in real-world scale
+// ------------------------------------------------------------------
+const FINISHES = {
+  birch: { label: 'Natural birch', base: '#d6ad72', dark: 'rgba(165,112,52,0.22)', light: 'rgba(240,208,152,0.22)', grain: [150, 98, 46], fleck: 'rgba(244,214,165,0.35)', edge: '#3a2512', swatch: '#d6ad72' },
+  walnut: { label: 'Dark walnut', base: '#523424', dark: 'rgba(30,17,10,0.35)', light: 'rgba(120,80,52,0.22)', grain: [28, 16, 9], fleck: 'rgba(140,96,62,0.25)', edge: '#120a05', swatch: '#4e3221' },
+};
+function woodTexture(f, seed0) {
+  const S = 1024, c = document.createElement('canvas'); c.width = c.height = S;
+  const g = c.getContext('2d');
+  g.fillStyle = f.base; g.fillRect(0, 0, S, S);
+  let seed = seed0; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 28; i++) { g.fillStyle = rnd() > 0.5 ? f.dark : f.light; g.fillRect(0, rnd() * S, S, 10 + rnd() * 60); }
+  const [r, gg, b] = f.grain;
+  for (let i = 0; i < 280; i++) {
+    const y0 = rnd() * S, amp = 2 + rnd() * 9, k = (1 + Math.floor(rnd() * 3)) * Math.PI * 2 / S, ph = rnd() * 6.28;
+    g.strokeStyle = `rgba(${r + rnd() * 25 | 0},${gg + rnd() * 20 | 0},${b + rnd() * 14 | 0},${0.12 + rnd() * 0.25})`;
+    g.lineWidth = 0.6 + rnd() * 1.6;
+    g.beginPath();
+    for (let x = 0; x <= S; x += 8) { const y = y0 + Math.sin(x * k + ph) * amp; x ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.stroke();
+  }
+  for (let i = 0; i < 140; i++) { g.fillStyle = f.fleck; g.fillRect(rnd() * S, rnd() * S, 6 + rnd() * 26, 1 + rnd() * 2); }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return t;
+}
+const MATS = {};
+for (const [k, f] of Object.entries(FINISHES)) {
+  MATS[k] = {
+    wood: new THREE.MeshStandardMaterial({ map: woodTexture(f, k === 'birch' ? 11 : 29), roughness: 0.55, envMapIntensity: 0.6, name: `${k}-wood` }),
+    edge: new THREE.LineBasicMaterial({ color: f.edge, transparent: true, opacity: 0.85 }),
+  };
+}
+const drawerBoxMat = new THREE.MeshStandardMaterial({ map: woodTexture(FINISHES.birch, 5), color: 0xf6ead8, roughness: 0.7, envMapIntensity: 0.4, name: 'drawer-box' });
+const hardboard = new THREE.MeshStandardMaterial({ color: 0x8a6c4e, roughness: 0.9, name: 'hardboard' });
+const whiteFront = new THREE.MeshStandardMaterial({ color: 0xf1eee8, roughness: 0.38, envMapIntensity: 0.7, name: 'white-front' });
+const blackMatte = new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.55, metalness: 0.2, name: 'pull-black' });
+const brass = new THREE.MeshStandardMaterial({ color: 0xf0c874, roughness: 0.25, metalness: 0.9, envMapIntensity: 1.8, name: 'pull-brass' });
+const fabric = new THREE.MeshStandardMaterial({ color: 0xd8ccbc, roughness: 1, name: 'pet-bed' });
+const fabric2 = new THREE.MeshStandardMaterial({ color: 0xc9bba8, roughness: 1, name: 'pet-bed-pad' });
+
+const MM = 0.001, TILE = 0.7;
+let uvSeed = 1;
+function woodGeo(w, h, d, grain) {
+  const geo = new THREE.BoxGeometry(w * MM, h * MM, d * MM);
+  const pos = geo.attributes.position, nor = geo.attributes.normal, uv = geo.attributes.uv;
+  uvSeed = (uvSeed * 48271) % 2147483647;
+  const ou = (uvSeed % 1000) / 1000, ov = ((uvSeed / 1000 | 0) % 1000) / 1000;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    const nx = Math.abs(nor.getX(i)), ny = Math.abs(nor.getY(i));
+    let a, b;
+    if (nx > 0.5) { a = grain === 'y' ? y : z; b = grain === 'y' ? z : y; }
+    else if (ny > 0.5) { a = grain === 'z' ? z : x; b = grain === 'z' ? x : z; }
+    else { a = grain === 'y' ? y : x; b = grain === 'y' ? x : y; }
+    uv.setXY(i, a / TILE + ou, b / TILE + ov);
+  }
+  return geo;
+}
+function mesh(geo, mat, x, y, z, parent) {
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x * MM, y * MM, z * MM);
+  m.castShadow = m.receiveShadow = true;
+  parent.add(m);
+  return m;
+}
+// a board: wood (or given material) with dark outlines on every edge
+function board(w, h, d, x, y, z, grain, parent, mat) {
+  const m = mesh(woodGeo(w, h, d, grain), mat || MATS[state.finish].wood, x, y, z, parent);
+  const lines = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), MATS[state.finish].edge);
+  lines.userData.outline = true;
+  m.add(lines);
+  return m;
+}
+const box = (w, h, d) => new THREE.BoxGeometry(w * MM, h * MM, d * MM);
+const rbox = (w, h, d, r) => new RoundedBoxGeometry(w * MM, h * MM, d * MM, 3, r * MM);
+
+function makePull() {
+  const g = new THREE.Group();
+  const L = 150, C = 128, STAND = 28;
+  for (const s of [-1, 1]) mesh(box(9, 9, STAND), brass, s * C / 2, 0, STAND / 2, g);
+  mesh(rbox(L, 12.5, 9.5, 1.5), blackMatte, 0, 0, STAND + 4.5, g);
+  mesh(box(L - 16, 1.2, 5), brass, 0, 6.6, STAND + 3, g);
+  for (const s of [-1, 1]) mesh(box(5, 13, 10), brass, s * (L / 2 - 0.5), 0, STAND + 4.5, g);
+  return g;
+}
+
+// ------------------------------------------------------------------
+// Parametric build
+// ------------------------------------------------------------------
+let cabinet = null, drawers = [], bed = null;
+function disposeTree(o) {
+  o.traverse(c => { if (c.geometry) c.geometry.dispose(); });
+}
+function build(reframe = false) {
+  if (cabinet) { scene.remove(cabinet); disposeTree(cabinet); }
+  dims = derive(state.size);
+  const { W, D, H, N, innerW, frontH, boxW, boxH, boxD } = dims;
+  uvSeed = 1;
+  cabinet = new THREE.Group();
+  cabinet.name = 'Nightstand';
+
+  board(W, T, D, 0, H - T / 2, 0, 'x', cabinet);                                 // top
+  for (const s of [-1, 1]) board(T, H - T, D, s * (W - T) / 2, (H - T) / 2, 0, 'y', cabinet); // sides
+  board(innerW, T, D - BACK, 0, T / 2, BACK / 2, 'x', cabinet);                   // bottom
+  board(innerW, T, D - BACK, 0, T + N + T / 2, BACK / 2, 'x', cabinet);           // shelf over the nook
+  board(innerW, H - T, BACK, 0, (H - T) / 2, -D / 2 + BACK / 2, 'y', cabinet);    // back
+
+  const bayBottom = 2 * T + N;
+  drawers = [];
+  for (const k of [1, 0]) {                         // build bottom first, index 0 = top drawer
+    const g = new THREE.Group();
+    const yb = bayBottom + GAP + k * 0 + (k === 0 ? frontH + GAP : 0);
+    const zFront = D / 2 - T / 2;
+    const frontMat = state.fronts === 'white' ? whiteFront : MATS[state.finish].wood;
+    board(innerW - 2 * GAP, frontH, T, 0, frontH / 2, zFront, 'x', g, frontMat);
+    const zb = zFront - T / 2 - boxD / 2;
+    const st = DRAWER_SIDE, y0 = 10;
+    for (const s of [-1, 1]) board(st, boxH, boxD, s * (boxW - st) / 2, y0 + boxH / 2, zb, 'z', g, drawerBoxMat);
+    board(boxW - 2 * st, boxH, st, 0, y0 + boxH / 2, zb - boxD / 2 + st / 2, 'x', g, drawerBoxMat);
+    board(boxW - 2 * st, boxH, st, 0, y0 + boxH / 2, zFront - T / 2 - st / 2, 'x', g, drawerBoxMat);
+    mesh(box(boxW - 2 * st, 6, boxD - 2 * st), hardboard, 0, y0 + 3, zb, g);
+    const pull = makePull();
+    pull.position.set(0, frontH / 2 * MM, D / 2 * MM);
+    g.add(pull);
+    g.position.y = yb * MM;
+    g.userData.drawerIndex = k;
+    g.traverse(o => { if (o.isMesh) o.userData.drawer = k; });
+    cabinet.add(g);
+    drawers[k] = g;
+  }
+
+  // pet bed in the nook, at the size typed into the calculator when the target is the nook
+  bed = new THREE.Group();
+  bed.name = 'PetBed';
+  const bw = clampNum(state.where === 'nook' ? state.item.w : 400, 100, 1200);
+  const bd = clampNum(state.where === 'nook' ? state.item.d : 350, 100, 1200);
+  const bh = clampNum(state.where === 'nook' ? state.item.h : 90, 20, 600);
+  const r = Math.min(bh * 0.45, 30, bw / 4, bd / 4);
+  mesh(rbox(bw, bh, bd, r), fabric, 0, bh / 2, 0, bed);
+  if (bw > 120 && bd > 120) mesh(rbox(bw - 60, Math.max(bh * 0.35, 8), bd - 60, Math.min(bh * 0.15, 20)), fabric2, 0, bh * 0.82, 0, bed);
+  // the bed sits on the bottom board, against the back of the nook
+  bed.position.set(0, T * MM + 0.0005, (-D / 2 + BACK + bd / 2 + 5) * MM);
+  bed.visible = state.showBed;
+  cabinet.add(bed);
+
+  scene.add(cabinet);
+  applyDrawerPositions();
+  if (reframe) frameCamera(false);
+  updateDims();
+}
+function clampNum(v, a, b) { v = Number(v) || 0; return Math.min(b, Math.max(a, v)); }
+
+function applyDrawerPositions() {
+  drawers.forEach((g, i) => { g.position.z = ease(state.open[i]) * dims.travel * MM; });
+}
+const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+// ------------------------------------------------------------------
+// Camera: spherical goal around the cabinet; also used by the demo
+// ------------------------------------------------------------------
+const view = { theta: -0.55, phi: 1.02, r: 1 };
+let camGoal = null;
+function homeTarget() { return new THREE.Vector3(0, dims.H * 0.48 * MM, dims.D * 0.12 * MM); }
+function radiusFor(f = 1) {
+  const aspect = stage.clientWidth / Math.max(1, stage.clientHeight);
+  const m = Math.max(dims.W, dims.H, dims.D) * MM;
+  return m * 3.3 * f * (aspect < 0.9 ? 1.35 : 1);
+}
+function placeCamera(theta, phi, r, target) {
+  const s = new THREE.Spherical(r, phi, theta);
+  camera.position.copy(target).add(new THREE.Vector3().setFromSpherical(s));
+  controls.target.copy(target);
+}
+function frameCamera(animate) {
+  const target = homeTarget();
+  if (animate) camGoal = { theta: view.theta, phi: view.phi, r: radiusFor(), target };
+  else placeCamera(view.theta, view.phi, radiusFor(), target);
+}
+function stepCamera(dt) {
+  if (!camGoal) return;
+  const off = camera.position.clone().sub(controls.target);
+  const s = new THREE.Spherical().setFromVector3(off);
+  const k = Math.min(1, dt * 2.2);
+  let dTheta = camGoal.theta - s.theta;
+  dTheta = Math.atan2(Math.sin(dTheta), Math.cos(dTheta));
+  const theta = s.theta + dTheta * k, phi = s.phi + (camGoal.phi - s.phi) * k, r = s.radius + (camGoal.r - s.radius) * k;
+  const target = controls.target.clone().lerp(camGoal.target, k);
+  placeCamera(theta, phi, r, target);
+  if (Math.abs(dTheta) < 0.002 && Math.abs(camGoal.phi - phi) < 0.002 && Math.abs(camGoal.r - r) < 0.002) camGoal = null;
+}
+
+// ------------------------------------------------------------------
+// Drawer controls
+// ------------------------------------------------------------------
+const toggles = $$('[data-toggle]');
+const sliders = $$('[data-slider]');
+const outs = $$('[data-out]');
+function setTarget(i, v) { state.target[i] = Math.min(1, Math.max(0, v)); syncDrawerUI(); }
+function syncDrawerUI() {
+  toggles.forEach(b => {
+    const i = +b.dataset.toggle, open = state.target[i] > 0.5;
+    b.setAttribute('aria-pressed', open ? 'true' : 'false');
+    b.textContent = (open ? 'Close ' : 'Open ') + (i ? 'bottom' : 'top');
+  });
+  sliders.forEach(s => { const i = +s.dataset.slider; if (document.activeElement !== s) s.value = Math.round(state.target[i] * 100); });
+  outs.forEach(o => { const i = +o.dataset.out; o.textContent = Math.round(state.target[i] * dims.travel) + ' mm'; });
+}
+toggles.forEach(b => b.addEventListener('click', () => { stopDemo(); const i = +b.dataset.toggle; setTarget(i, state.target[i] > 0.5 ? 0 : 1); }));
+sliders.forEach(s => s.addEventListener('input', () => { stopDemo(); setTarget(+s.dataset.slider, s.value / 100); }));
+
+// tap a drawer in the 3D view
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+let downAt = null;
+function pickDrawer(e) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObjects(drawers, true).find(h => h.object.isMesh);
+  return hit ? hit.object.userData.drawer : null;
+}
+renderer.domElement.addEventListener('pointerdown', e => { downAt = { x: e.clientX, y: e.clientY }; });
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 6) return;
+  const i = pickDrawer(e);
+  if (i !== null && i !== undefined) { stopDemo(); setTarget(i, state.target[i] > 0.5 ? 0 : 1); }
+});
+renderer.domElement.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  const i = pickDrawer(e);
+  renderer.domElement.style.cursor = (i !== null && i !== undefined) ? 'pointer' : 'grab';
+});
+controls.addEventListener('start', () => { camGoal = null; stopDemo(); });
+
+// ------------------------------------------------------------------
+// Finish, fronts, pet bed
+// ------------------------------------------------------------------
+$$('[data-finish]').forEach(b => b.addEventListener('click', () => {
+  state.finish = b.dataset.finish;
+  $$('[data-finish]').forEach(x => x.setAttribute('aria-checked', x === b ? 'true' : 'false'));
+  $$('.jl-swatch-wood').forEach(s => { s.style.background = FINISHES[state.finish].swatch; });
+  build(); refreshAll(); updateAR();
+}));
+$$('[data-fronts]').forEach(b => b.addEventListener('click', () => {
+  state.fronts = b.dataset.fronts;
+  $$('[data-fronts]').forEach(x => x.setAttribute('aria-checked', x === b ? 'true' : 'false'));
+  build(); refreshAll();
+}));
+const bedBox = $('#jl-show-bed');
+bedBox.addEventListener('change', () => { state.showBed = bedBox.checked; if (bed) bed.visible = state.showBed; });
+
+// ------------------------------------------------------------------
+// Size display
+// ------------------------------------------------------------------
+const inch = mm => (mm / 25.4).toFixed(1);
+const isStandard = () => ['W', 'D', 'H', 'N'].every(k => state.size[k] === STANDARD[k]);
+const sizeText = s => `${s.W} × ${s.D} × ${s.H} mm`;
+function updateDims() {
+  const d = dims;
+  const rows = [
+    ['Width', `${d.W} mm`], ['Depth', `${d.D} mm`], ['Height', `${d.H} mm`],
+    ['Inches', `${inch(d.W)} × ${inch(d.D)} × ${inch(d.H)}`],
+    ['Nook inside', `${d.nookIn.w} × ${d.nookIn.d} × ${d.nookIn.h}`],
+    ['Drawer inside', `${Math.round(d.drawerIn.w)} × ${Math.round(d.drawerIn.d)} × ${Math.round(d.drawerIn.h)}`],
+    ['Drawer travel', `${d.travel} mm`], ['Boards', `${T} mm`],
+  ];
+  $('[data-dims]').innerHTML = rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('');
+  const std = isStandard();
+  const badge = $('[data-size-badge]');
+  badge.textContent = std ? 'Standard size' : 'Custom size';
+  badge.classList.toggle('is-custom', !std);
+  $('[data-reset-size]').hidden = std;
+  syncDrawerUI();
+}
+$('[data-reset-size]').addEventListener('click', () => { state.size = { ...STANDARD }; build(); frameCamera(true); refreshAll(); });
+
+// ------------------------------------------------------------------
+// Calculators
+// ------------------------------------------------------------------
+const itemInputs = $$('[data-item]');
+const targetSel = $('[data-target]');
+function readItem() {
+  itemInputs.forEach(i => { state.item[i.dataset.item] = Math.max(0, Math.round(Number(i.value) || 0)); });
+  state.where = targetSel.value;
+}
+// fit check: returns {fits, rotated, over:{w,d,h}} — width and depth may be swapped
+function fitCheck(item, where, d) {
+  const space = where === 'nook'
+    ? { w: d.nookIn.w - 2 * BED_SIDE_CLEAR, d: d.nookIn.d, h: d.nookIn.h - BED_HEADROOM }
+    : { w: d.drawerIn.w - 2 * ITEM_CLEAR, d: d.drawerIn.d - 2 * ITEM_CLEAR, h: d.drawerIn.h };
+  const tryO = (w, dd) => ({ w: w - space.w, d: dd - space.d, h: item.h - space.h });
+  const a = tryO(item.w, item.d), b = tryO(item.d, item.w);
+  const worst = o => Math.max(o.w, o.d, o.h);
+  const best = worst(a) <= worst(b) ? { o: a, rotated: false } : { o: b, rotated: true };
+  return { fits: worst(best.o) <= 0, rotated: best.rotated, over: best.o, space };
+}
+const up5 = v => Math.ceil(v / 5) * 5;
+// smallest outside size (never smaller than standard in any direction) that fits the item
+function resizeFor(item, where) {
+  const s = { ...STANDARD };
+  const w = Math.max(item.w, item.d), dd = Math.min(item.w, item.d);   // long side across the width
+  if (where === 'nook') {
+    s.W = Math.max(STANDARD.W, up5(w + 2 * BED_SIDE_CLEAR + 2 * T));
+    s.D = Math.max(STANDARD.D, up5(dd + BACK));
+    s.N = Math.max(STANDARD.N, up5(item.h + BED_HEADROOM));
+    s.H = STANDARD.H + (s.N - STANDARD.N);
+  } else {
+    s.W = Math.max(STANDARD.W, up5(w + 2 * ITEM_CLEAR + 2 * DRAWER_SIDE + 2 * SLIDE + 2 * T));
+    s.D = Math.max(STANDARD.D, up5(dd + 2 * ITEM_CLEAR + 2 * DRAWER_SIDE + 30 + T + BACK));
+    const needFrontH = item.h + 6 + 40;
+    const needBay = 2 * needFrontH + 3 * GAP;
+    s.H = Math.max(STANDARD.H, up5(needBay + 3 * T + STANDARD.N));
+  }
+  const tooBig = s.W > LIMITS.W[1] || s.D > LIMITS.D[1] || s.H > LIMITS.H[1];
+  return { size: s, tooBig, same: ['W', 'D', 'H', 'N'].every(k => s[k] === STANDARD[k]) };
+}
+let lastResize = null;
+function renderCalcs() {
+  readItem();
+  const it = state.item;
+  const label = state.where === 'nook' ? 'pet bed' : 'item';
+  const fitBox = $('[data-fit-result]'), rsBox = $('[data-resize-result]');
+  const applyBtn = $('[data-apply-size]');
+  if (!it.w || !it.d || !it.h) {
+    fitBox.className = 'jl-result'; fitBox.innerHTML = '<span>Enter all three sizes to check.</span>';
+    rsBox.className = 'jl-result'; rsBox.innerHTML = '<span>Enter all three sizes to see a custom size.</span>';
+    applyBtn.disabled = true; lastResize = null; return;
+  }
+  const f = fitCheck(it, state.where, dims);
+  const where = state.where === 'nook' ? 'the sleeping nook' : 'a drawer';
+  if (f.fits) {
+    fitBox.className = 'jl-result is-good';
+    fitBox.innerHTML = `<strong>Fits in ${where}${f.rotated ? ' (turned sideways)' : ''}</strong>
+      <span>Space for it: ${f.space.w} × ${f.space.d} × ${f.space.h} mm${state.where === 'nook' ? ` (keeps ${BED_SIDE_CLEAR} mm each side and ${BED_HEADROOM} mm above for your pet)` : ''}.</span>
+      <span class="jl-out">Outside size: ${sizeText(dims)} (${inch(dims.W)} × ${inch(dims.D)} × ${inch(dims.H)} in)</span>`;
+  } else {
+    const parts = [];
+    if (f.over.w > 0) parts.push(`${f.over.w} mm too wide`);
+    if (f.over.d > 0) parts.push(`${f.over.d} mm too deep`);
+    if (f.over.h > 0) parts.push(`${f.over.h} mm too tall`);
+    fitBox.className = 'jl-result is-bad';
+    fitBox.innerHTML = `<strong>Doesn't fit at this size</strong><span>Your ${label} is ${parts.join(', ')}.</span>
+      <span class="jl-out">Outside size: ${sizeText(dims)}</span>`;
+  }
+  const r = resizeFor(it, state.where);
+  lastResize = r;
+  const s = r.size;
+  if (r.same) {
+    rsBox.className = 'jl-result is-good';
+    rsBox.innerHTML = `<strong>The standard size already fits</strong><span class="jl-out">Outside size: ${sizeText(s)} (${inch(s.W)} × ${inch(s.D)} × ${inch(s.H)} in)</span>`;
+  } else {
+    rsBox.className = 'jl-result' + (r.tooBig ? ' is-bad' : ' is-good');
+    rsBox.innerHTML = `<strong>${r.tooBig ? 'Bigger than we usually build' : 'Custom size that fits'}</strong>
+      <span class="jl-out">Outside size: ${sizeText(s)}<br>(${inch(s.W)} × ${inch(s.D)} × ${inch(s.H)} in, W × D × H)</span>
+      ${state.where === 'nook' ? `<span>Nook inside: ${s.W - 2 * T} × ${s.D - BACK} × ${s.N} mm</span>` : ''}
+      ${r.tooBig ? '<span>Send us an inquiry and we will tell you what we can do.</span>' : ''}`;
+  }
+  applyBtn.disabled = false;
+  applyBtn.textContent = r.same ? 'Show standard size in 3D' : 'Show this size in 3D';
+}
+itemInputs.forEach(i => i.addEventListener('input', () => { renderCalcs(); refreshBedOnly(); refreshSummary(); }));
+targetSel.addEventListener('change', () => { renderCalcs(); refreshBedOnly(); refreshSummary(); });
+$('[data-apply-size]').addEventListener('click', () => {
+  if (!lastResize) return;
+  state.size = { ...lastResize.size };
+  build(); frameCamera(true); refreshAll();
+  if (state.where === 'drawer') setTarget(0, 1);
+});
+let bedTimer = 0;
+function refreshBedOnly() { clearTimeout(bedTimer); bedTimer = setTimeout(() => { build(); }, 250); }
+
+// ------------------------------------------------------------------
+// Inquiry summary, Shopify form fields, WhatsApp link
+// ------------------------------------------------------------------
+function summaryLines() {
+  const f = fitCheck(state.item, state.where, dims);
+  const it = state.item;
+  const lines = [
+    `Finish: ${FINISHES[state.finish].label}`,
+    `Drawer fronts: ${state.fronts === 'white' ? 'White' : 'Same wood'}`,
+    `Size: ${sizeText(dims)} (W × D × H)${isStandard() ? ', standard' : ', custom'}`,
+    `Sleeping nook inside: ${dims.nookIn.w} × ${dims.nookIn.d} × ${dims.nookIn.h} mm`,
+  ];
+  if (it.w && it.d && it.h) lines.push(`${state.where === 'nook' ? 'Pet bed' : 'Drawer item'}: ${it.w} × ${it.d} × ${it.h} mm (${f.fits ? 'fits' : 'does not fit at this size'})`);
+  return lines;
+}
+function refreshSummary() {
+  const lines = summaryLines();
+  $('[data-summary]').textContent = lines.join('\n');
+  const set = (k, v) => { const el = $(`[data-h="${k}"]`); if (el) el.value = v; };
+  set('finish', FINISHES[state.finish].label);
+  set('fronts', state.fronts === 'white' ? 'White' : 'Same wood');
+  set('size', `${dims.W} x ${dims.D} x ${dims.H}${isStandard() ? ' (standard)' : ' (custom)'}`);
+  set('item', lines[4] || 'Not entered');
+  const text = `Hi Jalico, I'm interested in the Nightstand.\n${lines.join('\n')}`;
+  $('[data-whatsapp-link]').href = `https://wa.me/${WA}?text=${encodeURIComponent(text)}`;
+}
+function refreshAll() { renderCalcs(); refreshSummary(); updateDims(); }
+
+const form = $('form.jl-contact');
+if (form && MODE === 'preview') {
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const n = $('[data-form-note]');
+    n.hidden = false;
+  });
+}
+
+// ------------------------------------------------------------------
+// Demo: step captions in the top-right corner of the 3D view
+// ------------------------------------------------------------------
+const STEPS = [
+  { text: () => `Built from 18 mm ${FINISHES[state.finish].label.toLowerCase()} boards`, cam: [-0.55, 1.0, 1], act: () => { setTarget(0, 0); setTarget(1, 0); } },
+  { text: () => 'The top drawer slides out on full-extension runners', cam: [-0.35, 0.9, 0.95], act: () => setTarget(0, 1) },
+  { text: () => 'The bottom drawer holds the bigger things', cam: [-0.2, 1.05, 0.95], act: () => { setTarget(0, 0); setTarget(1, 1); } },
+  { text: () => 'Both drawers close flush with the frame', cam: [0.6, 1.05, 1.05], act: () => { setTarget(0, 0); setTarget(1, 0); } },
+  { text: () => 'The open nook below is a sleeping spot for your pet', cam: [0.05, 1.32, 0.85], act: () => { if (bed) bed.visible = true; }, low: true },
+  { text: () => 'Made to order in your size and finish', cam: [-1.1, 1.0, 1.1], act: () => { if (bed) bed.visible = state.showBed; } },
+];
+const STEP_MS = 3400;
+const capEl = $('.jl-caption'), capStep = capEl.querySelector('.jl-step'), capText = capEl.querySelector('p');
+const demoBtn = $('[data-demo]'), loopBox = $('#jl-loop');
+let demo = null;
+function runStep(i) {
+  if (!demo) return;
+  if (i >= STEPS.length) {
+    if (loopBox.checked) i = 0; else { stopDemo(); return; }
+  }
+  const s = STEPS[i];
+  demo.i = i;
+  s.act();
+  const t = homeTarget();
+  if (s.low) t.y = (T + dims.N * 0.5) * MM;
+  camGoal = { theta: s.cam[0], phi: s.cam[1], r: radiusFor(s.cam[2]), target: t };
+  capStep.textContent = `STEP ${i + 1} / ${STEPS.length}`;
+  capText.textContent = s.text();
+  capEl.hidden = false;
+  demo.timer = setTimeout(() => runStep(i + 1), STEP_MS);
+}
+function startDemo() { stopDemo(); demo = { i: 0, timer: 0 }; demoBtn.textContent = 'Stop demo'; runStep(0); }
+function stopDemo() {
+  if (!demo) return;
+  clearTimeout(demo.timer); demo = null;
+  capEl.hidden = true; demoBtn.textContent = 'Play demo';
+  if (bed) bed.visible = state.showBed;
+}
+demoBtn.addEventListener('click', () => (demo ? stopDemo() : startDemo()));
+
+// ------------------------------------------------------------------
+// AR: Shopify XR on the store, model-viewer in the preview
+// ------------------------------------------------------------------
+const arBtn = $('.jl-ar'), arNote = $('.jl-ar-note');
+function updateAR() {
+  if (MODE === 'shopify') {
+    const ids = JSON.parse(root.dataset.models || '{}');
+    const id = ids[state.finish] || ids.birch || ids.walnut;
+    if (!id) { arBtn.hidden = true; arNote.hidden = true; return; }
+    arBtn.setAttribute('data-shopify-model3d-id', id);
+  }
+}
+if (MODE === 'shopify') {
+  updateAR();
+  const models = JSON.parse(root.dataset.modelsJson || '[]');
+  if (models.length && window.Shopify && Shopify.loadFeatures) {
+    Shopify.loadFeatures([{ name: 'shopify-xr', version: '1.0', onLoad: err => {
+      if (err) return;
+      window.ShopifyXR.addModels(models);
+      window.ShopifyXR.setupXRElements();
+      setTimeout(() => { if (arBtn.hasAttribute('data-shopify-xr-hidden')) { arBtn.hidden = true; arNote.hidden = false; } }, 300);
+    } }]);
+  } else { arBtn.hidden = true; }
+} else {
+  const modal = $('.jl-modal');
+  let mvLoaded = false;
+  arBtn.addEventListener('click', async () => {
+    if (!mvLoaded) { await import('https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js'); mvLoaded = true; }
+    const mv = modal.querySelector('model-viewer');
+    const buf = await exportGLB(state.finish);
+    if (mv.dataset.url) URL.revokeObjectURL(mv.dataset.url);
+    mv.dataset.url = URL.createObjectURL(new Blob([buf], { type: 'model/gltf-binary' }));
+    mv.setAttribute('src', mv.dataset.url);
+    modal.querySelector('[data-ar-title]').textContent = `Nightstand, ${FINISHES[state.finish].label.toLowerCase()}`;
+    modal.hidden = false;
+  });
+  modal.addEventListener('click', e => { if (e.target === modal || e.target.closest('[data-close]')) modal.hidden = true; });
+}
+
+// GLB of the current finish: drawers closed, no outlines, no pet bed (same file as the Shopify product media)
+async function exportGLB(finish) {
+  const { GLTFExporter } = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/exporters/GLTFExporter.js/+esm');
+  const keep = { finish: state.finish, open: [...state.open], target: [...state.target] };
+  state.finish = finish; state.open = [0, 0]; state.target = [0, 0];
+  build();
+  const copy = cabinet.clone(true);
+  const drop = [];
+  copy.traverse(o => { if (o.userData.outline || o.name === 'PetBed') drop.push(o); });
+  drop.forEach(o => o.parent.remove(o));
+  copy.name = `Jalico Nightstand (${finish})`;
+  copy.updateMatrixWorld(true);
+  const buf = await new GLTFExporter().parseAsync(copy, { binary: true, maxTextureSize: 1024 });
+  state.finish = keep.finish; state.open = keep.open; state.target = keep.target;
+  build();
+  return buf;
+}
+
+// ------------------------------------------------------------------
+// Loop
+// ------------------------------------------------------------------
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.fov = w / h < 0.9 ? 44 : 35;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  let moved = false;
+  for (let i = 0; i < 2; i++) {
+    const d = state.target[i] - state.open[i];
+    if (d) { state.open[i] += Math.sign(d) * Math.min(reduce ? 1 : dt * 1.6, Math.abs(d)); moved = true; }
+  }
+  if (moved) applyDrawerPositions();
+  stepCamera(reduce ? 1 : dt);
+  controls.update();
+  renderer.render(scene, camera);
+});
+
+build(true);
+refreshAll();
+$('.jl-loading').hidden = true;
+
+// hooks for exporting the GLB files from this exact model
+window.__jl3d = { exportGLB };
+
+</script>
+
+</body></html>

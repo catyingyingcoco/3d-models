@@ -1,0 +1,591 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico 玄關衣帽櫃 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* Layout: brand bar, then a large 3D stage with a spec sidebar that stacks under it on phones */
+:root{
+  --oat:#F3ECE1; --walnut:#2A2119; --teak:#B5602A; --wood-lt:#DCCDB6; --wood-lt2:#E6D9C6; --amber:#E8A15C;
+  --bg:var(--oat); --fg:var(--walnut); --muted:#6B5A49; --card:var(--wood-lt2); --line:#CDBBA0; --stage:#EAE0D0; --accent:var(--teak); --on-accent:#fff;
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1E1812;--fg:#F3ECE1;--muted:#BCA98F;--card:#2C241C;--line:#4A3D30;--stage:#2A2119;--accent:var(--amber);--on-accent:#2A2119;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1E1812;--fg:#F3ECE1;--muted:#BCA98F;--card:#2C241C;--line:#4A3D30;--stage:#2A2119;--accent:var(--amber);--on-accent:#2A2119;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
+.tag{background:var(--walnut);color:var(--oat);font-weight:700;letter-spacing:.14em;font-size:12px;padding:5px 12px;border-radius:8px}
+h1{font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);margin:0;text-wrap:balance;line-height:1.25}
+.sub{color:var(--muted);margin:0;font-size:14px;flex-basis:100%}
+.seg{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg .btn{border-radius:999px;padding:9px 14px;font-size:14px}
+.sep{width:1px;height:24px;background:var(--line);margin:0 4px}
+.chip{font:inherit;font-size:14px;border:1.5px solid var(--line);background:transparent;color:var(--fg);padding:8px 14px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;align-items:start}
+@media (max-width:820px){.main{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;background:var(--stage);border-radius:14px;overflow:hidden;aspect-ratio:4/3.4;max-width:100%}
+.stage canvas{display:block;width:100%!important;height:100%!important;touch-action:none}
+.hint{position:absolute;left:12px;bottom:10px;font-size:12px;color:var(--muted);pointer-events:none}
+.tools{position:absolute;top:12px;left:12px;right:12px;display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-size:13px;font-weight:500;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+aside{display:grid;gap:14px;min-width:0}
+.panel{background:var(--card);border-radius:12px;padding:16px;display:grid;gap:10px}
+.panel h2{font-family:var(--serif);font-size:16px;margin:4px 0 0}
+.lbl{font-size:11px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+.dims{display:grid;gap:8px}
+.dim{display:grid;grid-template-columns:4.2em 1fr 4.4em;align-items:center;gap:8px;font-size:13px}
+.dim input[type=range]{width:100%;accent-color:var(--accent)}
+.dim output{font-variant-numeric:tabular-nums;text-align:right;font-weight:500}
+.total{font-size:13px;font-variant-numeric:tabular-nums;border-top:1px solid var(--line);padding-top:8px}
+.toggle{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+ul.parts{margin:0;padding-left:1.1em;font-size:13.5px;display:grid;gap:4px}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+.items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.item{font:inherit;font-size:13px;padding:8px 4px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;text-align:center}
+.item[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent);font-weight:700}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sw{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px}
+.sw.def{width:auto;border-radius:999px;padding:0 10px;font:inherit;font-size:12px;background:var(--bg);color:var(--fg)}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.btn.ghost{background:transparent;box-shadow:none;border:1.5px solid var(--line)}
+.item:focus-visible,.sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.toast{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);background:var(--walnut);color:var(--oat);font-size:13px;padding:8px 14px;border-radius:999px;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="tag">JALICO</span>
+    <h1>雙面玄關衣帽櫃 3D 模型</h1>
+    <p class="sub">一入大門就對住 B 面，櫃嘅另一邊係房門同 A 面。喺右邊揀件物件，櫃入面會亮出放得落嘅位置，撳一下就擺入去。拖動旋轉、捏合／滾輪縮放。</p>
+  </header>
+
+  <div class="seg" role="group" aria-label="視角">
+    <button class="chip" id="viewA" aria-pressed="true">睇 A 面｜三門</button>
+    <button class="chip" id="viewB" aria-pressed="false">睇 B 面｜雙門＋側架</button>
+    <button class="chip" id="viewS" aria-pressed="false">側面</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="btn primary" id="allDoors">開晒門</button>
+    <button class="btn ghost" id="dimBtn">隱藏尺寸</button>
+    <button class="btn ghost" id="itemsBtn">擺物件</button>
+  </div>
+
+  <div class="main">
+    <div class="stage" id="stage">
+      <div class="hint">直接撑門可以逐道開關｜單位：cm</div>
+      <div class="toast" id="toast" hidden></div>
+    </div>
+
+    <aside>
+      <div class="panel" id="itemsPanel" hidden>
+        <span class="lbl">擺放物件</span>
+        <div class="items" id="items"></div>
+        <div class="swatches" id="swatches" aria-label="顏色"></div>
+        <p class="note">揀物件 → 撳發亮嘅位置擺入去。冇揀物件嗰陣，撳櫃入面嘅物件就會拎走佢。太高或者格位滿咗會提你。</p>
+        <div class="row">
+          <button class="btn ghost" id="clearItems">清空全部</button>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="lbl">選配</span>
+        <label class="toggle"><input type="checkbox" id="room" checked> 顯示家居場景（大門、房門、牆）</label>
+        <label class="toggle"><input type="checkbox" id="decor" checked> 窗、窗簾同發財樹</label>
+        <label class="toggle"><input type="checkbox" id="sunfx" checked> 窗邊陽光同陰影</label>
+        <label class="toggle"><input type="checkbox" id="bench" checked> B 面加鞋凳（坐墊＋抽屜）</label>
+        <p class="note">唔加鞋凳嘅話，側架會落到地，多兩格層架。</p>
+      </div>
+      <div class="panel">
+        <span class="lbl">尺寸（可調）</span>
+        <div class="dims">
+          <label class="dim"><span>闊 W</span><input type="range" id="inW" min="80" max="160" step="1"><output id="oW"></output></label>
+          <label class="dim"><span>高 H</span><input type="range" id="inH" min="170" max="240" step="1"><output id="oH"></output></label>
+          <label class="dim"><span>A 面深</span><input type="range" id="inA" min="25" max="55" step="1"><output id="oA"></output></label>
+          <label class="dim"><span>B 面深</span><input type="range" id="inB" min="25" max="55" step="1"><output id="oB"></output></label>
+          <label class="dim" id="benchRow"><span>鞋凳長</span><input type="range" id="inL" min="60" max="160" step="1"><output id="oL"></output></label>
+        </div>
+        <div class="total" id="total"></div>
+        <p class="note">預設數值係由相片比例估算，唔係實際量度。用返圖紙尺寸拉一拉就啱。</p>
+      </div>
+      <div class="panel">
+        <span class="lbl">內部間隔</span>
+        <h2>A 面（走廊）</h2>
+        <ul class="parts">
+          <li>左窄格：上層放手提吸塵機，下面高位放直立吸塵機</li>
+          <li>右雙門格：頂層儲物板＋背板掛鈎排</li>
+          <li>右格底：鞋板＋地台放拖鞋</li>
+        </ul>
+        <h2>B 面（玄關）</h2>
+        <ul class="parts">
+          <li>雙門格：頂層儲物板＋掛鈎排＋橫棍掛冬褸</li>
+          <li>雙門格底：鞋板＋地台</li>
+          <li>側架：上方係固定門板（唔開），下方開放層架</li>
+          <li id="benchPart">鞋凳：坐墊＋側抽屜，下面開放放鞋</li>
+        </ul>
+        <p class="note">A 面左邊窄格同 B 面側架中間有幅木板隔住。B 面右上角固定門板後面嘅空間，屬於 A 面左格頂層，深度貫通成個櫃。其餘位置冇背板，開 A 面中門或右門可以直接摸到 B 面嘅衣服，反之亦然。</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;
+stage.prepend(renderer.domElement);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(38,1,1,5000);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.maxPolarAngle=Math.PI*0.52; controls.minDistance=80; controls.maxDistance=1100;
+
+const hemi=new THREE.HemisphereLight(0xfff6ea,0x8a7660,0.75);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xffffff,0.6);
+sun.position.set(-160,340,200); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-300,right:300,top:300,bottom:-300,near:10,far:1000}); sun.shadow.bias=-0.0005;
+scene.add(sun);
+const fill1=new THREE.DirectionalLight(0xffe9d2,0.3); fill1.position.set(250,150,250); scene.add(fill1);
+const fill2=new THREE.DirectionalLight(0xffe9d2,0.3); fill2.position.set(-200,150,-260); scene.add(fill2);
+
+function grainTex(base,line,seed){
+  const c=document.createElement('canvas');c.width=c.height=512;const g=c.getContext('2d');
+  g.fillStyle=base;g.fillRect(0,0,512,512);
+  let s=seed;const r=()=>{s=(s*9301+49297)%233280;return s/233280};
+  for(let i=0;i<70;i++){g.strokeStyle=line;g.globalAlpha=0.05+r()*0.12;g.lineWidth=0.6+r()*1.8;
+    const x0=r()*512,amp=4+r()*14,f=0.004+r()*0.012,ph=r()*6;
+    g.beginPath();for(let y=0;y<=512;y+=8){const x=x0+Math.sin(y*f+ph)*amp;y?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();}
+  g.globalAlpha=1;const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t;
+}
+const M={
+  wood:new THREE.MeshStandardMaterial({map:grainTex('#E6C9A2','#B98A5A',7),roughness:0.62}),
+  door:new THREE.MeshStandardMaterial({map:grainTex('#E9CDA7','#B5845A',3),roughness:0.55}),
+  inner:new THREE.MeshStandardMaterial({map:grainTex('#E2C59E','#A87C52',11),roughness:0.7}),
+  back:new THREE.MeshStandardMaterial({map:grainTex('#DDBF98','#A87C52',19),roughness:0.8}),
+  black:new THREE.MeshStandardMaterial({color:0x1d1b1a,roughness:0.4,metalness:0.4}),
+  steel:new THREE.MeshStandardMaterial({color:0xbfc3c6,roughness:0.3,metalness:0.8}),
+  rod:new THREE.MeshStandardMaterial({color:0xf2f2f0,roughness:0.4}),
+  cushion:new THREE.MeshStandardMaterial({color:0xF1E9DA,roughness:0.95}),
+};
+(function(){
+  const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');
+  g.fillStyle='#EFEAE3';g.fillRect(0,0,256,256);g.strokeStyle='#C9BFB2';g.lineWidth=3;g.strokeRect(0,0,256,256);
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(20,20);t.encoding=THREE.sRGBEncoding;
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(1200,1200),new THREE.MeshStandardMaterial({map:t,roughness:0.5}));
+  floor.rotation.x=-Math.PI/2;floor.position.y=-0.05;floor.receiveShadow=true;scene.add(floor);
+})();
+
+const matCache={};
+function mc(hex,r=0.85,m=0,op=1){const k=hex+'|'+r+'|'+m+'|'+op;if(!matCache[k]){const c=new THREE.Color(hex).convertSRGBToLinear();
+  matCache[k]=new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m,transparent:op<1,opacity:op})}return matCache[k]}
+const dark=(hex,f)=>'#'+new THREE.Color(hex).multiplyScalar(f).getHexString();
+function mk(geo,mat,x,y,z,p){const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;p.add(o);return o}
+function taper(wT,wB,h,d){const g=new THREE.BoxGeometry(1,h,d),a=g.attributes.position;for(let i=0;i<a.count;i++)a.setX(i,a.getX(i)*(a.getY(i)>0?wT:wB));g.computeVertexNormals();return g}
+const B3=(w,h,d)=>new THREE.BoxGeometry(w,h,d);
+const CY=(r,h,x)=>{const g=new THREE.CylinderGeometry(r,r,h,18);if(x)g.rotateZ(Math.PI/2);return g};
+
+/* ---------- item models: bottom at y=0, centred on x/z, front = +z ---------- */
+function coatM(col,len,kind){const g=new THREE.Group(),m=mc(col,0.9),d=kind==='puffer'?18:14,wB=kind==='coatLong'?36:31,wT=26;
+  mk(taper(wT,wB,len,d),m,0,len/2,0,g);
+  const sl=len*(kind==='coatLong'?0.6:0.8);
+  [-1,1].forEach(s=>{const o=mk(taper(7,9,sl,d*0.8),m,s*16,len-sl/2-2,0,g);o.rotation.z=s*0.07});
+  mk(B3(15,7,d*0.7),m,0,len+2,-d*0.1,g);
+  if(kind==='puffer')for(let y=8;y<len-4;y+=11){const w=wB+(wT-wB)*y/len+1.5;mk(B3(w,2.4,d+1.2),mc(dark(col,0.85),0.9),0,y,0,g)}
+  if(kind==='coatLong')mk(B3(wB-(wB-wT)*0.5+0.8,3,d+0.8),mc(dark(col,0.8),0.9),0,len*0.5,0,g);
+  if(kind==='jacket')mk(B3(0.7,len*0.92,0.4),mc('#1a1a1a',0.5,0.4),0,len*0.48,d/2+0.2,g);
+  return g}
+function slippersM(col){const g=new THREE.Group(),m=mc(col,0.9);[-5.5,5.5].forEach(x=>{mk(B3(9,2.5,25),m,x,1.25,0,g);mk(B3(9.6,4,9),m,x,4,5,g)});return g}
+function sneakersM(col){const g=new THREE.Group(),m=mc(col,0.8),w=mc('#F2F0EC',0.8);[-5.8,5.8].forEach(x=>{mk(B3(9.5,3,27),w,x,1.5,0,g);mk(taper(8,9,7.5,21),m,x,6.75,-2.5,g);mk(B3(8.5,4.5,6),m,x,5.2,9.5,g)});return g}
+function bootsM(col){const g=new THREE.Group(),m=mc(col,0.7),s=mc('#3a2e25',0.8);[-5.8,5.8].forEach(x=>{mk(B3(9.5,3,25),s,x,1.5,0,g);mk(B3(9,8,22),m,x,7,1,g);mk(B3(9,20,11),m,x,20,-6,g)});return g}
+function vacM(){const g=new THREE.Group(),gr=mc('#6f7378',0.5,0.3),pu=mc('#7d6aa3',0.4,0.2),dk=mc('#2a2a2e',0.6);
+  mk(B3(26,9,20),gr,0,4.5,2,g);mk(CY(4,24,true),dk,0,4,10,g);mk(CY(7,44),pu,0,31,-3,g);mk(CY(5.2,20),mc('#b9bcc4',0.2,0,0.7),0,44,-3,g);
+  mk(CY(1.6,52),gr,0,78,-9,g);const h=mk(new THREE.TorusGeometry(6,1.5,8,20),pu,0,104,-9,g);return g}
+function cleanerM(){const g=new THREE.Group();mk(B3(24,6,20),mc('#22305a',0.6),0,3,0,g);mk(B3(22,16,16),mc('#2E4A8a',0.5),0,14,-1,g);
+  mk(B3(10,12,12),mc('#9cc3e6',0.2,0,0.75),-5,14,1,g);const t=mk(new THREE.TorusGeometry(6,1,6,20),mc('#151515',0.6),4,13,8,g);return g}
+function boxM(){const g=new THREE.Group();mk(B3(29,13,26),mc('#C9A27A',0.9),0,6.5,0,g);mk(B3(30,2.5,27),mc('#B98E65',0.9),0,14.2,0,g);mk(B3(10,4,0.3),mc('#F5F2EA',0.9),0,8,13.1,g);return g}
+function bagM(col){const g=new THREE.Group(),m=mc(col,0.6);mk(taper(23,28,25,10),m,0,12.5,0,g);[-2.5,2.5].forEach(z=>mk(new THREE.TorusGeometry(7,0.8,8,20,Math.PI),m,0,25,z,g));return g}
+function capM(col){const g=new THREE.Group(),m=mc(col,0.9);const c=mk(new THREE.SphereGeometry(9,20,10,0,Math.PI*2,0,Math.PI/2),m,0,0,-2,g);c.scale.set(1,0.85,1.1);
+  mk(B3(15,0.8,9),m,0,0.4,10,g);mk(new THREE.SphereGeometry(1,8,6),m,0,7.8,-2,g);return g}
+function umbrellaM(col){const g=new THREE.Group(),m=mc(col,0.7),dk=mc('#2a2a2a',0.5,0.3);
+  mk(CY(0.6,84),dk,0,44,0,g);const c=mk(new THREE.ConeGeometry(4.5,62,16),m,0,42,0,g);c.rotation.x=Math.PI;
+  mk(CY(0.4,6),dk,0,3,0,g);mk(new THREE.TorusGeometry(3.2,0.8,8,16,Math.PI),dk,3.2,86,0,g);return g}
+function catM(){const g=new THREE.Group(),w=mc('#F4F1EA',0.95),o=mc('#D98A3D',0.95),k=mc('#2B2522',0.95);
+  const b=mk(new THREE.SphereGeometry(1,22,14),w,0,8.5,0,g);b.scale.set(10,8.5,15);
+  mk(new THREE.SphereGeometry(6.5,20,14),w,0,15,13,g);
+  [-1,1].forEach(s=>{const e=mk(new THREE.ConeGeometry(2.4,4.5,4),s<0?k:o,s*3.6,21,12.5,g);e.rotation.z=-s*0.2});
+  [[3,15.5,-3,5,2.2,6,o],[-4.5,14.5,5,4,2.2,4.5,k],[-2.5,19.8,13.5,3.5,2.2,3.2,o],[5,9,-9,3,4,4,k]].forEach(([x,y,z,a,bb,c,mm])=>{const p=mk(new THREE.SphereGeometry(1,14,10),mm,x,y,z,g);p.scale.set(a,bb,c)});
+  [-2.3,2.3].forEach(x=>mk(new THREE.SphereGeometry(0.8,8,6),k,x,16,19,g));
+  const t=mk(new THREE.TorusGeometry(8,1.4,8,18,Math.PI),o,0,1.4,-2,g);t.rotation.x=-Math.PI/2;t.rotation.z=Math.PI/2;
+  return g}
+
+const ITEMS=[
+  {id:'coatLong',name:'長大褸',types:['hang'],w:22,h:105,tint:1,def:'#CDB497',build:c=>coatM(c,100,'coatLong')},
+  {id:'puffer',name:'羽絨',types:['hang'],w:24,h:90,tint:1,def:'#222222',build:c=>coatM(c,85,'puffer')},
+  {id:'jacket',name:'短外套',types:['hang'],w:22,h:72,tint:1,def:'#2E3A55',build:c=>coatM(c,68,'jacket')},
+  {id:'bag',name:'手袋',types:['hang','shelf','bench'],w:30,h:33,tint:1,def:'#7A5236',build:bagM},
+  {id:'cap',name:'帽',types:['hang','shelf','bench'],w:20,h:8,tint:1,def:'#2E3A55',build:capM},
+  {id:'umbrella',name:'雨遮',types:['hang','tall'],w:10,h:90,tint:1,def:'#2E3A55',build:umbrellaM},
+  {id:'slippers',name:'拖鞋',types:['shoe','under','shelf'],w:22,h:6,tint:1,def:'#E6B8C3',build:slippersM},
+  {id:'sneakers',name:'波鞋',types:['shoe','under','shelf'],w:23,h:11,tint:1,def:'#8C8C8C',build:sneakersM},
+  {id:'boots',name:'短靴',types:['shoe','under'],w:22,h:31,tint:1,def:'#7A5236',build:bootsM},
+  {id:'vac',name:'直立吸塵機',types:['tall'],w:30,h:110,build:vacM},
+  {id:'cleaner',name:'地氈清潔機',types:['shelf','tall'],w:30,h:26,build:cleanerM},
+  {id:'box',name:'儲物盒',types:['shelf','shoe'],w:30,h:16,build:boxM},
+  {id:'cat',name:'三花貓',types:['bench'],w:22,h:23,build:catM},
+];
+const ITEM=Object.fromEntries(ITEMS.map(i=>[i.id,i]));
+const SW=[['預設',null],['米色','#CDB497'],['黑色','#222222'],['灰色','#8C8C8C'],['粉紅','#E6A6B5'],['海軍藍','#2E3A55'],['啡色','#7A5236']];
+
+/* ---------- slots: places inside the cabinet that take items ---------- */
+let slots=[];
+function slot(p,id,name,face,types,o){slots.push(Object.assign({id,name,face,parent:p,types,axis:'x',rot:0},o))}
+
+const T=1.8;
+function box(p,x,y,z,w,h,d,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x+w/2,y+h/2,z+d/2);o.castShadow=o.receiveShadow=true;p.add(o);return o}
+function rod(p,r,len,pos){const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,len,16),M.rod);o.position.copy(pos);o.rotation.z=Math.PI/2;o.castShadow=true;p.add(o)}
+let doors=[],drawers=[],labels=[],face='A';
+function door(p,xh,y,z,w,h,side,handle,key){
+  const g=new THREE.Group();g.position.set(xh,0,z);p.add(g);
+  box(g,side>0?0:-w,y,0,w,h,T,M.door);
+  [0.1,0.5,0.9].forEach(f=>box(g,side>0?1:-4,y+h*f-2,-1.2,3,4,1.2,M.steel));
+  if(handle){const hx=side>0?w-5:-w+4;box(g,hx,handle.y,T,1,handle.len,1.2,M.black);
+    box(g,hx,handle.y,T-0.1,1,1.2,2.6,M.black);box(g,hx,handle.y+handle.len-1.2,T-0.1,1,1.2,2.6,M.black)}
+  const atWall=(face==='A'&&xh===0)||(face==='B'&&xh===C.W);
+  const k=key||face+doors.length;g.traverse(m=>m.userData.door=k);
+  doors.push({g,target:-side*(atWall?1.5:1.92),face:k});
+}
+function hookRail(p,x,y,z,len,n){box(p,x,y,z,len,2.5,0.6,M.black);
+  for(let i=0;i<n;i++){const hx=x+len*(i+0.5)/n;box(p,hx-0.4,y-3,z+0.6,0.8,0.8,4,M.black);box(p,hx-0.4,y-3,z+4.2,0.8,3.5,0.8,M.black)}}
+function label(text,pos){
+  const c=document.createElement('canvas');const g=c.getContext('2d');const fs=40,font=`600 ${fs}px "Noto Sans TC",sans-serif`;
+  g.font=font;const w=Math.ceil(g.measureText(text).width+36);c.width=w;c.height=64;g.font=font;
+  g.fillStyle='#2A2119';const r=14;g.beginPath();g.moveTo(r,0);g.arcTo(w,0,w,64,r);g.arcTo(w,64,0,64,r);g.arcTo(0,64,0,0,r);g.arcTo(0,0,w,0,r);g.fill();
+  g.fillStyle='#F3ECE1';g.textBaseline='middle';g.fillText(text,18,34);
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false}));s.scale.set(w/64*9,9,1);s.position.copy(pos);s.renderOrder=10;return s;
+}
+function dimLine(p,a,b,text,off){
+  const g=new THREE.Group();const A=a.clone().add(off),B=b.clone().add(off);
+  const l=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([a,A,A,B,B,b]),new THREE.LineBasicMaterial({color:0xB5602A,depthTest:false}));
+  l.renderOrder=9;g.add(l);g.add(label(text,A.clone().lerp(B,0.5)));p.add(g);labels.push(g);
+}
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+
+const C={W:110,H:215,dA:35,dB:35,L:120,bench:true};
+const TW=()=>Math.round(C.W*0.33);   // narrow column, shared by A-side vacuum bay and B-side tower
+
+/* each face is built in its own local frame: x = viewer's left→right, z = 0 at the shared back panel, +z toward that viewer */
+function faceA(p){
+  const {W,H}=C,Dc=C.dA,dx=TW();
+  box(p,0,0,0,T,H,Dc,M.wood);box(p,W-T,0,0,T,H,Dc,M.wood);
+  box(p,T,H-T,0,W-2*T,T,Dc,M.wood);box(p,T,6,0,W-2*T,T,Dc,M.inner);box(p,T,0,Dc-3,W-2*T,6,T,M.wood);
+  box(p,dx,6+T,0,T,H-6-2*T,Dc,M.wood);
+  box(p,T,6+T,0,dx-T,H-55-6-T,T,M.back);   // partition between A narrow bay and B open shelves; above the shelf the A top space runs through to B's fixed panel
+  box(p,T,H-55,0,dx-T,T,Dc,M.inner);
+  const rx=dx+T,rw=W-T-rx;
+  box(p,rx,H-30,0,rw,T,Dc,M.inner);
+  box(p,rx,H-56,0,rw,20,T,M.inner);hookRail(p,rx+rw*0.2,H-46,T,rw*0.6,6);
+  box(p,rx,32,0,rw,T,Dc,M.inner);
+  const d1=dx+T/2,gap=0.3,wR=(W-d1)/2;
+  door(p,0,0.5,Dc,d1-gap,H-0.5,1,{y:H*0.5,len:12},'A1');
+  door(p,d1+gap,0.5,Dc,wR-gap*1.5,H-0.5,1,{y:H*0.5,len:16},'A2');
+  door(p,W,0.5,Dc,wR-gap*1.5,H-0.5,-1,{y:H*0.5,len:16},'A3');
+  slot(p,'A-vacTop','A 面窄格頂層','A',['shelf'],{x0:T,x1:dx,y:H-55+T,c:(Dc-C.dB)/2,dep:Dc+C.dB-2,hMax:55-2*T});
+  slot(p,'A-vacBay','A 面窄格（高位）','A',['tall'],{x0:T,x1:dx,y:6+T,c:Dc/2+T/2,dep:Dc-T-2,hMax:H-55-6-T});
+  slot(p,'A-top','A 面頂層','A',['shelf'],{x0:rx,x1:W-T,y:H-30+T,c:Dc/2,dep:Dc-2,hMax:30-2*T});
+  slot(p,'A-hooks','A 面掛鈎','A',['hang'],{x0:rx,x1:W-T,y:H-46,c:T+10,dep:20,hMax:H-46-(32+T)-2,stagger:2});
+  slot(p,'A-shoe','A 面鞋板','A',['shoe','shelf'],{x0:rx,x1:W-T,y:32+T,c:Dc/2,dep:Dc-2,hMax:40});
+  slot(p,'A-floor','A 面地台','A',['shoe'],{x0:rx,x1:W-T,y:6+T,c:Dc/2,dep:Dc-2,hMax:32-6-T});
+}
+function faceB(p){
+  const {W,H,L}=C,Dc=C.dB,tw=TW(),ww=W-tw,gap=0.3;
+  // double-door wardrobe, viewer's left
+  box(p,0,0,0,T,H,Dc,M.wood);box(p,ww-T,0,0,T,H,Dc,M.wood);
+  box(p,T,H-T,0,ww-2*T,T,Dc,M.wood);box(p,T,6,0,ww-2*T,T,Dc,M.inner);box(p,T,0,Dc-3,ww-2*T,6,T,M.wood);
+  box(p,T,H-30,0,ww-2*T,T,Dc,M.inner);
+  box(p,T,H-56,0,ww-2*T,20,T,M.inner);hookRail(p,ww*0.18,H-46,T,ww*0.64,7);
+  rod(p,1.4,ww-2*T,V(ww/2,H-95,Dc*0.6));
+  box(p,T,36,0,ww-2*T,T,Dc,M.inner);
+  door(p,0,0.5,Dc,ww/2-gap,H-0.5,1,{y:H*0.42,len:22},'B1');
+  door(p,ww,0.5,Dc,ww/2-gap,H-0.5,-1,{y:H*0.42,len:22},'B2');
+  // side tower, viewer's right
+  const tx=ww,bh=45,ty=C.bench?bh+2:0;
+  box(p,tx,ty,0,T,H-ty,Dc,M.wood);box(p,W-T,ty,0,T,H-ty,Dc,M.wood);
+  box(p,tx+T,H-T,0,tw-2*T,T,Dc,M.wood);
+  if(C.bench)box(p,tx+T,ty,0,tw-2*T,T,Dc,M.inner);
+  else{box(p,tx+T,6,0,tw-2*T,T,Dc,M.inner);box(p,tx+T,0,Dc-3,tw-2*T,6,T,M.wood)}
+  const topDoor=H-55;box(p,tx+T,topDoor,0,tw-2*T,T,Dc,M.inner);
+  const base=C.bench?ty:6,n=C.bench?4:6,step=(topDoor-base)/n;
+  for(let i=1;i<n;i++)box(p,tx+T,base+step*i,0,tw-2*T,T,Dc,M.inner);
+  box(p,W-(tw-gap),topDoor,Dc,tw-gap,H-topDoor,T,M.door);   // fixed panel: does not open, space behind belongs to the A-side top shelf
+  slot(p,'B-top','B 面頂層','B',['shelf'],{x0:T,x1:ww-T,y:H-30+T,c:Dc/2,dep:Dc-2,hMax:30-2*T});
+  slot(p,'B-hooks','B 面掛鈎','B',['hang'],{x0:T,x1:ww-T,y:H-46,c:T+10,dep:20,hMax:H-46-(36+T)-2,stagger:2});
+  slot(p,'B-rod','B 面橫棍','B',['hang'],{x0:T,x1:ww-T,y:H-95,c:Dc*0.6,dep:20,hMax:H-95-(36+T)-2,rot:Math.PI/2,w:18});
+  slot(p,'B-shoe','B 面鞋板','B',['shoe','shelf'],{x0:T,x1:ww-T,y:36+T,c:Dc/2,dep:Dc-2,hMax:40});
+  slot(p,'B-floor','B 面地台','B',['shoe'],{x0:T,x1:ww-T,y:6+T,c:Dc/2,dep:Dc-2,hMax:36-6-T});
+  const lv=[];for(let i=0;i<=n;i++)lv.push(i<n?base+step*i:topDoor);
+  for(let i=0;i<n;i++)slot(p,'B-t'+i,'側架第 '+(n-i)+' 格','B',['shelf','shoe'],{x0:tx+T,x1:W-T,y:lv[i]+T,c:Dc/2,dep:Dc-2,hMax:lv[i+1]-lv[i]-T});
+  // optional bench: runs under the tower and out toward the B-side viewer, drawer faces the room (viewer's left)
+  if(C.bench){
+    const z1=Math.max(L,Dc+30),Df=Dc+T;
+    box(p,tx,bh-T,0,tw,T,z1,M.wood);
+    box(p,tx,0,z1-T,tw,bh-T,T,M.wood);
+    box(p,W-T,0,0,T,bh-T,z1-T,M.wood);
+    box(p,tx+T,0,0,tw-2*T,1.5,z1-T,M.inner);
+    box(p,tx+T,bh-17,Df,tw-2*T,T,z1-T-Df,M.inner);
+    const dr=new THREE.Group();p.add(dr);const dl=z1-T-Df-1;
+    box(dr,tx-0.5,bh-16,Df+0.5,T,14,dl,M.door);
+    box(dr,tx+T-0.5,bh-15.5,Df+1,tw-T*3,11,T*0.7,M.inner);
+    box(dr,tx+T-0.5,bh-15.5,Df+1,tw-T*3,T*0.6,dl-1,M.inner);
+    box(dr,tx-1.2,bh-9.5,Df+dl/2-8,0.8,1,16,M.black);
+    dr.traverse(m=>m.userData.door='BD');drawers.push({g:dr,target:-24,face:'BD'});
+    box(p,tx+0.5,bh,Df+0.5,tw-1,7,z1-Df-1,M.cushion);
+    dimLine(p,V(W,bh+7,0),V(W,bh+7,z1),'鞋凳 '+Math.round(z1+0.6)+' cm',V(10,0,0));
+    slot(p,'B-under','鞋凳底','B',['under'],{axis:'z',x0:2,x1:z1-T-1,y:1.5,c:tx+tw/2,dep:tw-2*T,hMax:bh-17-1.5-1,rot:-Math.PI/2});
+    slot(p,'B-bench','鞋凳坐墊','B',['bench'],{axis:'z',x0:Df+1,x1:z1-1,y:bh+7,c:tx+tw/2,dep:tw-2,hMax:80,rot:-Math.PI/2});
+  }
+}
+
+let root=null,open={},showDims=true;
+const slotOpen=s=>s.face==='B'?(/^B-(t|under|bench)/.test(s.id)||open.B1||open.B2):s.id.startsWith('A-vac')?open.A1:(open.A2||open.A3);
+function rebuild(){
+  if(root){scene.remove(root);root.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.isSprite)o.material.map.dispose();if(o.userData.hl)o.material.dispose()})}
+  doors=[];drawers=[];labels=[];slots=[];
+  root=new THREE.Group();scene.add(root);
+  const {W,H,dA,dB}=C;
+  // no centre back panel: the two faces share one open interior; only the hook boards meet back-to-back as a stretcher
+  const a=new THREE.Group();root.add(a);face='A';faceA(a);
+  const b=new THREE.Group();b.rotation.y=Math.PI;b.position.set(W,0,0);root.add(b);face='B';faceB(b);
+  const zA=dA+T,zB=-(dB+T);
+  dimLine(root,V(0,H,zA),V(W,H,zA),W+' cm',V(0,12,0));
+  dimLine(root,V(W,0,zA),V(W,H,zA),H+' cm',V(12,0,0));
+  dimLine(root,V(0,H,zB),V(0,H,zA),'總深 '+Math.round(zA-zB)+' cm',V(0,12,0));
+  root.position.set(-W/2,0,0);
+  buildRoom();layoutItems();buildHighlights();
+  doors.forEach(d=>d.g.rotation.y=open[d.face]?d.target:0);
+  drawers.forEach(d=>d.g.position.x=open[d.face]?d.target:0);
+  labels.forEach(l=>l.visible=showDims);
+  const tot=Math.round(zA-zB);
+  document.getElementById('total').textContent=`外形：闊 ${W} × 高 ${H} × 總深 ${tot} cm`+(C.bench?`｜鞋凳伸出 B 面約 ${Math.round(Math.max(C.L,dB+30)-dB-T)} cm`:'');
+}
+
+/* ---------- home scene: side wall with bedroom door, far wall with front door ---------- */
+const wallM=mc('#ECE3D5',0.95),trimM=mc('#F7F5F0',0.6);
+let roomG=null,walls=[],showRoom=true,showDecor=true,showSun=true,rcG=null,rbG=null;
+const casterM=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
+/* sunlight through the window: its own shadow light; invisible blockers on layer 1 only cast for this light */
+const winSun=new THREE.DirectionalLight(0xffdcb0,0);winSun.shadow.mapSize.set(2048,2048);
+Object.assign(winSun.shadow.camera,{left:-240,right:240,top:240,bottom:-240,near:1,far:1100});winSun.shadow.bias=-0.0004;winSun.shadow.normalBias=0.6;
+scene.add(winSun);scene.add(winSun.target);
+function applyLighting(){const on=showSun&&showRoom;
+  hemi.intensity=on?0.5:0.75;sun.intensity=on?0.12:0.6;sun.castShadow=!on;fill1.intensity=fill2.intensity=on?0.12:0.3;
+  winSun.intensity=on?1.25:0;winSun.castShadow=on;
+  if(rcG)rcG.visible=on&&showDecor;if(rbG)rbG.visible=on}
+const curtainM=new THREE.MeshStandardMaterial({color:new THREE.Color('#FBF8F2').convertSRGBToLinear(),roughness:1,transparent:true,opacity:0.82,side:THREE.DoubleSide});
+function moneyTree(){
+  let sd=17;const r=()=>{sd=(sd*9301+49297)%233280;return sd/233280};
+  const g=new THREE.Group(),trunkM=mc('#8A6E4E',0.9),leafA=new THREE.MeshStandardMaterial({color:new THREE.Color('#3E7A34').convertSRGBToLinear(),roughness:0.55,side:THREE.DoubleSide}),
+    leafB=new THREE.MeshStandardMaterial({color:new THREE.Color('#57923F').convertSRGBToLinear(),roughness:0.55,side:THREE.DoubleSide});
+  const pot=mk(new THREE.LatheGeometry([[0,0],[14,0],[17,4],[20,36],[19.5,38],[18,38],[17.5,35],[0,35]].map(([x,y])=>new THREE.Vector2(x,y)),32),mc('#EFEBE3',0.95),0,0,0,g);
+  mk(CY(17.5,1),mc('#4a3626',1),0,35.5,0,g);
+  for(let j=0;j<3;j++){const pts=[];for(let k=0;k<=24;k++){const t=k/24,a=t*Math.PI*8+j*Math.PI*2/3;pts.push(V(Math.cos(a)*1.7,36+t*74,Math.sin(a)*1.7))}
+    mk(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),60,1.3,8),trunkM,0,0,0,g)}
+  const leafG=(()=>{const sh=new THREE.Shape();sh.moveTo(0,0);sh.quadraticCurveTo(2.6,6,0,14);sh.quadraticCurveTo(-2.6,6,0,0);return new THREE.ShapeGeometry(sh,6)})();
+  function cluster(p){const c=new THREE.Group();c.rotation.order='YXZ';c.rotation.set(-Math.PI/2+(r()-0.5)*0.9,r()*Math.PI*2,0);c.position.copy(p);g.add(c);
+    const n=6+Math.floor(r()*2);for(let i=0;i<n;i++){const h=new THREE.Group();h.rotation.z=i*Math.PI*2/n+(r()-0.5)*0.3;c.add(h);
+      const s=0.9+r()*0.5,m=new THREE.Mesh(leafG,r()<0.5?leafA:leafB);m.scale.set(s,s,s);m.rotation.x=0.25+r()*0.35;m.castShadow=true;m.receiveShadow=true;h.add(m)}}
+  const top=V(0,109,0),nb=9;
+  for(let i=0;i<nb;i++){const a=i*Math.PI*2/nb+(r()-0.5)*0.5,rr=14+r()*26,end=V(Math.cos(a)*rr,118+r()*55,Math.sin(a)*rr);
+    const cv=new THREE.QuadraticBezierCurve3(top,V(Math.cos(a)*rr*0.25,end.y-6,Math.sin(a)*rr*0.25),end);
+    mk(new THREE.TubeGeometry(cv,16,0.55,6),trunkM,0,0,0,g);[0.55,0.8,1].forEach(t=>cluster(cv.getPoint(t)))}
+  [0,1,2].forEach(()=>cluster(V((r()-0.5)*10,165+r()*15,(r()-0.5)*10)));
+  return g}
+const plant=moneyTree();
+function bw(p,x0,y0,z0,x1,y1,z1,m){const o=new THREE.Mesh(B3(x1-x0,y1-y0,z1-z0),m);o.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);o.receiveShadow=true;p.add(o);return o}
+function matTex(){const c=document.createElement('canvas');c.width=512;c.height=300;const g=c.getContext('2d');
+  g.fillStyle='#3d4045';g.fillRect(0,0,512,300);g.fillStyle='#E9DCC6';g.font='bold 64px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('MEOW!!!',256,150);
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t}
+const matMat=new THREE.MeshStandardMaterial({map:matTex(),roughness:1});
+function buildRoom(){
+  if(plant.parent)plant.parent.remove(plant);
+  if(roomG){scene.remove(roomG);roomG.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
+  roomG=new THREE.Group();scene.add(roomG);walls=[];
+  const {W,dA,dB}=C,zA=dA+T,benchZ=C.bench?-Math.max(C.L,dB+30):-(dB+T);
+  const xL=-W/2,xR=W/2+130,zF=benchZ-170,zR=zA+180,WH=250,DH=208;
+  // side wall (cabinet + bench back onto it), bedroom door on the A side
+  const sg=new THREE.Group();roomG.add(sg);const r0=zA+14,r1=r0+84;
+  bw(sg,xL-8,0,zF-8,xL,WH,r0,wallM);bw(sg,xL-8,0,r1,xL,WH,zR+8,wallM);bw(sg,xL-8,DH,r0,xL,WH,r1,wallM);
+  bw(sg,xL-3,0.5,r0,xL-0.6,DH,r1,mc('#F5F3EE',0.5));
+  [[r0+8,r1-8,120,195],[r0+8,r1-8,15,108]].forEach(([a,b,y0,y1])=>bw(sg,xL-0.6,y0,a,xL-0.1,y1,b,mc('#EFECE5',0.5)));
+  bw(sg,xL,96,r1-12,xL+5,98,r1-4,mc('#C9A13B',0.3,0.8));bw(sg,xL,94,r1-6,xL+1.5,102,r1-4,mc('#C9A13B',0.3,0.8));
+  bw(sg,xL,0,r0-7,xL+1.5,DH+7,r0,trimM);bw(sg,xL,0,r1,xL+1.5,DH+7,r1+7,trimM);bw(sg,xL,DH,r0,xL+1.5,DH+7,r1,trimM);
+  bw(sg,xL,0,zF,xL+1.2,10,r0-7,trimM);bw(sg,xL,0,r1+7,xL+1.2,10,zR,trimM);
+  walls.push({g:sg,p:V(xL,0,0),n:V(1,0,0)});
+  // front-door wall facing the B side
+  const fg=new THREE.Group();roomG.add(fg);const f0=-12,f1=f0+92;
+  bw(fg,xL-8,0,zF-8,f0,WH,zF,wallM);bw(fg,f1,0,zF-8,xR,WH,zF,wallM);bw(fg,f0,DH,zF-8,f1,WH,zF,wallM);
+  bw(fg,f0,0.5,zF-4,f1,DH,zF-1,mc('#1E1E22',0.4));
+  bw(fg,f0+22,40,zF-1,f1-22,185,zF-0.6,mc('#9fb7c4',0.1,0.2,0.85));
+  bw(fg,f0+20,38,zF-0.9,f1-20,40,zF-0.4,mc('#C9A13B',0.3,0.8));bw(fg,f0+20,185,zF-0.9,f1-20,187,zF-0.4,mc('#C9A13B',0.3,0.8));
+  bw(fg,f1-12,92,zF-1,f1-6,112,zF+2,mc('#C9A13B',0.3,0.8));
+  bw(fg,f0-7,0,zF,f0,DH+7,zF+1.5,trimM);bw(fg,f1,0,zF,f1+7,DH+7,zF+1.5,trimM);bw(fg,f0,DH,zF,f1,DH+7,zF+1.5,trimM);
+  bw(fg,xL,0,zF,f0-7,10,zF+1.2,trimM);bw(fg,f1+7,0,zF,xR,10,zF+1.2,trimM);
+  const mat=bw(roomG,f0+1,0,zF+8,f1-1,1,zF+60,matMat);
+  walls.push({g:fg,p:V(0,0,zF),n:V(0,0,1)});
+  // back wall behind the A-side viewer
+  const ag=new THREE.Group();roomG.add(ag);bw(ag,xL-8,0,zR,xR,WH,zR+8,wallM);bw(ag,xL,0,zR-1.2,xR,10,zR,trimM);
+  walls.push({g:ag,p:V(0,0,zR),n:V(0,0,-1)});
+  // right wall with a window, sheer curtains and a money tree
+  const rv=new THREE.Group(),rc=new THREE.Group(),rb=new THREE.Group();roomG.add(rv);roomG.add(rc);roomG.add(rb);rcG=rc;rbG=rb;
+  const w0=zA+15,w1=w0+105,wy0=62,wy1=212,zm=(w0+w1)/2;
+  function cast(x0,y0,z0,x1,y1,z1,grp){const c=bw(grp||rc,x0,y0,z0,x1,y1,z1,casterM);c.castShadow=true;c.receiveShadow=false}
+  function both(x0,y0,z0,x1,y1,z1,m){bw(rv,x0,y0,z0,x1,y1,z1,m);cast(x0,y0,z0,x1,y1,z1)}
+  both(xR,0,zF-8,xR+8,WH,w0,wallM);both(xR,0,w1,xR+8,WH,zR+8,wallM);both(xR,0,w0,xR+8,wy0,w1,wallM);both(xR,wy1,w0,xR+8,WH,w1,wallM);
+  both(xR,wy0,w0,xR+8,wy1,w0+5,trimM);both(xR,wy0,w1-5,xR+8,wy1,w1,trimM);both(xR,wy0,w0,xR+8,wy0+5,w1,trimM);both(xR,wy1-5,w0,xR+8,wy1,w1,trimM);
+  both(xR+2,wy0,zm-2,xR+6,wy1,zm+2,trimM);both(xR+2,165,w0,xR+6,169,w1,trimM);
+  bw(rv,xR+3.8,wy0,w0,xR+4.2,wy1,w1,mc('#cfe3ee',0.05,0,0.18));
+  const sky=new THREE.Mesh(new THREE.PlaneGeometry(w1-w0+80,wy1-wy0+80),new THREE.MeshBasicMaterial({color:0xFFF1D6}));sky.rotation.y=-Math.PI/2;sky.position.set(xR+70,(wy0+wy1)/2,zm);rv.add(sky);
+  const sill=bw(rv,xR-7,wy0-4,w0-6,xR,wy0,w1+6,trimM);sill.castShadow=true;
+  bw(rv,xR-1.2,0,zF,xR,10,zR,trimM);
+  function curtain(z0,z1){const w=z1-z0,geo=new THREE.PlaneGeometry(w,174,32,1),a=geo.attributes.position;
+    for(let i=0;i<a.count;i++)a.setZ(i,Math.sin(a.getX(i)/w*Math.PI*7)*2.2);geo.computeVertexNormals();
+    const m=new THREE.Mesh(geo,curtainM);m.rotation.y=-Math.PI/2;m.position.set(xR-8,227-87,(z0+z1)/2);m.receiveShadow=true;rv.add(m)}
+  curtain(w0-32,w0+14);curtain(w1-14,w1+32);
+  const rodG=new THREE.CylinderGeometry(0.9,0.9,w1-w0+76,12);rodG.rotateX(Math.PI/2);mk(rodG,mc('#2a2a2a',0.4,0.5),xR-8,229,zm,rv).castShadow=false;
+  walls.push({g:rv,p:V(xR,0,0),n:V(-1,0,0),decor:true});
+  // blockers so sun only enters through the window (ceiling + A-side wall), shadow-only
+  cast(xL-8,WH,zF-8,xR+8,WH+4,zR+8,rb);cast(xL-8,0,zR,xR+8,WH,zR+8,rb);
+  plant.position.set(Math.min(xR-38,W/2+72),0,zA+42);plant.visible=showDecor;roomG.add(plant);
+  const wc=V(xR+4,(wy0+wy1)/2+10,zm),tgt=V(-10,55,zA+5),dir=tgt.clone().sub(wc).normalize();
+  winSun.position.copy(wc.clone().addScaledVector(dir,-420));winSun.target.position.copy(tgt);winSun.target.updateMatrixWorld();
+  roomG.visible=showRoom;applyLighting();
+}
+
+/* ---------- items in slots ---------- */
+const DEF={
+  'A-hooks':[['coatLong','#CDB497'],['puffer','#222222'],['jacket','#2a2a2a']],
+  'A-shoe':[['box'],['slippers','#222222']],
+  'A-floor':[['slippers','#E6B8C3'],['slippers','#E6B8C3'],['slippers','#9a9a9a']],
+  'A-vacBay':[['vac']],'A-vacTop':[['cleaner']],'A-top':[['box']],
+  'B-hooks':[['puffer','#222222'],['jacket','#E6A6B5'],['puffer','#222222']],
+  'B-shoe':[['box'],['slippers','#222222']],
+  'B-floor':[['slippers','#E6B8C3'],['slippers','#E6B8C3'],['sneakers','#9a9a9a']],
+  'B-under':[['sneakers','#222222'],['sneakers','#F2F0EC']],
+  'B-bench':[['cat']],'B-t0':[['slippers','#E6A6B5']],'B-t3':[['cap','#2E3A55']],'B-towerTop':[['box']],
+};
+const fromDef=()=>Object.fromEntries(Object.entries(DEF).map(([k,v])=>[k,v.map(([id,col])=>({id,col:col||null}))]));
+let placed={},itemObjs=[];
+function slotLen(s){return s.x1-s.x0}
+function layoutItems(){
+  itemObjs.forEach(o=>{o.parent&&o.parent.remove(o);o.traverse(m=>{if(m.geometry)m.geometry.dispose()})});itemObjs=[];
+  slots.forEach(s=>{const list=placed[s.id]||[];let cur=0;
+    list.forEach((it,i)=>{const d=ITEM[it.id],w=s.w&&s.types.includes('hang')?Math.min(s.w,d.w):d.w;if(cur+w>slotLen(s)+0.5)return;
+      const g=d.build(it.col||d.def);const along=s.x0+cur+w/2;cur+=w;
+      let y=s.y;if(s.types.includes('hang')){const k=Math.min(1,s.hMax/d.h);g.scale.y=k;y=s.y-d.h*k}
+      g.rotation.y=s.rot;const cz=s.c+(s.stagger?(i%2)*s.stagger*2:0);
+      if(s.axis==='x')g.position.set(along,y,cz);else g.position.set(cz,y,along);
+      g.userData={slot:s.id,idx:i};g.traverse(m=>m.userData.item=g);s.parent.add(g);itemObjs.push(g)})});
+}
+let hls=[];
+function buildHighlights(){hls=[];
+  slots.forEach(s=>{const hang=s.types.includes('hang'),hh=hang?20:Math.min(s.hMax,60),L=slotLen(s);
+    const geo=s.axis==='x'?B3(L,hh,s.dep):B3(s.dep,hh,L);
+    const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xE8A15C,transparent:true,opacity:0.35,depthWrite:false,depthTest:false}));
+    const yc=hang?s.y-8:s.y+hh/2,mid=s.x0+L/2;
+    if(s.axis==='x')m.position.set(mid,yc,s.c);else m.position.set(s.c,yc,mid);
+    m.userData={hl:true,slot:s};m.renderOrder=5;m.visible=false;s.parent.add(m);hls.push(m)});
+  updateHighlights();
+}
+let sel=null,col=null;
+function fits(s,d){return d.types.some(t=>s.types.includes(t))}
+function updateHighlights(){hls.forEach(m=>{m.visible=!!sel&&fits(m.userData.slot,ITEM[sel]);m.material.opacity=0.35})}
+
+const toastEl=document.getElementById('toast');let toastT;
+function toast(t){toastEl.textContent=t;toastEl.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>toastEl.hidden=true,2600)}
+
+function place(s){const d=ITEM[sel];
+  if(!s.types.includes('hang')&&d.h>s.hMax){toast(`${s.name}淨高約 ${Math.round(s.hMax)} cm，${d.name}要 ${d.h} cm，放唔落`);return}
+  const list=placed[s.id]||(placed[s.id]=[]);const w=s.w&&s.types.includes('hang')?Math.min(s.w,d.w):d.w;
+  const used=list.reduce((a,it)=>a+(s.w&&s.types.includes('hang')?Math.min(s.w,ITEM[it.id].w):ITEM[it.id].w),0);
+  if(used+w>slotLen(s)+0.5){toast(`${s.name}已經滿咗`);return}
+  list.push({id:sel,col:d.tint?col:null});layoutItems();toast(`${d.name}已擺入${s.name}`);
+}
+function remove(g){const {slot:sid,idx}=g.userData;const it=placed[sid][idx];placed[sid].splice(idx,1);layoutItems();toast(`已拎走${ITEM[it.id].name}`)}
+
+const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();let downXY=null,hovered=null;
+function setPtr(e){const r=renderer.domElement.getBoundingClientRect();ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ptr,camera)}
+function hitSlot(){const vis=hls.filter(m=>m.visible);const h=ray.intersectObjects(vis,false);return h.length?h[0].object:null}
+function hitItem(){const meshes=[];itemObjs.forEach(g=>{const s=slots.find(x=>x.id===g.userData.slot);if(s&&slotOpen(s))g.traverse(m=>m.isMesh&&meshes.push(m))});
+  const h=ray.intersectObjects(meshes,false);return h.length?h[0].object.userData.item:null}
+function hitDoor(){const meshes=[];doors.concat(drawers).forEach(d=>d.g.traverse(m=>m.isMesh&&meshes.push(m)));
+  const h=ray.intersectObjects(meshes,false);return h.length?h[0].object.userData.door:null}
+renderer.domElement.addEventListener('pointerdown',e=>{downXY=[e.clientX,e.clientY]});
+renderer.domElement.addEventListener('pointerup',e=>{if(!downXY)return;const moved=Math.hypot(e.clientX-downXY[0],e.clientY-downXY[1]);downXY=null;if(moved>6)return;
+  setPtr(e);if(sel){const m=hitSlot();if(m)place(m.userData.slot)}else{const g=hitItem();if(g){remove(g);return}const k=hitDoor();if(k){open[k]=!open[k];syncDoorBtns()}}});
+renderer.domElement.addEventListener('pointermove',e=>{if(e.buttons)return;setPtr(e);
+  if(sel){const m=hitSlot();if(hovered&&hovered!==m)hovered.material.opacity=0.35;hovered=m;if(m)m.material.opacity=0.65;renderer.domElement.style.cursor=m?'pointer':''}
+  else renderer.domElement.style.cursor=(hitItem()||hitDoor())?'pointer':''});
+
+/* ---------- item palette ---------- */
+const itemsEl=document.getElementById('items'),swEl=document.getElementById('swatches');
+ITEMS.forEach(d=>{const b=document.createElement('button');b.className='item';b.textContent=d.name;b.setAttribute('aria-pressed','false');b.dataset.id=d.id;
+  b.onclick=()=>selectItem(sel===d.id?null:d.id);itemsEl.appendChild(b)});
+SW.forEach(([n,c],i)=>{const b=document.createElement('button');b.className='sw'+(c?'':' def');b.title=n;b.setAttribute('aria-label',n);
+  if(c)b.style.background=c;else b.textContent='預設色';b.setAttribute('aria-pressed',i===0);
+  b.onclick=()=>{col=c;swEl.querySelectorAll('.sw').forEach(x=>x.setAttribute('aria-pressed',x===b))};swEl.appendChild(b)});
+function selectItem(id){sel=id;itemsEl.querySelectorAll('.item').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));
+  if(id){doors.concat(drawers).forEach(d=>open[d.face]=true);syncDoorBtns();toast(`撳發亮嘅位置擺${ITEM[id].name}入去`)}updateHighlights()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sel)selectItem(null)});
+document.getElementById('clearItems').onclick=()=>{placed={};layoutItems();toast('已清空所有物件')};
+const itemsBtn=document.getElementById('itemsBtn'),itemsPanel=document.getElementById('itemsPanel');
+itemsBtn.onclick=()=>{const show=itemsPanel.hidden;itemsPanel.hidden=!show;itemsBtn.textContent=show?'收起擺物件':'擺物件';if(!show&&sel)selectItem(null)};
+const roomCb=document.getElementById('room');roomCb.addEventListener('change',()=>{showRoom=roomCb.checked;roomG.visible=showRoom;applyLighting()});
+const decorCb=document.getElementById('decor');decorCb.addEventListener('change',()=>{showDecor=decorCb.checked;plant.visible=showDecor;applyLighting()});
+const sunCb=document.getElementById('sunfx');sunCb.addEventListener('change',()=>{showSun=sunCb.checked;applyLighting()});
+
+/* views */
+let view='A';
+function setView(v){view=v;const H=C.H,k=Math.max(C.W,H)*2.3,t=V(0,H*0.45,0);
+  if(v==='A'){camera.position.set(k*0.2,H*0.45+k*0.15,k*0.9);t.set(35,H*0.45,30)}
+  if(v==='B')camera.position.set(k*0.45,H*0.45+k*0.18,-k*0.9);
+  if(v==='S')camera.position.set(k*0.95,H*0.45+k*0.2,-k*0.15);
+  controls.target.copy(t);controls.update();
+  ['A','B','S'].forEach(x=>document.getElementById('view'+x).setAttribute('aria-pressed',x===v));}
+['A','B','S'].forEach(x=>document.getElementById('view'+x).onclick=()=>setView(x));
+
+const sliders=[['W','inW','oW'],['H','inH','oH'],['dA','inA','oA'],['dB','inB','oB'],['L','inL','oL']];
+sliders.forEach(([k,i,o])=>{const el=document.getElementById(i),out=document.getElementById(o);
+  el.value=C[k];out.textContent=C[k]+' cm';
+  el.addEventListener('input',()=>{C[k]=+el.value;out.textContent=C[k]+' cm';rebuild()})});
+const benchCb=document.getElementById('bench');
+function syncBench(){document.getElementById('benchRow').hidden=!C.bench;document.getElementById('benchPart').hidden=!C.bench}
+benchCb.addEventListener('change',()=>{C.bench=benchCb.checked;syncBench();rebuild()});
+const allBtn=document.getElementById('allDoors');
+const anyOpen=()=>doors.concat(drawers).some(d=>open[d.face]);
+function syncDoorBtns(){allBtn.textContent=anyOpen()?'閂晒門':'開晒門'}
+allBtn.onclick=()=>{const v=!anyOpen();doors.concat(drawers).forEach(d=>open[d.face]=v);syncDoorBtns()};
+const dimBtn=document.getElementById('dimBtn');
+dimBtn.onclick=()=>{showDims=!showDims;labels.forEach(l=>l.visible=showDims);dimBtn.textContent=showDims?'隱藏尺寸':'顯示尺寸'};
+
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(stage);
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tick(){const k=reduce?1:0.09;
+  doors.forEach(d=>{const t=open[d.face]?d.target:0;d.g.rotation.y+=(t-d.g.rotation.y)*k});
+  drawers.forEach(d=>{const t=open[d.face]?d.target:0;d.g.position.x+=(t-d.g.position.x)*k});
+  controls.update();
+  walls.forEach(w=>{w.g.visible=(!w.decor||showDecor)&&camera.position.clone().sub(w.p).dot(w.n)>0});
+  renderer.render(scene,camera);requestAnimationFrame(tick)}
+syncBench();resize();rebuild();setView('A');
+document.fonts&&document.fonts.ready.then(rebuild);
+tick();
+})();
+</script>
+
+</body></html>

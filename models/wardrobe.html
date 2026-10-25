@@ -1,0 +1,655 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico Wardrobe 3D Section</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+body{background:#f4efe8;margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.jlwd-wrap { padding: 32px max(16px, env(safe-area-inset-left, 0px)) 40px; }
+
+.jlwd{--jl-bg: #f4efe8;--jl-panel: #fbf8f4;--jl-stage: #efe8de;--jl-ink: #2a221b;--jl-muted: #76685a;--jl-line: #dccfbe;--jl-accent: #2a221b;--jl-accent-ink: #faf5ee;--jl-good: #2f6b3c;--jl-bad: #9a3b1f;--jl-wa: #1f7a4d;--jl-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;color:var(--jl-ink);font-family:var(--jl3d-font, inherit);font-size:15px;line-height:1.45;display:grid;gap:16px;max-width:1280px;margin:0 auto;box-sizing:border-box}
+.jlwd *,.jlwd *:before,.jlwd *:after{box-sizing:border-box}
+.jlwd [hidden]{display:none!important}
+.jlwd h2,.jlwd h3,.jlwd p{margin:0}
+.jlwd h2{font-size:1.4rem;line-height:1.15;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.jlwd h3{font-size:1.05rem;font-weight:700}
+.jlwd .jl-eyebrow{font-family:var(--jl-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--jl-muted)}
+.jlwd .jl-small{font-size:.78rem;color:var(--jl-muted)}
+.jlwd .jl-card{background:var(--jl-panel);border:1px solid var(--jl-line);border-radius:14px;padding:14px 16px;display:grid;gap:10px;align-content:start;min-width:0}
+.jlwd .jl-top{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px}
+.jlwd .jl-viewer{position:relative;min-width:0;height:clamp(480px,80vh,820px);background:var(--jl-stage);border:1px solid var(--jl-line);border-radius:16px;overflow:hidden}
+.jlwd .jl-stage{position:absolute;inset:0}
+.jlwd .jl-stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.jlwd .jl-loading{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--jl-mono);font-size:.8rem;color:var(--jl-muted);pointer-events:none}
+.jlwd .jl-hint{position:absolute;left:14px;bottom:12px;right:190px;font-family:var(--jl-mono);font-size:.68rem;color:var(--jl-muted);pointer-events:none}
+.jlwd .jl-caption{position:absolute;top:14px;right:14px;max-width:min(320px,calc(100% - 28px));background:#2a221bdb;color:#faf5ee;border-radius:12px;padding:10px 14px;display:grid;gap:4px;pointer-events:none}
+.jlwd .jl-caption .jl-step{font-family:var(--jl-mono);font-size:.66rem;letter-spacing:.1em;opacity:.75}
+.jlwd .jl-caption p{font-size:.92rem;font-weight:600;line-height:1.3}
+.jlwd .jl-ar{position:absolute;right:14px;bottom:12px;font:600 .85rem/1 inherit;font-family:inherit;color:var(--jl-accent-ink);background:var(--jl-accent);border:0;border-radius:999px;padding:11px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.jlwd .jl-ar svg{width:16px;height:16px}
+.jlwd .jl-ar-note{position:absolute;right:14px;bottom:14px;font-size:.72rem;color:var(--jl-muted);background:var(--jl-panel);border:1px solid var(--jl-line);border-radius:999px;padding:6px 12px}
+.jlwd .jl-side{display:grid;gap:12px;align-content:start;min-width:0}
+.jlwd .jl-choices{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.jlwd .jl-choices-3{grid-template-columns:1fr}
+.jlwd .jl-btn{font:inherit;font-size:.85rem;font-weight:500;color:var(--jl-ink);text-align:left;background:transparent;border:1px solid var(--jl-line);border-radius:10px;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:40px}
+.jlwd .jl-btn:hover{background:var(--jl-line)}
+.jlwd .jl-btn[aria-pressed=true],.jlwd .jl-btn[aria-checked=true]{background:var(--jl-accent);color:var(--jl-accent-ink);border-color:var(--jl-accent)}
+.jlwd .jl-btn:disabled{opacity:.45;cursor:default}
+.jlwd .jl-swatch{width:18px;height:18px;border-radius:5px;border:1px solid rgba(0,0,0,.25);flex:none}
+.jlwd .jl-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.jlwd .jl-slider{display:grid;grid-template-columns:92px 1fr 58px;align-items:center;gap:8px;font-size:.8rem}
+.jlwd .jl-slider output{font-family:var(--jl-mono);font-size:.75rem;text-align:right;font-variant-numeric:tabular-nums}
+.jlwd input[type=range]{width:100%;accent-color:var(--jl-accent)}
+.jlwd .jl-check{display:flex;align-items:center;gap:8px;font-size:.85rem;cursor:pointer}
+.jlwd .jl-check input{width:18px;height:18px;accent-color:var(--jl-accent)}
+.jlwd .jl-dims{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--jl-mono);font-size:.76rem}
+.jlwd .jl-dims dt{color:var(--jl-muted)}
+.jlwd .jl-dims dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.jlwd .jl-badge{font-family:var(--jl-mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--jl-line);border-radius:999px;padding:3px 8px;color:var(--jl-muted)}
+.jlwd .jl-badge.is-custom{border-color:var(--jl-accent);color:var(--jl-ink)}
+.jlwd .jl-link{font:inherit;font-size:.78rem;color:var(--jl-ink);background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.jlwd .jl-tools{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.jlwd .jl-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.jlwd label.jl-field{display:grid;gap:4px;font-size:.76rem;color:var(--jl-muted)}
+.jlwd .jl-field input,.jlwd .jl-field select,.jlwd .jl-field textarea{font:inherit;font-size:.92rem;color:var(--jl-ink);background:#fff;border:1px solid var(--jl-line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.jlwd .jl-field textarea{min-height:96px;resize:vertical}
+.jlwd .jl-result{border-radius:10px;padding:10px 12px;display:grid;gap:4px;font-size:.86rem;background:var(--jl-bg);border:1px solid var(--jl-line)}
+.jlwd .jl-result strong{font-size:.95rem}
+.jlwd .jl-result.is-good strong{color:var(--jl-good)}
+.jlwd .jl-result.is-bad strong{color:var(--jl-bad)}
+.jlwd .jl-result .jl-out{font-family:var(--jl-mono);font-size:.8rem;font-variant-numeric:tabular-nums}
+.jlwd .jl-primary{font:inherit;font-size:.88rem;font-weight:600;color:var(--jl-accent-ink);background:var(--jl-accent);border:0;border-radius:10px;padding:10px 14px;cursor:pointer;justify-self:start}
+.jlwd .jl-primary:disabled{opacity:.45;cursor:default}
+.jlwd .jl-inquiry{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px}
+.jlwd .jl-summary{margin:0;font-family:var(--jl-mono);font-size:.78rem;white-space:pre-wrap;background:var(--jl-bg);border:1px solid var(--jl-line);border-radius:10px;padding:10px 12px}
+.jlwd .jl-form{display:grid;gap:10px}
+.jlwd .jl-intro{align-content:start}
+.jlwd .jl-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.jlwd .jl-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.jlwd .jl-wa{font:inherit;font-size:.88rem;font-weight:600;color:#fff;background:var(--jl-wa);border-radius:10px;padding:10px 14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.jlwd .jl-wa svg{width:18px;height:18px}
+.jlwd .jl-notice{font-size:.82rem;border-radius:10px;padding:8px 12px;background:var(--jl-bg);border:1px solid var(--jl-line)}
+.jlwd .jl-notice.is-good{color:var(--jl-good);border-color:var(--jl-good)}
+.jlwd .jl-notice.is-bad{color:var(--jl-bad);border-color:var(--jl-bad)}
+.jlwd .jl-modal{position:fixed;inset:0;z-index:1000;background:#140f0a99;display:grid;place-items:center;padding:16px}
+.jlwd .jl-modal-box{background:var(--jl-panel);border-radius:16px;width:min(720px,100%);display:grid;gap:10px;padding:14px}
+.jlwd .jl-modal model-viewer{width:100%;height:min(60vh,520px);background:var(--jl-stage);border-radius:12px}
+.jlwd button:focus-visible,.jlwd a:focus-visible,.jlwd input:focus-visible,.jlwd select:focus-visible,.jlwd textarea:focus-visible{outline:2px solid #b07a3e;outline-offset:2px}
+@media (max-width: 900px){.jlwd .jl-top,.jlwd .jl-tools,.jlwd .jl-inquiry{grid-template-columns:minmax(0,1fr)}
+.jlwd .jl-viewer{height:clamp(420px,70vh,620px)}
+}
+@media (max-width: 480px){.jlwd .jl-hint{display:none}
+.jlwd .jl-form-row{grid-template-columns:1fr}
+.jlwd .jl-caption{left:14px;right:14px;max-width:none}
+.jlwd .jl-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+<div class="jlwd-wrap">
+<div class="jlwd" data-mode="preview" data-whatsapp="1XXXXXXXXXX" data-product-title="Three-Door Coat Wardrobe">
+<div class="jl-top">
+<section class="jl-viewer" aria-label="3D model of the three-door wardrobe">
+<div class="jl-stage"></div>
+<div class="jl-loading">Loading 3D model&hellip;</div>
+<div class="jl-caption" hidden aria-live="polite"><span class="jl-step"></span><p></p></div>
+<div class="jl-hint">Drag to rotate &middot; Scroll or pinch to zoom &middot; Tap a door to open it</div>
+<button class="jl-ar" type="button" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>View in your room</button>
+<span class="jl-ar-note" hidden>Open this page on your phone to see it in your room</span>
+</section>
+<aside class="jl-side">
+<section class="jl-card">
+<span class="jl-eyebrow">Jalico &middot; Made in the GTA</span>
+<h2>Three-Door Coat Wardrobe</h2>
+<span class="jl-small">Finish</span>
+<div class="jl-choices" role="radiogroup" aria-label="Finish">
+<button class="jl-btn" type="button" role="radio" aria-checked="true" data-finish="birch"><span class="jl-swatch" style="background:#d6ad72"></span>Natural birch</button>
+<button class="jl-btn" type="button" role="radio" aria-checked="false" data-finish="walnut"><span class="jl-swatch" style="background:#4e3221"></span>Dark walnut</button>
+</div>
+</section>
+<section class="jl-card" aria-label="Doors">
+<span class="jl-eyebrow">Doors</span>
+<div class="jl-choices jl-choices-3">
+<button class="jl-btn" type="button" aria-pressed="false" data-toggle="L">Open left door</button>
+<button class="jl-btn" type="button" aria-pressed="false" data-toggle="M">Open middle door</button>
+<button class="jl-btn" type="button" aria-pressed="false" data-toggle="R">Open right door</button>
+</div>
+<label class="jl-slider"><span>All doors</span><input type="range" min="0" max="100" value="0" data-slider="all" id="jlwd-slider-all"><output data-out="all">0%</output></label>
+<div class="jl-row"><button class="jl-link" type="button" data-all>Open all doors</button>
+<label class="jl-check"><input type="checkbox" id="jlwd-show-items" checked>Show coats and items</label></div>
+</section>
+<section class="jl-card" aria-label="How it works">
+<span class="jl-eyebrow">How it works</span>
+<div class="jl-row">
+<button class="jl-primary" type="button" data-demo>Play demo</button>
+<label class="jl-check"><input type="checkbox" id="jlwd-loop">Loop</label>
+</div>
+</section>
+<section class="jl-card" aria-label="Size">
+<div class="jl-row"><span class="jl-eyebrow">Size</span><span class="jl-badge" data-size-badge>Standard size</span></div>
+<dl class="jl-dims" data-dims></dl>
+<button class="jl-link" type="button" data-reset-size hidden>Back to standard size</button>
+</section>
+</aside>
+</div>
+<div class="jl-tools">
+<section class="jl-card" aria-label="Will my coats fit">
+<h3>Will my coats fit?</h3>
+<p class="jl-small">Pick a coat type or enter your own sizes. We check the length against the hanging space and count how many fit side by side on the rail.</p>
+<label class="jl-field">Coat type
+<select id="jlwd-preset" data-preset>
+<option value="wool">Long wool coat</option>
+<option value="puffer">Long puffer jacket</option>
+<option value="trench">Trench coat</option>
+<option value="jacket">Short jacket</option>
+<option value="kids">Kids&#39; coat</option>
+<option value="custom">My own sizes</option>
+</select>
+</label>
+<div class="jl-fields">
+<label class="jl-field">Length (mm)<input id="jlwd-coat-l" type="number" inputmode="numeric" min="200" step="1" value="1150" data-coat="l"></label>
+<label class="jl-field">Shoulders (mm)<input id="jlwd-coat-s" type="number" inputmode="numeric" min="200" step="1" value="460" data-coat="s"></label>
+<label class="jl-field">Thickness (mm)<input id="jlwd-coat-t" type="number" inputmode="numeric" min="20" step="1" value="70" data-coat="t"></label>
+<label class="jl-field">Coats<input id="jlwd-coat-n" type="number" inputmode="numeric" min="1" step="1" value="8" data-coat="n"></label>
+</div>
+<div class="jl-result" data-fit-result></div>
+</section>
+<section class="jl-card" aria-label="Resize to fit">
+<h3>Resize the wardrobe for your coats</h3>
+<p class="jl-small">We build every piece to order. This works out the outside size that holds the coats above, keeping the vacuum bay the same.</p>
+<div class="jl-result" data-resize-result></div>
+<button class="jl-primary" type="button" data-apply-size>Show this size in 3D</button>
+</section>
+</div>
+<section class="jl-card jl-inquiry" id="jlwd-inquiry" aria-label="Send an inquiry">
+<div class="jl-form jl-intro">
+<h3>Ask us about your wardrobe</h3>
+<p class="jl-small">Your choices fill in automatically. We usually reply within one business day.</p>
+<pre class="jl-summary" data-summary></pre>
+<div class="jl-actions">
+<a class="jl-wa" data-whatsapp-link href="https://wa.me/1XXXXXXXXXX" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.1-1.2-.2-.2-.5-.3z"/></svg>
+Chat on WhatsApp
+</a>
+<span class="jl-small">+1 XXX XXX XXXX</span>
+</div>
+</div>
+<form class="jl-form jl-contact" id="jlwd-contact-form">
+<input type="hidden" name="contact[Product]" value="Three-Door Coat Wardrobe">
+<input type="hidden" name="contact[Finish]" data-h="finish">
+<input type="hidden" name="contact[Size W x D x H (mm)]" data-h="size">
+<input type="hidden" name="contact[Coats]" data-h="coats">
+<div class="jl-form-row">
+<label class="jl-field">Name<input type="text" name="contact[name]" id="jlwd-name" autocomplete="name" required></label>
+<label class="jl-field">Email<input type="email" name="contact[email]" id="jlwd-email" autocomplete="email" required></label>
+</div>
+<label class="jl-field">Phone (optional)<input type="tel" name="contact[phone]" id="jlwd-phone" autocomplete="tel"></label>
+<label class="jl-field">Message<textarea name="contact[body]" id="jlwd-body" placeholder="Anything else? Where it will go, timing, a different size or layout."></textarea></label>
+<button class="jl-primary" type="submit">Send inquiry</button>
+<p class="jl-notice" data-form-note hidden>Preview only: on the store this sends your inquiry to Jalico.</p>
+</form>
+</section>
+<div class="jl-modal" hidden>
+<div class="jl-modal-box">
+<div class="jl-row"><strong data-ar-title>Three-door wardrobe</strong><button class="jl-btn" type="button" data-close>Close</button></div>
+<model-viewer ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1" alt="3D model of the wardrobe"></model-viewer>
+<p class="jl-small">On a phone, tap the AR icon in the corner to place it in your room.</p>
+</div>
+</div>
+</div>
+</div>
+<script type="module">
+import * as r from "https://cdn.jsdelivr.net/npm/three@0.160.0/+esm";
+import { OrbitControls as re } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js/+esm";
+import { RoomEnvironment as ie } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js/+esm";
+const A = document.querySelector(".jlwd"), u = (t) => A.querySelector(t), st = (t) => [...A.querySelectorAll(t)], mt = A.dataset.mode || "preview", le = A.dataset.whatsapp || "1XXXXXXXXXX", ce = A.dataset.productTitle || "Three-Door Coat Wardrobe", s = 1e-3, d = 18, N = 6, Q = 60, pt = 3, W = 340, zt = 300, de = 500, gt = 350, he = 60, wt = 40, H = { W: 1100, D: 600, H: 2150 }, yt = { W: [900, 1800], D: [450, 700], H: [1800, 2400] }, ue = (t) => t * Math.PI / 180;
+function _(t) {
+  const e = t.D - d - 2, o = e - N, n = t.W - 3 * d - W, a = Q + d, c = t.H - d, l = c - de, p = l - d - a, m = c - zt, h = m - d - he, y = h - wt - gt, b = gt - d - a;
+  return { ...t, Dc: e, innerD: o, rightW: n, floorTop: a, topUnder: c, leftShelfTop: l, tallClear: p, topShelfTop: m, rodY: h, drop: y, shoeClear: b };
+}
+const i = {
+  size: { ...H },
+  finish: "birch",
+  showItems: !0,
+  open: { L: 0, M: 0, R: 0 },
+  target: { L: 0, M: 0, R: 0 },
+  coat: { l: 1150, s: 460, t: 70, n: 8 }
+};
+let f = _(i.size);
+function U(t, e) {
+  const o = e.l + 20 <= t.drop, n = e.s + 40 <= t.innerD, a = o && n && e.t > 0 ? Math.floor(t.rightW / e.t) : 0;
+  return { lengthOk: o, depthOk: n, total: a };
+}
+const Rt = (t) => Math.ceil(t / 10) * 10;
+function fe(t) {
+  const e = { ...H };
+  e.D = Math.max(H.D, Rt(t.s + 40 + N + d + 2));
+  const o = _(e);
+  t.l + 20 > o.drop && (e.H = H.H + Rt(t.l + 20 - o.drop));
+  let n = 0;
+  for (; U(_(e), t).total < t.n && n++ < 200; )
+    e.W += 10;
+  const a = U(_(e), t), c = e.W > yt.W[1] || e.D > yt.D[1] || e.H > yt.H[1] || a.total < t.n, l = e.W === H.W && e.D === H.D && e.H === H.H;
+  return { size: e, cap: a, tooBig: c, same: l };
+}
+const J = u(".jl-stage"), $ = new r.WebGLRenderer({ antialias: !0 });
+$.setPixelRatio(Math.min(window.devicePixelRatio, 2)), $.outputColorSpace = r.SRGBColorSpace, $.toneMapping = r.ACESFilmicToneMapping, $.shadowMap.enabled = !0, $.shadowMap.type = r.PCFSoftShadowMap, J.appendChild($.domElement);
+const I = new r.Scene();
+I.background = new r.Color("#efe8de"), I.environment = new r.PMREMGenerator($).fromScene(new ie(), 0.04).texture;
+const O = new r.PerspectiveCamera(35, 1, 0.02, 60), G = new re(O, $.domElement);
+G.enableDamping = !0, G.maxPolarAngle = Math.PI * 0.495, G.minDistance = 0.6, G.maxDistance = 9, I.add(new r.HemisphereLight(16775146, 9075302, 0.6));
+const F = new r.DirectionalLight(16773343, 1.5);
+F.position.set(-1.6, 3.2, 2.4), F.castShadow = !0, F.shadow.mapSize.set(2048, 2048), Object.assign(F.shadow.camera, { left: -2, right: 2, top: 2.6, bottom: -0.4, far: 10 }), F.shadow.bias = -4e-4, F.shadow.normalBias = 0.01, I.add(F);
+const bt = new r.Mesh(new r.PlaneGeometry(20, 20), new r.ShadowMaterial({ opacity: 0.2 }));
+bt.rotation.x = -Math.PI / 2, bt.receiveShadow = !0, I.add(bt);
+const tt = {
+  birch: { label: "Natural birch", base: "#d6ad72", dark: "rgba(165,112,52,0.22)", light: "rgba(240,208,152,0.22)", grain: [150, 98, 46], fleck: "rgba(244,214,165,0.35)", edge: "#3a2512" },
+  walnut: { label: "Dark walnut", base: "#523424", dark: "rgba(30,17,10,0.35)", light: "rgba(120,80,52,0.22)", grain: [28, 16, 9], fleck: "rgba(140,96,62,0.25)", edge: "#120a05" }
+};
+function me(t) {
+  let e = t;
+  return () => (e = e * 16807 % 2147483647) / 2147483647;
+}
+function pe(t, e) {
+  const o = document.createElement("canvas");
+  o.width = o.height = 1024;
+  const n = o.getContext("2d"), a = me(e);
+  n.fillStyle = t.base, n.fillRect(0, 0, 1024, 1024);
+  for (let h = 0; h < 28; h++)
+    n.fillStyle = a() > 0.5 ? t.dark : t.light, n.fillRect(0, a() * 1024, 1024, 10 + a() * 60);
+  const [c, l, p] = t.grain;
+  for (let h = 0; h < 280; h++) {
+    const y = a() * 1024, b = 2 + a() * 9, x = (1 + Math.floor(a() * 3)) * Math.PI * 2 / 1024, E = a() * 6.28;
+    n.strokeStyle = `rgba(${c + a() * 25 | 0},${l + a() * 20 | 0},${p + a() * 14 | 0},${0.12 + a() * 0.25})`, n.lineWidth = 0.6 + a() * 1.6, n.beginPath();
+    for (let L = 0; L <= 1024; L += 8) {
+      const g = y + Math.sin(L * x + E) * b;
+      L ? n.lineTo(L, g) : n.moveTo(L, g);
+    }
+    n.stroke();
+  }
+  for (let h = 0; h < 140; h++)
+    n.fillStyle = t.fleck, n.fillRect(a() * 1024, a() * 1024, 6 + a() * 26, 1 + a() * 2);
+  const m = new r.CanvasTexture(o);
+  return m.colorSpace = r.SRGBColorSpace, m.wrapS = m.wrapT = r.RepeatWrapping, m.anisotropy = $.capabilities.getMaxAnisotropy(), m;
+}
+const Mt = {};
+for (const [t, e] of Object.entries(tt))
+  Mt[t] = {
+    wood: new r.MeshStandardMaterial({ map: pe(e, t === "birch" ? 11 : 29), roughness: 0.55, envMapIntensity: 0.6, name: `${t}-wood` }),
+    edge: new r.LineBasicMaterial({ color: e.edge, transparent: !0, opacity: 0.85 })
+  };
+const Ht = new r.MeshStandardMaterial({ color: 10988720, metalness: 0.85, roughness: 0.35, name: "steel" }), Gt = new r.MeshStandardMaterial({ color: 1776153, metalness: 0.5, roughness: 0.4, name: "matte-black" }), jt = new r.MeshStandardMaterial({ color: 13948632, metalness: 0.95, roughness: 0.2, name: "rail" });
+let et = 1;
+function ge(t, e, o, n) {
+  const a = new r.BoxGeometry(t * s, e * s, o * s), c = a.attributes.position, l = a.attributes.normal, p = a.attributes.uv;
+  et = et * 48271 % 2147483647;
+  const m = et % 1e3 / 1e3, h = (et / 1e3 | 0) % 1e3 / 1e3;
+  for (let y = 0; y < c.count; y++) {
+    const b = c.getX(y), x = c.getY(y), E = c.getZ(y), L = Math.abs(l.getX(y)), g = Math.abs(l.getY(y));
+    let S, T;
+    L > 0.5 ? (S = n === "y" ? x : E, T = n === "y" ? E : x) : g > 0.5 ? (S = n === "z" ? E : b, T = n === "z" ? b : E) : (S = n === "y" ? x : b, T = n === "y" ? b : x), p.setXY(y, S / 0.7 + m, T / 0.7 + h);
+  }
+  return a;
+}
+function M(t, e, o, n, a, c) {
+  const l = new r.Mesh(t, e);
+  return l.position.set(o * s, n * s, a * s), l.castShadow = l.receiveShadow = !0, c.add(l), l;
+}
+function z(t, e, o, n, a, c, l, p) {
+  const m = M(ge(t, e, o, l), Mt[i.finish].wood, n, a, c, p), h = new r.LineSegments(new r.EdgesGeometry(m.geometry, 30), Mt[i.finish].edge);
+  return h.userData.outline = !0, m.add(h), m;
+}
+function we(t, e, o, n) {
+  const a = new r.BoxGeometry(1, o, 1), c = a.attributes.position;
+  for (let l = 0; l < c.count; l++)
+    c.setX(l, c.getX(l) * n), c.setZ(l, c.getZ(l) * (c.getY(l) > 0 ? t : e));
+  return a.computeVertexNormals(), a;
+}
+const ye = {}, R = (t, e = 0.85) => ye[t + e] ||= new r.MeshStandardMaterial({ color: t, roughness: e, name: "item" });
+let w = null, D = null;
+const xt = {};
+function be(t) {
+  t.traverse((e) => e.geometry && e.geometry.dispose());
+}
+function X(t = !1) {
+  w && (I.remove(w), be(w)), f = _(i.size), et = 1;
+  const { W: e, H: o, Dc: n, rightW: a, floorTop: c, leftShelfTop: l, topShelfTop: p, rodY: m } = f, h = -i.size.D / 2, y = h + n / 2, b = h + N + (n - N) / 2, x = n - N;
+  w = new r.Group(), w.name = "Jalico three-door wardrobe";
+  for (const v of [-1, 1])
+    z(d, o, n, v * (e / 2 - d / 2), o / 2, y, "y", w);
+  z(e - 2 * d, d, n, 0, o - d / 2, y, "x", w), z(e - 2 * d, d, n, 0, Q + d / 2, y, "x", w), z(e - 2 * d, Q, d, 0, Q / 2, h + n - 40, "x", w), z(e - 2 * d, o - Q - 2 * d, N, 0, (c + o - d) / 2, h + N / 2, "y", w);
+  const E = -e / 2 + d + W + d / 2;
+  z(d, o - c - d, x, E, (c + o - d) / 2, b, "y", w);
+  const L = -e / 2 + d + W / 2, g = E + d / 2 + a / 2;
+  z(W, d, x, L, l - d / 2, b, "x", w), z(a, d, x, g, p - d / 2, b, "x", w), z(a, d, x - 20, g, gt - d / 2, b - 10, "x", w);
+  const S = M(new r.CylinderGeometry(12.5 * s, 12.5 * s, a * s, 24).rotateZ(Math.PI / 2), jt, g, m, b, w);
+  S.name = "coat-rail";
+  for (const v of [-1, 1])
+    M(new r.CylinderGeometry(22 * s, 22 * s, 6 * s, 20).rotateZ(Math.PI / 2), jt, g + v * (a / 2 - 3), m, b, w);
+  const T = d + W + d / 2 - pt / 2, at = (e - T - 2 * pt) / 2, Y = o - 8, ft = 6 + Y / 2, ne = h + n + 2, ae = [
+    { key: "L", hinge: -e / 2, w: T, side: 1 },
+    { key: "M", hinge: -e / 2 + T + pt, w: at, side: 1 },
+    { key: "R", hinge: e / 2, w: at, side: -1 }
+  ];
+  for (const v of ae) {
+    const C = new r.Group();
+    C.name = `Door ${v.key}`, C.position.set(v.hinge * s, 0, ne * s), z(v.w, Y, d, v.side * v.w / 2, ft, d / 2, "y", C);
+    const kt = v.side > 0 ? v.w - 40 : -v.w + 40, Ct = o * 0.47;
+    M(new r.BoxGeometry(12 * s, 180 * s, 10 * s), Gt, kt, Ct, d + 22, C);
+    for (const q of [-1, 1])
+      M(new r.CylinderGeometry(5 * s, 5 * s, 22 * s, 12).rotateX(Math.PI / 2), Gt, kt, Ct + q * 80, d + 11, C);
+    for (const q of [0.1, 0.5, 0.9]) {
+      const se = M(new r.CylinderGeometry(17.5 * s, 17.5 * s, 2 * s, 20).rotateX(Math.PI / 2), Ht, v.side * 30, 6 + Y * q, -1, C);
+      se.name = "cup-hinge";
+    }
+    C.userData.side = v.side, C.traverse((q) => {
+      q.isMesh && (q.userData.part = v.key);
+    }), w.add(C), xt[v.key] = C;
+  }
+  D = new r.Group(), D.name = "Items", w.add(D), Me(L, g, b, x), D.visible = i.showItems, I.add(w), It(), t && $t(!1), qt();
+}
+const Wt = [2828846, 12163702, 3951199, 7221034, 9146259, 3099194, 1322e4, 2041395];
+function Me(t, e, o, n) {
+  const a = i.coat, c = U(f, a), l = Math.min(a.n || 0, c.total), p = R(12884579, 0.6), m = e - f.rightW / 2;
+  for (let g = 0; g < l; g++) {
+    const S = new r.Group(), T = Math.max(30, a.t), at = Math.min(a.s - 20, 440);
+    M(new r.TorusGeometry(15 * s, 2 * s, 6, 18, Math.PI * 1.25).rotateY(Math.PI / 2), Ht, 0, 0, 0, S).rotation.x = -Math.PI * 0.1, M(new r.BoxGeometry(8 * s, 14 * s, at * s), p, 0, -wt + 7, 0, S);
+    const Y = a.l, ft = R(Wt[g % Wt.length], 0.9);
+    M(we(a.s * 0.82 * s, a.s * 0.98 * s, Y * s, T * 0.8 * s), ft, 0, -wt - 4 - Y / 2, 0, S), S.position.set((m + T * (g + 0.5)) * s, f.rodY * s, o * s), S.rotation.y = (g % 2 ? 1 : -1) * 0.04, D.add(S);
+  }
+  const h = new r.Group(), y = R(7304056, 0.45), b = R(7101078, 0.4);
+  M(new r.BoxGeometry(250 * s, 90 * s, 230 * s), y, 0, 45, 0, h), M(new r.CylinderGeometry(70 * s, 70 * s, 420 * s, 24), b, 0, 300, -30, h), M(new r.CylinderGeometry(55 * s, 55 * s, 200 * s, 24), R(12172484, 0.2), 0, 420, -30, h), M(new r.CylinderGeometry(16 * s, 16 * s, 560 * s, 12), y, 0, 790, -70, h), M(new r.TorusGeometry(60 * s, 15 * s, 10, 24), b, 0, 1110, -70, h), h.position.set(t * s, f.floorTop * s, o * s), f.tallClear >= 1180 && W >= 260 && D.add(h);
+  const x = new r.Group();
+  M(new r.BoxGeometry(240 * s, 200 * s, 200 * s), R(3033738, 0.5), 0, 100, 0, x), M(new r.TorusGeometry(70 * s, 10 * s, 8, 24), R(1381653, 0.6), 0, 120, 105, x), x.position.set(t * s, f.leftShelfTop * s, o * s), D.add(x);
+  const E = R(13214330, 0.9);
+  for (const g of [-1, 1]) {
+    const S = M(new r.BoxGeometry(300 * s, 170 * s, Math.min(380, n - 40) * s), E, e + g * 170, f.topShelfTop + 85, o, D);
+    S.name = "box";
+  }
+  const L = [15120579, 2828846, 10132122];
+  for (let g = 0; g < 3; g++)
+    for (const S of [-1, 1]) {
+      const T = e - f.rightW / 2 + 110 + g * 230 + S * 55;
+      M(new r.BoxGeometry(90 * s, 25 * s, 250 * s), R(L[g], 0.9), T, f.floorTop + 12, o + 60, D), M(new r.BoxGeometry(96 * s, 40 * s, 90 * s), R(L[g], 0.9), T, f.floorTop + 40, o + 110, D);
+    }
+}
+const xe = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+function It() {
+  for (const t of ["L", "M", "R"]) {
+    const e = xt[t];
+    e && (e.rotation.y = -e.userData.side * ue(100) * xe(i.open[t]));
+  }
+}
+const Se = { L: "left door", M: "middle door", R: "right door" };
+function ot(t, e) {
+  i.target[t] = Math.min(1, Math.max(0, e)), V();
+}
+const Ot = st("[data-toggle]"), rt = u("[data-slider='all']"), $e = u("[data-out='all']"), Pt = u("[data-all]");
+function V() {
+  Ot.forEach((o) => {
+    const n = o.dataset.toggle, a = i.target[n] > 0.5;
+    o.setAttribute("aria-pressed", a ? "true" : "false"), o.textContent = (a ? "Close " : "Open ") + Se[n];
+  });
+  const t = (i.target.L + i.target.M + i.target.R) / 3;
+  document.activeElement !== rt && (rt.value = Math.round(t * 100)), $e.textContent = Math.round(t * 100) + "%";
+  const e = ["L", "M", "R"].some((o) => i.target[o] > 0.5);
+  Pt.textContent = e ? "Close all doors" : "Open all doors";
+}
+Ot.forEach((t) => t.addEventListener("click", () => {
+  B();
+  const e = t.dataset.toggle;
+  ot(e, i.target[e] > 0.5 ? 0 : 1);
+})), rt.addEventListener("input", () => {
+  B();
+  for (const t of ["L", "M", "R"])
+    i.target[t] = rt.value / 100;
+  V();
+}), Pt.addEventListener("click", () => {
+  B();
+  const t = ["L", "M", "R"].some((e) => i.target[e] > 0.5) ? 0 : 1;
+  for (const e of ["L", "M", "R"])
+    i.target[e] = t;
+  V();
+});
+const Bt = new r.Raycaster(), At = new r.Vector2();
+let it = null;
+function Nt(t) {
+  const e = $.domElement.getBoundingClientRect();
+  At.set((t.clientX - e.left) / e.width * 2 - 1, -((t.clientY - e.top) / e.height) * 2 + 1), Bt.setFromCamera(At, O);
+  const o = Bt.intersectObjects(Object.values(xt), !0).find((n) => n.object.isMesh && n.object.userData.part);
+  return o ? o.object.userData.part : null;
+}
+$.domElement.addEventListener("pointerdown", (t) => {
+  it = { x: t.clientX, y: t.clientY };
+}), $.domElement.addEventListener("pointerup", (t) => {
+  if (!it || Math.hypot(t.clientX - it.x, t.clientY - it.y) > 6)
+    return;
+  const e = Nt(t);
+  e && (B(), ot(e, i.target[e] > 0.5 ? 0 : 1));
+}), $.domElement.addEventListener("pointermove", (t) => {
+  t.pointerType === "mouse" && ($.domElement.style.cursor = Nt(t) ? "pointer" : "grab");
+});
+const lt = { theta: -0.38, phi: 1.28, r: 1 };
+let k = null;
+function Ft(t = 0, e = 0) {
+  return new r.Vector3(t * s, (f.H * 0.5 + e) * s, 0);
+}
+function St(t = 1) {
+  const e = J.clientWidth / Math.max(1, J.clientHeight);
+  return Math.max(f.W * 2.3, f.H * 2.15) * s * t * (e < 0.9 ? 1.4 : 1);
+}
+function Xt(t, e, o, n) {
+  O.position.copy(n).add(new r.Vector3().setFromSpherical(new r.Spherical(o, e, t))), G.target.copy(n);
+}
+function $t(t) {
+  const e = Ft();
+  t ? k = { theta: lt.theta, phi: lt.phi, r: St(), target: e } : Xt(lt.theta, lt.phi, St(), e);
+}
+function ve(t) {
+  if (!k)
+    return;
+  const e = O.position.clone().sub(G.target), o = new r.Spherical().setFromVector3(e), n = Math.min(1, t * 2.2);
+  let a = k.theta - o.theta;
+  a = Math.atan2(Math.sin(a), Math.cos(a));
+  const c = o.theta + a * n, l = o.phi + (k.phi - o.phi) * n, p = o.radius + (k.r - o.radius) * n;
+  Xt(c, l, p, G.target.clone().lerp(k.target, n)), Math.abs(a) < 2e-3 && Math.abs(k.phi - l) < 2e-3 && Math.abs(k.r - p) < 2e-3 && (k = null);
+}
+G.addEventListener("start", () => {
+  k = null, B();
+}), st("[data-finish]").forEach((t) => t.addEventListener("click", () => {
+  i.finish = t.dataset.finish, st("[data-finish]").forEach((e) => e.setAttribute("aria-checked", e === t ? "true" : "false")), X(), Z(), Qt();
+}));
+const Yt = u("#jlwd-show-items");
+Yt.addEventListener("change", () => {
+  i.showItems = Yt.checked, D.visible = i.showItems;
+});
+const j = (t) => (t / 25.4).toFixed(1), vt = () => ["W", "D", "H"].every((t) => i.size[t] === H[t]), nt = (t) => `${t.W} \xD7 ${t.D} \xD7 ${t.H} mm`;
+function qt() {
+  const t = f, e = [
+    ["Width", `${t.W} mm`],
+    ["Depth", `${t.D} mm`],
+    ["Height", `${t.H} mm`],
+    ["Inches", `${j(t.W)} \xD7 ${j(t.D)} \xD7 ${j(t.H)}`],
+    ["Hanging space", `${t.rightW} \xD7 ${t.innerD} \xD7 ${t.drop}`],
+    ["Tall bay", `${W} \xD7 ${t.innerD} \xD7 ${t.tallClear}`],
+    ["Top shelf clear", `${zt} mm`],
+    ["Boards", `${d} mm`]
+  ];
+  u("[data-dims]").innerHTML = e.map(([a, c]) => `<dt>${a}</dt><dd>${c}</dd>`).join("");
+  const o = vt(), n = u("[data-size-badge]");
+  n.textContent = o ? "Standard size" : "Custom size", n.classList.toggle("is-custom", !o), u("[data-reset-size]").hidden = o, V();
+}
+u("[data-reset-size]").addEventListener("click", () => {
+  i.size = { ...H }, X(), $t(!0), Z();
+});
+const Le = {
+  wool: { l: 1150, s: 460, t: 70 },
+  puffer: { l: 1050, s: 500, t: 130 },
+  trench: { l: 1100, s: 450, t: 60 },
+  jacket: { l: 700, s: 460, t: 90 },
+  kids: { l: 600, s: 350, t: 70 }
+}, _t = st("[data-coat]"), Lt = u("[data-preset]");
+function Tt() {
+  _t.forEach((t) => {
+    i.coat[t.dataset.coat] = Math.max(0, Math.round(Number(t.value) || 0));
+  });
+}
+let Ut = 0;
+const Jt = () => {
+  clearTimeout(Ut), Ut = setTimeout(() => X(), 250);
+};
+Lt.addEventListener("change", () => {
+  const t = Le[Lt.value];
+  if (t)
+    for (const e of ["l", "s", "t"])
+      u(`[data-coat="${e}"]`).value = t[e];
+  Tt(), Z(), Jt();
+}), _t.forEach((t) => t.addEventListener("input", () => {
+  t.dataset.coat !== "n" && (Lt.value = "custom"), Tt(), Z(), Jt();
+}));
+const ct = (t, e) => `${t} ${e}${t === 1 ? "" : "s"}`;
+let dt = null;
+function Te() {
+  const t = i.coat, e = u("[data-fit-result]"), o = u("[data-resize-result]"), n = u("[data-apply-size]");
+  if (!t.l || !t.s || !t.t || !t.n) {
+    e.className = o.className = "jl-result", e.innerHTML = "<span>Enter the coat size and how many coats.</span>", o.innerHTML = "<span>Enter the coat size and how many coats to see a custom size.</span>", n.disabled = !0, dt = null;
+    return;
+  }
+  const a = U(f, t), c = a.total >= t.n, l = [];
+  a.lengthOk || l.push(`Too long for the hanging space (${f.drop} mm from the rail to the shoe shelf).`), a.depthOk || l.push(`Too wide across the shoulders for the ${f.innerD} mm inside depth.`), e.className = "jl-result " + (a.total && c ? "is-good" : "is-bad"), e.innerHTML = a.total === 0 ? `<strong>Doesn't fit at this size</strong><span>${l.join(" ")}</span><span class="jl-out">Outside size: ${nt(f)}</span>` : `<strong>${ct(a.total, "coat")} fit on the rail${c ? `, enough for your ${t.n}` : `, you need ${t.n}`}</strong>
+       <span>${f.drop - t.l} mm spare below the coat hem.</span>
+       <span class="jl-out">Outside size: ${nt(f)} (${j(f.W)} \xD7 ${j(f.D)} \xD7 ${j(f.H)} in)</span>`;
+  const p = fe(t), m = p.size;
+  dt = p, p.same && !p.tooBig ? (o.className = "jl-result is-good", o.innerHTML = `<strong>The standard size already fits ${ct(t.n, "coat")}</strong><span class="jl-out">Outside size: ${nt(m)}</span>`) : (o.className = "jl-result " + (p.tooBig ? "is-bad" : "is-good"), o.innerHTML = `<strong>${p.tooBig ? "Bigger than we usually build" : `Custom size for ${ct(t.n, "coat")}`}</strong>
+      <span class="jl-out">Outside size: ${nt(m)}<br>(${j(m.W)} \xD7 ${j(m.D)} \xD7 ${j(m.H)} in, W \xD7 D \xD7 H)</span>
+      <span>Holds ${ct(p.cap.total, "coat")}. The vacuum bay stays ${W} mm wide.</span>
+      ${p.tooBig ? "<span>Send us an inquiry and we'll suggest options, like a second unit or a double rail.</span>" : ""}`), n.disabled = !1, n.textContent = p.same ? "Show standard size in 3D" : "Show this size in 3D";
+}
+u("[data-apply-size]").addEventListener("click", () => {
+  dt && (i.size = { ...dt.size }, X(), $t(!0), Z());
+});
+function De() {
+  const t = i.coat, e = U(f, t), o = [
+    `Finish: ${tt[i.finish].label}`,
+    "Layout: tall vacuum bay on the left; coat rail, top shelf and shoe shelf on the right",
+    `Size: ${nt(i.size)} (W \xD7 D \xD7 H)${vt() ? ", standard" : ", custom"}`
+  ];
+  return t.l && t.s && t.t && t.n && o.push(`Coats: ${t.n}, ${t.l} long \xD7 ${t.s} wide \xD7 ${t.t} thick mm (${e.total} fit at this size)`), o;
+}
+function Ee() {
+  const t = De();
+  u("[data-summary]").textContent = t.join(`
+`);
+  const e = (n, a) => {
+    const c = u(`[data-h="${n}"]`);
+    c && (c.value = a);
+  };
+  e("finish", tt[i.finish].label), e("size", `${i.size.W} x ${i.size.D} x ${i.size.H}${vt() ? " (standard)" : " (custom)"}`), e("coats", t[3] || "Not entered");
+  const o = `Hi Jalico, I'm interested in the ${ce}.
+${t.join(`
+`)}`;
+  u("[data-whatsapp-link]").href = `https://wa.me/${le}?text=${encodeURIComponent(o)}`;
+}
+function Z() {
+  Te(), Ee(), qt();
+}
+const Vt = u("form.jl-contact");
+Vt && mt === "preview" && Vt.addEventListener("submit", (t) => {
+  t.preventDefault(), u("[data-form-note]").hidden = !1;
+});
+const ht = (t) => {
+  for (const e of ["L", "M", "R"])
+    i.target[e] = t;
+  V();
+}, Dt = [
+  { text: () => `Built from 18 mm ${tt[i.finish].label.toLowerCase()} boards, with three full-height doors`, cam: [-0.45, 1.2, 0.74], at: [0, 0], act: () => ht(0) },
+  { text: () => "The left door opens to a tall bay for an upright vacuum, mop or umbrellas", cam: [-0.3, 1.3, 0.46], at: [-300, -250], act: () => {
+    ht(0), ot("L", 1);
+  } },
+  { text: () => "A shelf above keeps the handheld vacuum and cleaning supplies tidy", cam: [-0.25, 1.25, 0.37], at: [-300, 650], act: () => {
+  } },
+  { text: () => "Behind the other two doors, a full-width rail for long coats", cam: [-0.15, 1.25, 0.53], at: [150, 50], act: () => {
+    ht(1), ot("L", 0);
+  } },
+  { text: () => "Top shelf for hats, scarves and seasonal boxes", cam: [-0.1, 1.15, 0.41], at: [150, 850], act: () => {
+  } },
+  { text: () => "Shoe shelf and floor space for slippers and everyday shoes", cam: [-0.15, 1.35, 0.41], at: [150, -800], act: () => {
+  } },
+  { text: () => "Made to order in your size and finish", cam: [-0.7, 1.2, 0.78], at: [0, 0], act: () => ht(0) }
+], ut = u(".jl-caption"), ke = ut.querySelector(".jl-step"), Ce = ut.querySelector("p"), Et = u("[data-demo]"), ze = u("#jlwd-loop");
+let P = null;
+function Zt(t) {
+  if (!P)
+    return;
+  if (t >= Dt.length)
+    if (ze.checked)
+      t = 0;
+    else {
+      B();
+      return;
+    }
+  const e = Dt[t];
+  P.i = t, e.act(), k = { theta: e.cam[0], phi: e.cam[1], r: St(e.cam[2]), target: Ft(e.at[0], e.at[1]) }, ke.textContent = `STEP ${t + 1} / ${Dt.length}`, Ce.textContent = e.text(), ut.hidden = !1, i.showItems === !1 && (D.visible = !0), P.timer = setTimeout(() => Zt(t + 1), 3400);
+}
+function Re() {
+  B(), P = { i: 0, timer: 0 }, Et.textContent = "Stop demo", Zt(0);
+}
+function B() {
+  P && (clearTimeout(P.timer), P = null, ut.hidden = !0, Et.textContent = "Play demo", D && (D.visible = i.showItems));
+}
+Et.addEventListener("click", () => P ? B() : Re());
+const K = u(".jl-ar"), Kt = u(".jl-ar-note");
+function Qt() {
+  if (mt !== "shopify")
+    return;
+  const t = JSON.parse(A.dataset.models || "{}"), e = t[i.finish] || t.birch || t.walnut;
+  if (!e) {
+    K.hidden = !0, Kt.hidden = !0;
+    return;
+  }
+  K.setAttribute("data-shopify-model3d-id", e);
+}
+async function te(t) {
+  const { GLTFExporter: e } = await import("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/exporters/GLTFExporter.js/+esm"), o = { finish: i.finish, open: { ...i.open }, target: { ...i.target }, show: i.showItems };
+  i.finish = t, i.open = { L: 0, M: 0, R: 0 }, i.target = { L: 0, M: 0, R: 0 }, X();
+  const n = w.clone(!0), a = [];
+  n.traverse((l) => {
+    (l.userData.outline || l.name === "Items") && a.push(l);
+  }), a.forEach((l) => l.parent.remove(l)), n.name = `Jalico three-door wardrobe (${t})`, n.updateMatrixWorld(!0);
+  const c = await new e().parseAsync(n, { binary: !0, maxTextureSize: 1024 });
+  return Object.assign(i, { finish: o.finish, open: o.open, target: o.target, showItems: o.show }), X(), V(), c;
+}
+if (mt === "shopify") {
+  Qt();
+  const t = JSON.parse(A.dataset.modelsJson || "[]");
+  t.length && window.Shopify && Shopify.loadFeatures ? Shopify.loadFeatures([{ name: "shopify-xr", version: "1.0", onLoad: (e) => {
+    e || (window.ShopifyXR.addModels(t), window.ShopifyXR.setupXRElements(), setTimeout(() => {
+      K.hasAttribute("data-shopify-xr-hidden") && (K.hidden = !0, Kt.hidden = !1);
+    }, 300));
+  } }]) : K.hidden = !0;
+} else {
+  const t = u(".jl-modal");
+  let e = !1;
+  K.addEventListener("click", async () => {
+    e || (await import("https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"), e = !0);
+    const o = t.querySelector("model-viewer"), n = await te(i.finish);
+    o.dataset.url && URL.revokeObjectURL(o.dataset.url), o.dataset.url = URL.createObjectURL(new Blob([n], { type: "model/gltf-binary" })), o.setAttribute("src", o.dataset.url), t.querySelector("[data-ar-title]").textContent = `Three-door wardrobe, ${tt[i.finish].label.toLowerCase()}`, t.hidden = !1;
+  }), t.addEventListener("click", (o) => {
+    (o.target === t || o.target.closest("[data-close]")) && (t.hidden = !0);
+  });
+}
+function ee() {
+  const t = J.clientWidth, e = J.clientHeight;
+  !t || !e || ($.setSize(t, e, !1), O.aspect = t / e, O.fov = t / e < 0.9 ? 44 : 35, O.updateProjectionMatrix());
+}
+new ResizeObserver(ee).observe(J), ee();
+const oe = matchMedia("(prefers-reduced-motion: reduce)").matches, He = new r.Clock();
+$.setAnimationLoop(() => {
+  const t = Math.min(He.getDelta(), 0.05);
+  let e = !1;
+  for (const o of ["L", "M", "R"]) {
+    const n = i.target[o] - i.open[o];
+    n && (i.open[o] += Math.sign(n) * Math.min(oe ? 1 : t * 1.6, Math.abs(n)), e = !0);
+  }
+  e && It(), ve(oe ? 1 : t), G.update(), $.render(I, O);
+}), Tt(), X(!0), Z(), u(".jl-loading").hidden = !0, window.__jlwd = { exportGLB: te, state: i, fit: U, geom: _, setDoor: ot };
+
+</script>
+
+</body></html>

@@ -1,0 +1,443 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico Pet Cabinet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: workshop bench — large 3D stage on the left, a narrow spec sheet on the right; stacks on phones */
+:root{
+  --bg:#ECEEE9; --surface:#F7F8F4; --stage:#E3E6DF; --fg:#1E231F; --muted:#5D665F;
+  --line:#CDD3CA; --accent:#2F5B4C; --accent-ink:#F4F7F3; --wood:#7A4A22;
+  --f-display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Work Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141815; --surface:#1B201C; --stage:#1F2420; --fg:#E6EAE4; --muted:#9AA59C;
+  --line:#2E3630; --accent:#7FB8A3; --accent-ink:#0F1612; --wood:#C08A55; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141815; --surface:#1B201C; --stage:#1F2420; --fg:#E6EAE4; --muted:#9AA59C;
+  --line:#2E3630; --accent:#7FB8A3; --accent-ink:#0F1612; --wood:#C08A55; color-scheme:dark}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-body);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;max-width:1400px;margin:0 auto}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;background:var(--stage);border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  height:min(78vh,760px);min-height:420px}
+@media (max-width:860px){.stage{height:60vh;min-height:360px}}
+#c{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#c:active{cursor:grabbing}
+.toolbar{position:absolute;left:12px;right:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:8px;pointer-events:none}
+.toolbar>*{pointer-events:auto}
+.hint{position:absolute;top:12px;left:12px;font:12px var(--f-mono);color:var(--muted)}
+button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--fg);
+  padding:7px 12px;border-radius:4px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.spacer{flex:1}
+aside{display:flex;flex-direction:column;gap:20px;min-width:0}
+.eyebrow{font:500 11px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 30px/1.05 var(--f-display);margin:4px 0 6px;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:60ch}
+h2{font:700 15px var(--f-display);margin:0 0 10px;letter-spacing:.01em}
+section{border-top:1px solid var(--line);padding-top:14px}
+.ctl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;margin-bottom:10px}
+.ctl label{font-weight:500}
+.ctl output{font:12px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.ctl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:4px 6px 6px 0;border-bottom:1px solid var(--line)}
+td{padding:5px 6px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{font-size:12.5px;color:var(--muted)}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--wood);margin-right:6px;vertical-align:-1px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="stage">
+    <canvas id="c" aria-label="3D model of the Jalico pet supply cabinet. Drag to rotate, scroll or pinch to zoom."></canvas>
+    <div class="hint">drag · rotate &nbsp; scroll · zoom &nbsp; right-drag · pan</div>
+    <div class="toolbar">
+      <button id="bDoors" aria-pressed="false">Open doors</button>
+      <button id="bLid" aria-pressed="false">Lift glass lid</button>
+      <button id="bDims" aria-pressed="true">Dimensions</button>
+      <button id="bItems" aria-pressed="true">Items</button>
+      <span class="spacer"></span>
+      <button data-view="front">Front</button>
+      <button data-view="side">Side</button>
+      <button data-view="three">3/4</button>
+    </div>
+  </div>
+
+  <aside>
+    <div>
+      <div class="eyebrow">Jalico · pet supply cabinet</div>
+      <h1>Jalico Pet Cabinet</h1>
+      <p class="lede">Two-door base with a shelf on the left, an open cubby above, and a hinged glass lid over the right bin, stocked with the dog's everyday things. Sloped sides, walnut stain, honey-toned lid frame.</p>
+    </div>
+
+    <section>
+      <h2>Overall size</h2>
+      <div class="ctl"><label for="W">Width</label><output id="oW"></output><input type="range" id="W" min="600" max="1400" step="5"></div>
+      <div class="ctl"><label for="H">Height</label><output id="oH"></output><input type="range" id="H" min="600" max="1200" step="5"></div>
+      <div class="ctl"><label for="D">Depth at base</label><output id="oD"></output><input type="range" id="D" min="300" max="650" step="5"></div>
+      <div class="ctl"><label for="HL">Door section height</label><output id="oHL"></output><input type="range" id="HL" min="350" max="1000" step="5"></div>
+      <div class="ctl"><label for="DT">Top board depth</label><output id="oDT"></output><input type="range" id="DT" min="80" max="300" step="5"></div>
+      <div class="row"><button id="bReset">Reset to estimate</button></div>
+      <p class="note">Sizes are estimated from the photos (about 900 × 880 × 430 mm). Measure the real cabinet and set the sliders to match; the cut list updates with them.</p>
+    </section>
+
+    <section>
+      <h2>Cut list</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Part</th><th>Qty</th><th>L × W × T (mm)</th></tr></thead>
+        <tbody id="parts"></tbody>
+      </table></div>
+      <p class="note"><span class="swatch"></span>18 mm plywood carcass, 6 mm back, 20 mm frame-and-panel doors, 4 mm glass. Sloped parts are listed by their bounding rectangle.</p>
+    </section>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const T=18, DOOR_T=20, BACK_T=6, PLINTH=45, GAP=3, LID_T=20;
+const DEFAULT={W:900,H:880,D:430,HL:520,DT:140};
+let P={...DEFAULT};
+try{const s=JSON.parse(localStorage.getItem('jalico-cab')||'null'); if(s) P={...P,...s};}catch(e){}
+
+/* ---------- renderer / scene ---------- */
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.outputEncoding=THREE.sRGBEncoding;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(32,1,0.01,50);
+const controls=new THREE.OrbitControls(camera,canvas);
+controls.enableDamping=true; controls.dampingFactor=0.08; controls.maxPolarAngle=Math.PI*0.52;
+controls.minDistance=0.6; controls.maxDistance=6;
+
+scene.add(new THREE.HemisphereLight(0xfff4e6,0x40372c,0.75));
+const sun=new THREE.DirectionalLight(0xffffff,1.25);
+sun.position.set(1.4,2.6,2.2); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-1.2,right:1.2,top:1.6,bottom:-0.4,near:0.5,far:7}); sun.shadow.bias=-0.0004;
+scene.add(sun);
+const fill=new THREE.DirectionalLight(0xdfe8ff,0.35); fill.position.set(-2,1.2,1); scene.add(fill);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(8,8),new THREE.ShadowMaterial({opacity:0.22}));
+ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; ground.name='ground'; scene.add(ground);
+
+function themeBg(){const v=getComputedStyle(document.documentElement).getPropertyValue('--stage').trim()||'#E3E6DF';scene.background=new THREE.Color(v);}
+themeBg();
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',themeBg);}catch(e){}
+new MutationObserver(themeBg).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+/* ---------- materials ---------- */
+function woodCanvas(base,dark,seed){
+  const c=document.createElement('canvas'); c.width=1024; c.height=256; const g=c.getContext('2d');
+  g.fillStyle=base; g.fillRect(0,0,1024,256);
+  let r=seed; const rnd=()=>((r=(r*16807)%2147483647)/2147483647);
+  for(let i=0;i<140;i++){
+    const y0=rnd()*256, amp=2+rnd()*6, f=0.004+rnd()*0.01, ph=rnd()*6;
+    g.strokeStyle=dark; g.globalAlpha=0.05+rnd()*0.18; g.lineWidth=0.6+rnd()*2.2; g.beginPath();
+    for(let x=0;x<=1024;x+=8){const y=y0+Math.sin(x*f+ph)*amp+Math.sin(x*f*3.1+ph)*amp*0.3; x?g.lineTo(x,y):g.moveTo(x,y);}
+    g.stroke();
+  }
+  g.globalAlpha=0.08; for(let i=0;i<9;i++){g.fillStyle=rnd()>.5?'#000':'#fff'; g.fillRect(0,rnd()*256,1024,4+rnd()*20);}
+  return c;
+}
+function woodMat(base,dark,seed,{rot=0,rep=[1,1],rough=0.55}={}){
+  const t=new THREE.CanvasTexture(woodCanvas(base,dark,seed));
+  t.encoding=THREE.sRGBEncoding; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.anisotropy=8;
+  t.center.set(0.5,0.5); t.rotation=rot; t.repeat.set(rep[0],rep[1]);
+  return new THREE.MeshStandardMaterial({map:t,roughness:rough,metalness:0,side:THREE.DoubleSide});
+}
+const M={
+  walnutH:woodMat('#7a4521','#3a1d0b',11),
+  walnutV:woodMat('#7a4521','#3a1d0b',23,{rot:Math.PI/2}),
+  walnutIn:woodMat('#8a5429','#47250e',37),
+  walnutX:woodMat('#7a4521','#3a1d0b',41,{rep:[1/700,1/180]}),
+  walnutXV:woodMat('#7a4521','#3a1d0b',43,{rot:Math.PI/2,rep:[1/700,1/180]}),
+  panel:woodMat('#6c3b1a','#2f170a',53,{rot:Math.PI/2,rough:0.5}),
+  honeyH:woodMat('#b47534','#5c3412',61,{rough:0.45}),
+  honeyV:woodMat('#b47534','#5c3412',67,{rot:Math.PI/2,rough:0.45}),
+  honeyX:woodMat('#b47534','#5c3412',71,{rep:[1/600,1/120],rough:0.45}),
+  glass:new THREE.MeshPhysicalMaterial({color:0xd8e7e6,roughness:0.04,metalness:0,transparent:true,opacity:0.22,side:THREE.DoubleSide,depthWrite:false}),
+  iron:new THREE.MeshStandardMaterial({color:0x1c1c1c,roughness:0.45,metalness:0.7}),
+  steel:new THREE.MeshStandardMaterial({color:0xc9c9c9,roughness:0.3,metalness:0.9}),
+};
+
+/* ---------- geometry helpers (all mm; root scaled to metres) ---------- */
+const root=new THREE.Group(); root.scale.setScalar(0.001); scene.add(root);
+let model, dims, lidPivot, doorL, doorR, parts=[];
+function cut(name,a,b,c,note){const s=[a,b,c].map(v=>Math.round(v)).sort((x,y)=>y-x); parts.push({name,dims:s,note});}
+function shade(m){m.castShadow=true;m.receiveShadow=true;return m;}
+function box(parent,name,x0,x1,y0,y1,z0,z1,mat,list=true){
+  const m=shade(new THREE.Mesh(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mat));
+  m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2); m.name=name; parent.add(m);
+  if(list) cut(name,x1-x0,y1-y0,z1-z0); return m;
+}
+// profile in (z,y) pairs, extruded across x from x0 to x0+t
+function slab(parent,name,pts,x0,t,mat){
+  const s=new THREE.Shape(); pts.forEach(([z,y],i)=>i?s.lineTo(z,y):s.moveTo(z,y)); s.closePath();
+  const g=new THREE.ExtrudeGeometry(s,{depth:t,bevelEnabled:false});
+  const m=shade(new THREE.Mesh(g,mat)); m.rotation.y=-Math.PI/2; m.position.x=x0+t; m.name=name; parent.add(m);
+  const zs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  cut(name,Math.max(...ys)-Math.min(...ys),Math.max(...zs)-Math.min(...zs),t,'sloped'); return m;
+}
+// shape in local (x,y), extruded along z from z0 to z0+t
+function plate(parent,name,shape,z0,t,mat){
+  const m=shade(new THREE.Mesh(new THREE.ExtrudeGeometry(shape,{depth:t,bevelEnabled:false}),mat));
+  m.position.z=z0; m.name=name; parent.add(m); return m;
+}
+
+/* ---------- build ---------- */
+function build(){
+  if(model){root.remove(model); model.traverse(o=>{if(o.geometry)o.geometry.dispose(); if(o.material&&o.material.map&&o.material.isSpriteMaterial){o.material.map.dispose();o.material.dispose();}});}
+  if(dims){root.remove(dims);}
+  parts=[]; model=new THREE.Group(); model.name='JalicoPetCabinet'; root.add(model);
+  const {W,H,D,HL,DT}=P, xL=-W/2, xR=W/2, yTop=H-T;
+  const A={z:D,y:HL}, B={z:DT,y:yTop};
+
+  // carcass
+  const side=[[0,0],[D,0],[D,HL],[B.z,B.y],[0,yTop]];
+  slab(model,'Side panel',side,xL,T,M.walnutX);
+  slab(model,'Side panel',side,xR-T,T,M.walnutX);
+  box(model,'Top board',xL-8,xR+8,yTop,H,0,DT+10,M.walnutH);
+  box(model,'Bottom panel',xL+T,xR-T,PLINTH,PLINTH+T,BACK_T,D-DOOR_T,M.walnutIn);
+  box(model,'Plinth (kick board)',xL+T,xR-T,0,PLINTH,D-DOOR_T-T-12,D-DOOR_T-12,M.walnutH);
+  box(model,'Mid shelf / upper floor',xL+T,xR-T,HL-T,HL,BACK_T,D,M.walnutIn);
+  box(model,'Back panel (6 mm)',xL+T,xR-T,PLINTH,yTop,0,BACK_T,M.walnutIn);
+  box(model,'Divider, lower',-T/2,T/2,PLINTH+T,HL-T,BACK_T,D-DOOR_T,M.walnutIn);
+  slab(model,'Divider, upper',[[BACK_T,HL],[D,HL],[B.z,B.y],[BACK_T,yTop]],-T/2,T,M.walnutX);
+  const shelfY=(PLINTH+T+HL-T)/2;
+  box(model,'Adjustable shelf, left',xL+T+1,-T/2-1,shelfY-T/2,shelfY+T/2,BACK_T,D-DOOR_T-15,M.walnutIn);
+
+  // glass lid, hinged at the top board's front edge
+  const L=Math.hypot(A.z-B.z,A.y-B.y)-GAP, theta=Math.atan2(-(A.z-B.z),-(A.y-B.y));
+  lidPivot=new THREE.Group(); lidPivot.name='GlassLid'; lidPivot.position.set(0,B.y,B.z);
+  lidPivot.userData.closed=theta; lidPivot.rotation.x=theta+(lidOpen?-1.25:0); model.add(lidPivot);
+  const lx0=T/2+GAP, lx1=xR-T-GAP, SW=45, BR=62;
+  box(lidPivot,'Lid stile',lx0,lx0+SW,-L,0,-LID_T,0,M.honeyV);
+  box(lidPivot,'Lid stile',lx1-SW,lx1,-L,0,-LID_T,0,M.honeyV);
+  box(lidPivot,'Lid top rail',lx0+SW,lx1-SW,-SW,0,-LID_T,0,M.honeyH);
+  const cx=(lx0+lx1)/2, bs=new THREE.Shape();
+  bs.moveTo(lx0+SW,-L); bs.lineTo(cx-70,-L); bs.absellipse(cx,-L,70,24,Math.PI,0,true); bs.lineTo(lx1-SW,-L);
+  bs.lineTo(lx1-SW,-L+BR); bs.lineTo(lx0+SW,-L+BR); bs.closePath();
+  plate(lidPivot,'Lid bottom rail',bs,-LID_T,LID_T,M.honeyX); cut('Lid bottom rail (finger notch)',lx1-lx0-2*SW,BR,LID_T);
+  box(lidPivot,'Glass, 4 mm',lx0+SW-8,lx1-SW+8,-L+BR-8,-SW+8,-12,-8,M.glass);
+  [lx0+70,lx1-70].forEach(hx=>{ // strap hinges
+    box(lidPivot,'h',hx-38,hx+38,-48,-2,0,3,M.iron,false);
+    box(model,'h',hx-38,hx+38,H,H+3,DT-40,DT+4,M.iron,false);
+    const pin=new THREE.Mesh(new THREE.CylinderGeometry(5,5,76,16),M.iron); pin.rotation.z=Math.PI/2; pin.position.set(hx,B.y+6,B.z+4); model.add(pin);
+  });
+
+  // doors: frame and panel, inset between sides, hinged at the outer edges
+  const dw=(W-2*T)/2-GAP*1.5, dy0=PLINTH+GAP, dy1=HL-T-GAP, dh=dy1-dy0, S=62;
+  function door(isLeft){
+    const g=new THREE.Group(); g.name=isLeft?'DoorLeft':'DoorRight';
+    g.position.set(isLeft?xL+T+GAP/2:xR-T-GAP/2,0,D);
+    const sgn=isLeft?1:-1, X=v=>sgn*v; // local x measured from hinge toward centre
+    const lo=(a,b)=>[Math.min(X(a),X(b)),Math.max(X(a),X(b))];
+    // hinge stile
+    box(g,'Door stile',...lo(0,S),dy0,dy1,-DOOR_T,0,M.walnutV);
+    // meeting stile with half of the lens-shaped finger pull
+    const cy=dy0+dh*0.80, ry=78, rx=24, s=new THREE.Shape();
+    if(isLeft){ s.moveTo(dw-S,dy0); s.lineTo(dw,dy0); s.lineTo(dw,cy-ry); s.absellipse(dw,cy,rx,ry,-Math.PI/2,Math.PI/2,true); s.lineTo(dw,dy1); s.lineTo(dw-S,dy1); }
+    else { s.moveTo(-dw+S,dy0); s.lineTo(-dw,dy0); s.lineTo(-dw,cy-ry); s.absellipse(-dw,cy,rx,ry,-Math.PI/2,Math.PI/2,false); s.lineTo(-dw,dy1); s.lineTo(-dw+S,dy1); }
+    s.closePath(); plate(g,'Door stile (pull)',s,-DOOR_T,DOOR_T,M.walnutXV);
+    cut('Door stile',dh,S,DOOR_T);
+    box(g,'Door rail',...lo(S,dw-S),dy1-S,dy1,-DOOR_T,0,M.walnutH);
+    box(g,'Door rail',...lo(S,dw-S),dy0,dy0+S,-DOOR_T,0,M.walnutH);
+    box(g,'Door panel (9 mm)',...lo(S-8,dw-S+8),dy0+S-8,dy1-S+8,-15,-6,M.panel);
+    // hinge leaves (inside)
+    [dy0+90,dy1-90].forEach(hy=>box(g,'hl',...lo(4,40),hy-35,hy+35,-DOOR_T-3,-DOOR_T,M.steel,false));
+    model.add(g); return g;
+  }
+  doorL=door(true); doorR=door(false); setDoors(true);
+
+  // three J-hooks on the left side
+  [[HL+260,D-150],[HL+60,D-60],[HL-170,D-60]].forEach(([hy,hz])=>{
+    if(hy>H-60) hy=H-60;
+    const yt=hy+45, sz=yt<=HL?D:D-(yt-HL)*(D-DT)/(yTop-HL); hz=Math.min(hz,sz-35);
+    box(model,'k',xL-5,xL,hy-40,hy+40,hz-9,hz+9,M.iron,false);
+    const arc=new THREE.Mesh(new THREE.TorusGeometry(18,4.5,10,24,Math.PI),M.iron);
+    arc.rotation.y=Math.PI/2; arc.rotation.x=Math.PI; arc.position.set(xL-22,hy-38,hz); shade(arc); model.add(arc);
+    const stem=new THREE.Mesh(new THREE.CylinderGeometry(4.5,4.5,50,10),M.iron); stem.position.set(xL-4,hy-20,hz); stem.rotation.z=0.1; model.add(stem);
+    const tip=new THREE.Mesh(new THREE.CylinderGeometry(4.5,4.5,26,10),M.iron); tip.position.set(xL-40,hy-28,hz); model.add(tip);
+  });
+
+  buildProps(); buildDims(); renderParts(); syncUI();
+}
+
+
+/* ---------- items inside the cabinet ---------- */
+let propsOn=true, props;
+function texCanvas(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t;}
+function bagTex(bg,band,fg,word){return texCanvas(256,384,(g,w,h)=>{g.fillStyle=bg;g.fillRect(0,0,w,h);
+  g.fillStyle=band;g.fillRect(0,h*0.38,w,h*0.3);g.fillStyle=fg;g.font='700 46px "Familjen Grotesk",Arial';g.textAlign='center';g.fillText(word,w/2,h*0.56);
+  g.globalAlpha=.35;g.fillStyle='#fff';g.fillRect(18,22,w-36,10);g.fillRect(18,h-40,w*0.5,10);});}
+const weave=texCanvas(64,64,(g,w,h)=>{g.fillStyle='#fff';g.fillRect(0,0,w,h);g.fillStyle='#000';
+  for(let i=0;i<2;i++)for(let j=0;j<2;j++)g.fillRect(6+i*32,8+j*32,20,16);});
+function buildProps(){
+  const {W,H,D,HL,DT}=P, xL=-W/2, xR=W/2, yTop=H-T;
+  props=new THREE.Group(); props.name='Items'; props.visible=propsOn; model.add(props);
+  const std=(c,o={})=>new THREE.MeshStandardMaterial({color:c,roughness:.55,...o});
+  const add=(geo,mat,x,y,z)=>{const m=shade(new THREE.Mesh(geo,mat));m.position.set(x,y,z);props.add(m);return m;};
+  const cyl=(r,h,mat,x,y,z,rTop)=>add(new THREE.CylinderGeometry(rTop??r,r,h,28),mat,x,y+h/2,z);
+  const bx=(w,h,d,mat,x,y,z)=>add(new THREE.BoxGeometry(w,h,d),mat,x,y+h/2,z);
+  const cw=W/2-T-T/2, k=Math.min(1.15,cw/423), cxL=xL+T+cw/2, cxR=T/2+cw/2;
+  const slopeY=z=>z>=D?HL:HL+(D-z)*(yTop-HL)/(D-DT);         // underside of the slope at depth z
+  const zFor=(h,pref)=>{let z=pref; while(z>BACK_T+40 && slopeY(z)-HL-28<h) z-=10; return z;}; // push tall items back
+  const white=std(0xf3f2ee), clear=new THREE.MeshPhysicalMaterial({color:0xdfeef0,roughness:.08,transparent:true,opacity:.45});
+
+  // upper-left cubby: water bottle, paw cleaner cup, white basket
+  let z=zFor(190,BACK_T+70); cyl(33,150,clear,xL+T+55*k,HL,z); cyl(31,42,white,xL+T+55*k,HL+150,z);
+  add(new THREE.SphereGeometry(30,20,12,0,Math.PI*2,0,Math.PI/2),white,xL+T+55*k,HL+192,z);
+  z=zFor(115,D-110); const pink=std(0xf06a9e,{roughness:.7});
+  cyl(42,95,pink,xL+T+70*k,HL,z,44); cyl(47,22,std(0xe4307a),xL+T+70*k,HL+95,z);
+  const bw=250*k, bh=125, bd=190, bxC=cxL+55*k; z=zFor(bh+40,BACK_T+30+bd/2+40);
+  const wm=new THREE.MeshStandardMaterial({color:0xf7f7f4,roughness:.6,alphaMap:weave,alphaTest:.5,side:THREE.DoubleSide});
+  weave.wrapS=weave.wrapT=THREE.RepeatWrapping; weave.repeat.set(6,3);
+  bx(bw,6,bd,white,bxC,HL,z);
+  [[bw,bh,4,0,-bd/2],[bw,bh,4,0,bd/2],[4,bh,bd,-bw/2,0],[4,bh,bd,bw/2,0]].forEach(([a,b,c,dx,dz])=>bx(a,b,c,wm,bxC+dx,HL,z+dz));
+  const pk=bx(105,150,28,std(0x1f6b45),bxC-45*k,HL+6,z-15); pk.rotation.z=0.18;
+  cyl(36,165,white,bxC+55*k,HL+6,z+10,26);
+
+  // glass bin: two sprays and small bottles
+  const sx=T/2+60*k; cyl(36,190,std(0xcfe3d8,{transparent:true,opacity:.85}),sx,HL,BACK_T+50);
+  z=zFor(250,BACK_T+130); cyl(42,205,std(0xf2f0eb,{roughness:.35}),sx+40*k,HL,z,36);
+  cyl(13,28,white,sx+40*k,HL+205,z); bx(34,40,78,white,sx+40*k,HL+233,z+18);
+  const bots=[[0xffffff,120,22,0xffffff],[0xf6f1e6,135,23,0xffffff],[0x2e7d5c,140,21,0x2e7d5c],[0xf3c432,85,17,0xf0b000]];
+  bots.forEach(([c,h,r,cap],i)=>{const x=sx+120*k+i*52*k, zz=zFor(h+30,D*0.52); cyl(r,h,std(c,{roughness:.4}),x,HL,zz); cyl(r*0.55,26,std(cap),x,HL+h,zz);});
+
+  // lower left: treat bags on the shelf, puzzle toy below
+  const shelfTop=(PLINTH+T+HL-T)/2+T/2, room=HL-T-shelfTop-18, bagH=Math.min(195,room);
+  [['#2c86c9','#e8f2fa','#123c5c','JERKY'],['#e7e3da','#6b5b4a','#fff','CAT'],['#f2dfbe','#7a3f86','#fff','BUTTER']].forEach((b,i)=>{
+    const t=bagTex(...b), m=std(b[0]); const mats=[m,m,m,m,new THREE.MeshStandardMaterial({map:t,roughness:.5}),m];
+    const bag=add(new THREE.BoxGeometry(cw/3-14,bagH,70),mats,xL+T+cw/6+i*cw/3,shelfTop+bagH/2,D*0.55); bag.rotation.y=(i-1)*0.08;});
+  const floorY=PLINTH+T; bx(cw*0.7,32,210,std(0x3fa2d6),cxL,floorY,D*0.55);
+  cyl(85,24,std(0x8fc9ec),cxL+20,floorY+32,D*0.55); bx(60,20,60,std(0x6cc04a),cxL-cw*0.25,floorY+32,D*0.55);
+
+  // lower right: big dog food bag
+  const fbH=Math.min(400,HL-T-floorY-75), fbW=cw*0.78;
+  const ft=bagTex('#e9efe1','#5aa03c','#fff','DOG FOOD'), fm=std(0xe9efe1);
+  add(new THREE.BoxGeometry(fbW,fbH,170),[fm,fm,fm,fm,new THREE.MeshStandardMaterial({map:ft,roughness:.6}),fm],cxR,floorY+fbH/2,D*0.5);
+  const fold=bx(fbW*0.96,55,176,std(0x7d5a9a,{roughness:.8}),cxR,floorY+fbH-10,D*0.5); fold.rotation.x=-0.12;
+
+  // on top: paw-print frame, copper wire tree, plush puppy
+  const paw=texCanvas(128,160,(g,w,h)=>{g.fillStyle='#fbfbf8';g.fillRect(0,0,w,h);g.fillStyle='#4a4a4a';
+    [[58,58],[72,112]].forEach(([x,y])=>{g.beginPath();g.ellipse(x,y,13,11,0,0,7);g.fill();
+      [[-14,-16],[-4,-22],[7,-21],[16,-14]].forEach(([dx,dy])=>{g.beginPath();g.ellipse(x+dx,y+dy,4.5,5.5,0,0,7);g.fill();});});
+    g.strokeStyle='#e6e6e0';g.lineWidth=14;g.strokeRect(0,0,w,h);});
+  const fw=white, frm=add(new THREE.BoxGeometry(120,155,14),[fw,fw,fw,fw,new THREE.MeshStandardMaterial({map:paw,roughness:.6}),fw],xL+110,H+77,DT*0.5);
+  frm.rotation.x=-0.18;
+  cyl(16,16,std(0x2f6b57),xL+205,H,DT*0.5); const copper=std(0xd99a7a,{roughness:.8});
+  [[0,52,0,26],[-14,44,4,16],[14,46,-4,18]].forEach(([dx,dy,dz,r])=>add(new THREE.SphereGeometry(r,14,10),copper,xL+205+dx,H+dy,DT*0.5+dz));
+  cyl(3,30,std(0x8a5a3c),xL+205,H+16,DT*0.5);
+  const fur=std(0x8a5530,{roughness:1}), px=xR-150, pz=Math.min(DT*0.55,70);
+  add(new THREE.SphereGeometry(70,24,18),fur,px,H+66,pz).scale.set(1,1.05,0.85);
+  add(new THREE.SphereGeometry(55,24,18),fur,px+5,H+175,pz+6);
+  [-1,1].forEach(sd=>{const e=add(new THREE.SphereGeometry(26,16,12),fur,px+sd*48,H+150,pz+4);e.scale.set(0.6,1.5,0.5);
+    const f=add(new THREE.SphereGeometry(22,16,12),std(0x3b6fd1,{roughness:.9}),px+sd*40,H+22,pz+55);f.scale.set(1,1,0.7);});
+  add(new THREE.SphereGeometry(12,12,10),std(0x3b6fd1),px+5,H+170,pz+60);
+}
+
+/* ---------- dimension annotations ---------- */
+const inch=mm=>{const e=Math.round(mm/25.4*8)/8, w=Math.floor(e), f=Math.round((e-w)*8);
+  const fr={0:'',1:'⅛',2:'¼',3:'⅜',4:'½',5:'⅝',6:'¾',7:'⅞'}[f]; return `${w}${fr}″`;};
+const fmt=mm=>`${Math.round(mm)} mm · ${inch(mm)}`;
+function label(text){
+  const c=document.createElement('canvas'), g=c.getContext('2d'); c.width=512; c.height=96;
+  g.fillStyle='rgba(20,24,21,0.82)'; const r=18; g.beginPath(); g.roundRect?g.roundRect(4,8,504,80,r):g.rect(4,8,504,80); g.fill();
+  g.fillStyle='#F2F4EF'; g.font='500 42px "IBM Plex Mono", monospace'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(text,256,50);
+  const t=new THREE.CanvasTexture(c); t.encoding=THREE.sRGBEncoding;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true})); s.scale.set(260,49,1); s.renderOrder=10; return s;
+}
+function dimLine(a,b,off,text){
+  const g=new THREE.Group(), mat=new THREE.LineBasicMaterial({color:0xb0533a,depthTest:false,transparent:true});
+  const A=new THREE.Vector3(...a), B=new THREE.Vector3(...b), O=new THREE.Vector3(...off).setLength(18);
+  const geo=new THREE.BufferGeometry().setFromPoints([A,B, A.clone().add(O),A.clone().sub(O), B.clone().add(O),B.clone().sub(O)]);
+  const l=new THREE.LineSegments(geo,mat); l.renderOrder=9; g.add(l);
+  const s=label(text); s.position.copy(A).add(B).multiplyScalar(0.5); g.add(s); return g;
+}
+function buildDims(){
+  const {W,H,D,HL}=P; dims=new THREE.Group(); dims.name='dims'; dims.visible=dimsOn;
+  dims.add(dimLine([-W/2,2,D+110],[W/2,2,D+110],[0,0,1],`W ${fmt(W)}`));
+  dims.add(dimLine([W/2+90,0,D],[W/2+90,H,D],[1,0,0],`H ${fmt(H)}`));
+  dims.add(dimLine([W/2+90,2,0],[W/2+90,2,D],[1,0,0],`D ${fmt(D)}`));
+  dims.add(dimLine([-W/2-90,0,D],[-W/2-90,HL,D],[1,0,0],`Doors ${fmt(HL)}`));
+  root.add(dims);
+}
+
+/* ---------- cut list ---------- */
+function renderParts(){
+  const map=new Map();
+  parts.forEach(p=>{const k=p.name+'|'+p.dims.join('x'); const e=map.get(k); e?e.q++:map.set(k,{...p,q:1});});
+  const tb=document.getElementById('parts'); tb.innerHTML='';
+  map.forEach(p=>{if(p.name==='Lid bottom rail'||p.name==='Door stile (pull)')return;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}${p.note?' <span class="note">(sloped)</span>':''}</td><td class="n">${p.q}</td><td class="n">${p.dims.join(' × ')}</td>`; tb.appendChild(tr);});
+}
+
+/* ---------- animation of doors / lid ---------- */
+let doorsOpen=false, lidOpen=false, dimsOn=true, tDoor=0, tLid=0;
+function setDoors(instant){ if(instant){tDoor=doorsOpen?1:0;} applyDoor(); }
+function applyDoor(){ if(!doorL)return; const a=1.95*ease(tDoor); doorL.rotation.y=-a; doorR.rotation.y=a; }
+function applyLid(){ if(!lidPivot)return; lidPivot.rotation.x=lidPivot.userData.closed-1.25*ease(tLid); }
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- camera views ---------- */
+const views={front:[0,0.5,2.7],side:[-2.6,0.55,0.25],three:[1.75,1.15,2.15]};
+let camGoal=null;
+function goView(k,instant){const v=views[k]; camGoal={pos:new THREE.Vector3(...v),target:new THREE.Vector3(0,P.H/2000,P.D/2000-0.05)};
+  if(instant){camera.position.copy(camGoal.pos);controls.target.copy(camGoal.target);camGoal=null;}}
+
+/* ---------- UI ---------- */
+const ids=['W','H','D','HL','DT'];
+function syncUI(){ids.forEach(k=>{const el=document.getElementById(k); el.value=P[k]; document.getElementById('o'+k).textContent=fmt(P[k]);});
+  document.getElementById('HL').max=P.H-160; document.getElementById('DT').max=P.D-120;}
+ids.forEach(k=>document.getElementById(k).addEventListener('input',e=>{
+  P[k]=+e.target.value; P.HL=Math.min(P.HL,P.H-160); P.DT=Math.min(P.DT,P.D-120);
+  try{localStorage.setItem('jalico-cab',JSON.stringify(P));}catch(err){}
+  build(); applyDoor(); applyLid();
+}));
+document.getElementById('bReset').onclick=()=>{P={...DEFAULT}; try{localStorage.removeItem('jalico-cab');}catch(e){} build(); applyLid(); goView('three');};
+const bD=document.getElementById('bDoors'), bL=document.getElementById('bLid'), bM=document.getElementById('bDims');
+bD.onclick=()=>{doorsOpen=!doorsOpen; bD.setAttribute('aria-pressed',doorsOpen); bD.textContent=doorsOpen?'Close doors':'Open doors'; if(reduce){tDoor=doorsOpen?1:0;applyDoor();}};
+bL.onclick=()=>{lidOpen=!lidOpen; bL.setAttribute('aria-pressed',lidOpen); bL.textContent=lidOpen?'Close glass lid':'Lift glass lid'; if(reduce){tLid=lidOpen?1:0;applyLid();}};
+bM.onclick=()=>{dimsOn=!dimsOn; bM.setAttribute('aria-pressed',dimsOn); if(dims)dims.visible=dimsOn;};
+const bI=document.getElementById('bItems'); bI.onclick=()=>{propsOn=!propsOn; bI.setAttribute('aria-pressed',propsOn); if(props)props.visible=propsOn;};
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>goView(b.dataset.view,reduce));
+
+/* ---------- loop ---------- */
+function resize(){const r=canvas.parentElement.getBoundingClientRect(); renderer.setSize(r.width,r.height,false); camera.aspect=r.width/r.height; camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(canvas.parentElement);
+let last=performance.now();
+function tick(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+  const tdG=doorsOpen?1:0, tlG=lidOpen?1:0;
+  if(tDoor!==tdG){tDoor+=Math.sign(tdG-tDoor)*dt/0.9; tDoor=Math.max(0,Math.min(1,tDoor)); applyDoor();}
+  if(tLid!==tlG){tLid+=Math.sign(tlG-tLid)*dt/0.8; tLid=Math.max(0,Math.min(1,tLid)); applyLid();}
+  if(camGoal){camera.position.lerp(camGoal.pos,0.12); controls.target.lerp(camGoal.target,0.12);
+    if(camera.position.distanceTo(camGoal.pos)<0.002)camGoal=null;}
+  controls.update(); renderer.render(scene,camera); requestAnimationFrame(tick);
+}
+build(); goView('three',true); resize(); requestAnimationFrame(tick);
+
+// hooks for offline export
+window.__jalico={scene,root,get model(){return model},get dims(){return dims},P,
+  setState(o){if('doors'in o){doorsOpen=o.doors;tDoor=o.doors?1:0;applyDoor();} if('lid'in o){lidOpen=o.lid;tLid=o.lid?1:0;applyLid();} if('items'in o){propsOn=o.items; if(props)props.visible=o.items;} if('dims'in o){dimsOn=o.dims; if(dims)dims.visible=o.dims;}},
+  view(k){goView(k,true);controls.update();renderer.render(scene,camera);}};
+})();
+</script>
+
+</body></html>

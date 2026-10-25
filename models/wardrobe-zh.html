@@ -1,0 +1,214 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico 三門衣櫃 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* Layout: slim brand header, one large 3D room view, a single control row underneath */
+:root{
+  --oat:#F3ECE1; --walnut:#2A2119; --teak:#B5602A; --amber:#E8A15C;
+  --bg:var(--oat); --fg:var(--walnut); --muted:#6B5A49; --line:#CDBBA0; --stage:#E9DFD2; --accent:var(--teak); --on-accent:#fff;
+  --serif:"Noto Serif TC","Songti TC",serif; --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1E1812;--fg:#F3ECE1;--muted:#BCA98F;--line:#4A3D30;--stage:#2A2119;--accent:var(--amber);--on-accent:#2A2119;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1E1812;--fg:#F3ECE1;--muted:#BCA98F;--line:#4A3D30;--stage:#2A2119;--accent:var(--amber);--on-accent:#2A2119;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 36px;display:grid;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.tag{background:var(--walnut);color:var(--oat);font-weight:700;letter-spacing:.14em;font-size:12px;padding:5px 12px;border-radius:8px}
+h1{font-family:var(--serif);font-size:clamp(22px,3.2vw,30px);margin:0;line-height:1.25;text-wrap:balance}
+.sub{color:var(--muted);margin:0;font-size:14px;flex-basis:100%}
+.stage{position:relative;background:var(--stage);border-radius:14px;overflow:hidden;aspect-ratio:1/1.02;max-height:82vh;max-width:100%;width:100%;justify-self:center}
+@media (min-width:760px){.stage{aspect-ratio:4/3.6}}
+.stage canvas{display:block;width:100%!important;height:100%!important;touch-action:none}
+.hint{position:absolute;left:12px;bottom:10px;font-size:12px;color:#5b4a3a;background:rgba(243,236,225,.8);padding:2px 8px;border-radius:6px;pointer-events:none}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:inherit;font-size:14px;border:1.5px solid var(--line);background:transparent;color:var(--fg);padding:8px 14px;border-radius:999px;cursor:pointer}
+.chip.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.spec{font-size:13px;color:var(--muted);margin:0;font-variant-numeric:tabular-nums}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="tag">JALICO</span>
+    <h1>三門衣帽櫃｜陽光客廳場景</h1>
+    <p class="sub">拖動旋轉、捏合／滾輪縮放。直接撳櫃門可以逐道打開。</p>
+  </header>
+  <div class="stage" id="stage"><div class="hint">直接撳門開關</div></div>
+  <div class="controls">
+    <button class="chip primary" id="allDoors">開晒門</button>
+    <button class="chip" id="sunBtn" aria-pressed="true">陽光陰影</button>
+    <button class="chip" id="plantBtn" aria-pressed="true">發財樹</button>
+    <button class="chip" id="resetBtn">重設視角</button>
+  </div>
+  <p class="spec">尺寸（估算）：闊 110 × 高 215 × 深 60 cm｜左格放吸塵機，右邊雙門格有頂層、掛鈎同鞋板</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;
+stage.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#E9DFD2').convertSRGBToLinear();
+const camera=new THREE.PerspectiveCamera(36,1,1,4000);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.maxPolarAngle=Math.PI*0.5;controls.minDistance=90;controls.maxDistance=650;
+
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const lin=h=>new THREE.Color(h).convertSRGBToLinear();
+const matCache={};
+function mc(hex,r=0.85,m=0,op=1){const k=hex+'|'+r+'|'+m+'|'+op;if(!matCache[k])matCache[k]=new THREE.MeshStandardMaterial({color:lin(hex),roughness:r,metalness:m,transparent:op<1,opacity:op});return matCache[k]}
+function mk(geo,mat,x,y,z,p,cast=true){const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);o.castShadow=cast;o.receiveShadow=true;p.add(o);return o}
+function bx(p,x0,y0,z0,x1,y1,z1,m,cast=true){return mk(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),m,(x0+x1)/2,(y0+y1)/2,(z0+z1)/2,p,cast)}
+function canvasTex(w,h,draw,rep){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;if(rep){t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rep[0],rep[1])}return t}
+function rng(seed){let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280}}
+
+/* ---------- materials ---------- */
+function grain(base,line,seed){return canvasTex(512,1024,(g,w,h)=>{g.fillStyle=base;g.fillRect(0,0,w,h);const r=rng(seed);
+  for(let i=0;i<120;i++){g.strokeStyle=line;g.globalAlpha=0.04+r()*0.1;g.lineWidth=0.5+r()*1.6;const x0=r()*w,amp=2+r()*8,f=0.002+r()*0.006,ph=r()*6;
+    g.beginPath();for(let y=0;y<=h;y+=8){const x=x0+Math.sin(y*f+ph)*amp;y?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}})}
+const M={
+  door:new THREE.MeshStandardMaterial({map:grain('#E2C49A','#B88E60',3),roughness:0.6}),
+  body:new THREE.MeshStandardMaterial({map:grain('#DDBE93','#B08657',7),roughness:0.65}),
+  inner:new THREE.MeshStandardMaterial({map:grain('#E0C39C','#A87C52',11),roughness:0.75}),
+  handle:mc('#1c1b1a',0.35,0.5),steel:mc('#bfc3c6',0.3,0.8),
+  wall:mc('#EFE7DC',0.95),trim:mc('#F8F6F1',0.55),
+};
+const floorTex=canvasTex(1024,1024,(g,w,h)=>{const r=rng(5),rows=8,ph=h/rows;
+  for(let i=0;i<rows;i++){let x=-r()*300;while(x<w){const len=260+r()*320,c=Math.floor(r()*4);
+    g.fillStyle=['#7A4B2C','#83532F','#6E4126','#8A5A35'][c];g.fillRect(x,i*ph,len,ph);
+    for(let k=0;k<14;k++){g.strokeStyle='rgba(40,20,8,'+(0.05+r()*0.12)+')';g.lineWidth=0.6+r()*1.4;const yy=i*ph+r()*ph;g.beginPath();g.moveTo(x,yy);g.bezierCurveTo(x+len*0.3,yy+(r()-0.5)*8,x+len*0.6,yy+(r()-0.5)*8,x+len,yy);g.stroke()}
+    g.fillStyle='rgba(30,15,5,.55)';g.fillRect(x,i*ph,2,ph);x+=len}
+    g.fillStyle='rgba(30,15,5,.6)';g.fillRect(0,i*ph,w,2)}},[9,9]);
+const floorM=new THREE.MeshStandardMaterial({map:floorTex,roughness:0.42,metalness:0.02});
+const rugTex=canvasTex(512,512,(g,w,h)=>{g.fillStyle='#E6DCCB';g.fillRect(0,0,w,h);const r=rng(9);
+  for(let i=0;i<9000;i++){const v=190+Math.floor(r()*65);g.fillStyle=`rgba(${v},${v-8},${v-22},${0.35+r()*0.5})`;const x=r()*w,y=r()*h;g.beginPath();g.arc(x,y,1+r()*2.6,0,7);g.fill()}},[4,3]);
+const rugM=new THREE.MeshStandardMaterial({map:rugTex,roughness:1,bumpMap:rugTex,bumpScale:1.2});
+
+/* ---------- room ---------- */
+const W=110,H=215,D=60,T=1.8;
+const xL=-W/2-115,xR=W/2+260,zFront=420,WH=270;
+mk(new THREE.PlaneGeometry(xR-xL,zFront+400).rotateX(-Math.PI/2),floorM,(xL+xR)/2,0,(zFront+400)/2-10,scene,false);
+const walls=[];
+const back=new THREE.Group();scene.add(back);bx(back,xL-10,0,-10,xR,WH,0,M.wall,false);bx(back,xL,0,0,xR,11,1.4,M.trim,false);
+walls.push({g:back,p:V(0,0,0),n:V(0,0,1)});
+// left wall with a tall window; the sun comes through it
+const left=new THREE.Group();scene.add(left);
+const w0=70,w1=250,wy0=25,wy1=235,wz=(w0+w1)/2;
+bx(left,xL-10,0,-10,xL,WH,w0,M.wall,false);bx(left,xL-10,0,w1,xL,WH,zFront,M.wall,false);
+bx(left,xL-10,0,w0,xL,wy0,w1,M.wall,false);bx(left,xL-10,wy1,w0,xL,WH,w1,M.wall,false);
+const sky=new THREE.Mesh(new THREE.PlaneGeometry(w1-w0+120,wy1-wy0+120),new THREE.MeshBasicMaterial({color:lin('#FFF1D8')}));sky.rotation.y=Math.PI/2;sky.position.set(xL-25,(wy0+wy1)/2,wz);left.add(sky);
+walls.push({g:left,p:V(xL,0,0),n:V(1,0,0)});
+// window frame + muntins: visible copies plus shadow-only copies that stay even when the wall is hidden
+const casterM=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
+const casters=new THREE.Group();scene.add(casters);
+function frame(x0,y0,z0,x1,y1,z1){bx(left,x0,y0,z0,x1,y1,z1,M.trim,false);bx(casters,x0,y0,z0,x1,y1,z1,casterM,true)}
+function cast(x0,y0,z0,x1,y1,z1){bx(casters,x0,y0,z0,x1,y1,z1,casterM,true)}
+cast(xL-10,0,-10,xL,WH,w0);cast(xL-10,0,w1,xL,WH,zFront+200);cast(xL-10,0,w0,xL,wy0,w1);cast(xL-10,wy1,w0,xL,WH,w1);
+frame(xL-8,wy0,w0,xL,wy1,w0+6);frame(xL-8,wy0,w1-6,xL,wy1,w1);frame(xL-8,wy0,w0,xL,wy0+6,w1);frame(xL-8,wy1-6,w0,xL,wy1,w1);
+[1,2,3].forEach(i=>{const z=w0+(w1-w0)*i/4;frame(xL-6,wy0,z-2.5,xL-2,wy1,z+2.5)});
+[1,2].forEach(i=>{const y=wy0+(wy1-wy0)*i/3;frame(xL-6,y-2.5,w0,xL-2,y+2.5,w1)});
+cast(xL-10,WH,-20,xR+20,WH+5,zFront+200);                    // ceiling, shadow only
+cast(xL,-1,zFront+80,xR+20,WH,zFront+90);                     // front blocker behind the camera
+// sheer curtains in front of the window edges
+const curtainM=new THREE.MeshStandardMaterial({color:lin('#FBF8F2'),roughness:1,transparent:true,opacity:0.88,side:THREE.DoubleSide});
+function curtain(z0,z1){const w=z1-z0,geo=new THREE.PlaneGeometry(w,252,40,1),a=geo.attributes.position;
+  for(let i=0;i<a.count;i++)a.setZ(i,Math.sin(a.getX(i)/w*Math.PI*9)*3);geo.computeVertexNormals();
+  const m=new THREE.Mesh(geo,curtainM);m.rotation.y=Math.PI/2;m.position.set(xL+10,126+1,(z0+z1)/2);m.receiveShadow=true;left.add(m)}
+curtain(w0-40,wz+6);curtain(wz-6,w1+40);
+{const rg=new THREE.CylinderGeometry(1,1,w1-w0+110,12);rg.rotateX(Math.PI/2);mk(rg,mc('#2a2a2a',0.4,0.5),xL+10,255,wz,left,false)}
+// rug
+mk(new THREE.BoxGeometry(320,2,170),rugM,10,1,250,scene,false);
+
+/* ---------- wardrobe ---------- */
+const cab=new THREE.Group();cab.position.set(-W/2,0,0);scene.add(cab);
+const doors=[];
+function door(xh,w,side,handleY,handleLen,key){
+  const g=new THREE.Group();g.position.set(xh,0,D);cab.add(g);
+  bx(g,side>0?0:-w,0.6,0,side>0?w:0,H-0.4,T,M.door);
+  [0.1,0.5,0.9].forEach(f=>bx(g,side>0?1:-4,H*f-2,-1.2,side>0?4:-1,H*f+2,0,M.steel));
+  const hx=side>0?w-4.5:-w+3.5;bx(g,hx,handleY,T,hx+1,handleY+handleLen,T+1.2,M.handle);
+  bx(g,hx,handleY,T-0.1,hx+1,handleY+1.2,T+2.6,M.handle);bx(g,hx,handleY+handleLen-1.2,T-0.1,hx+1,handleY+handleLen,T+2.6,M.handle);
+  g.traverse(m=>m.userData.door=key);doors.push({g,key,target:-side*1.9,open:false})}
+// carcass
+bx(cab,0,0,0,T,H,D,M.body);bx(cab,W-T,0,0,W,H,D,M.body);bx(cab,T,H-T,0,W-T,H,D,M.body);
+bx(cab,T,6,0,W-T,6+T,D,M.inner);bx(cab,T,0,D-3,W-T,6,D-1,M.body);bx(cab,T,T,0,W-T,H-T,0.8,M.inner);
+const dx=Math.round(W/3);
+bx(cab,dx,6+T,0,dx+T,H-T,D,M.body);
+bx(cab,T,H-55,0,dx,H-55+T,D,M.inner);
+bx(cab,dx+T,H-30,0,W-T,H-30+T,D,M.inner);bx(cab,dx+T,32,0,W-T,32+T,D,M.inner);
+bx(cab,dx+T,H-56,0.8,W-T,H-36,0.8+T,M.inner);
+{const rw=W-T-dx-T,x0=dx+T+rw*0.2,len=rw*0.6;bx(cab,x0,H-46,0.8+T,x0+len,H-43.5,0.8+T+0.6,M.handle);
+  for(let i=0;i<6;i++){const hx=x0+len*(i+0.5)/6;bx(cab,hx-0.4,H-49,0.8+T+0.6,hx+0.4,H-48.2,0.8+T+4.6,M.handle);bx(cab,hx-0.4,H-49,0.8+T+4.2,hx+0.4,H-45.5,0.8+T+5,M.handle)}}
+const gap=0.3,dw=W/3-gap*1.5;
+door(0,dw,1,H*0.47,15,'L');
+door(W/3+gap/2,dw,1,H*0.47,15,'M');
+door(W,dw,-1,H*0.47,15,'R');
+
+/* ---------- money tree ---------- */
+function moneyTree(){
+  const r=rng(23),g=new THREE.Group(),trunkM=mc('#8B6E4F',0.9);
+  const leafMs=['#4F9140','#5FA34B','#6DAF55','#468638'].map(c=>new THREE.MeshStandardMaterial({color:lin(c),roughness:0.5,side:THREE.DoubleSide}));
+  mk(new THREE.LatheGeometry([[0,0],[13,0],[16,3],[18.5,30],[18.5,37],[17,37],[16.6,34],[0,34]].map(([x,y])=>new THREE.Vector2(x,y)),40),mc('#ECE7DE',0.97),0,0,0,g);
+  mk(new THREE.CylinderGeometry(16.5,16.5,1,24),mc('#4a3626',1),0,34.5,0,g);
+  for(let j=0;j<4;j++){const pts=[];for(let k=0;k<=28;k++){const t=k/28,a=t*Math.PI*7+j*Math.PI/2;pts.push(V(Math.cos(a)*2,34+t*86,Math.sin(a)*2))}
+    mk(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),70,1.5-0.3*0,8),trunkM,0,0,0,g)}
+  const sh=new THREE.Shape();sh.moveTo(0,0);sh.bezierCurveTo(4.2,3,4.6,11,0,17);sh.bezierCurveTo(-4.6,11,-4.2,3,0,0);const leafG=new THREE.ShapeGeometry(sh,8);
+  function cluster(p,dirY){const c=new THREE.Group();c.rotation.order='YXZ';c.rotation.set(-Math.PI/2+0.35+(r()-0.5)*0.9,dirY+(r()-0.5)*0.8,0);c.position.copy(p);g.add(c);
+    const n=5+Math.floor(r()*3);for(let i=0;i<n;i++){const h=new THREE.Group();h.rotation.z=i*Math.PI*2/n+(r()-0.5)*0.35;c.add(h);
+      const s=0.75+r()*0.55,m=new THREE.Mesh(leafG,leafMs[Math.floor(r()*4)]);m.scale.set(s,s,s);m.position.y=1.5;m.rotation.x=0.35+r()*0.5;m.castShadow=true;m.receiveShadow=true;h.add(m)}}
+  const top=V(0,118,0),nb=13;
+  for(let i=0;i<nb;i++){const a=i*Math.PI*2/nb+(r()-0.5)*0.6,rr=10+r()*28,end=V(Math.cos(a)*rr,132+r()*50,Math.sin(a)*rr);
+    const cv=new THREE.QuadraticBezierCurve3(top,V(Math.cos(a)*rr*0.3,end.y-8,Math.sin(a)*rr*0.3),end);
+    mk(new THREE.TubeGeometry(cv,16,0.5,6),trunkM,0,0,0,g);
+    [0.6,0.85,1].forEach(t=>cluster(cv.getPoint(t),-a+Math.PI/2))}
+  for(let i=0;i<5;i++)cluster(V((r()-0.5)*14,178+r()*12,(r()-0.5)*14),r()*6);
+  return g}
+const plant=moneyTree();plant.position.set(-W/2-50,0,40);scene.add(plant);
+
+/* ---------- lighting ---------- */
+const hemi=new THREE.HemisphereLight(0xfff4e6,0x6b4a33,0.55);scene.add(hemi);
+const fill=new THREE.DirectionalLight(0xfff0e0,0.18);fill.position.set(200,260,500);scene.add(fill);
+const sun=new THREE.DirectionalLight(0xffd9a6,0);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.radius=3;
+Object.assign(sun.shadow.camera,{left:-260,right:260,top:260,bottom:-260,near:1,far:1400});sun.shadow.bias=-0.0004;sun.shadow.normalBias=0.5;
+scene.add(sun);scene.add(sun.target);
+{const wc=V(xL,175,wz),tgt=V(20,95,0),dir=tgt.clone().sub(wc).normalize();sun.position.copy(wc.clone().addScaledVector(dir,-500));sun.target.position.copy(tgt)}
+let sunOn=true;
+function applySun(){sun.intensity=sunOn?1.9:0;sun.castShadow=sunOn;hemi.intensity=sunOn?0.7:1.05;fill.intensity=sunOn?0.18:0.45;casters.visible=sunOn}
+applySun();
+
+/* ---------- interaction ---------- */
+function resetView(){camera.position.set(40,118,560);controls.target.set(-28,100,60);controls.update()}
+resetView();
+const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();let down=null;
+function doorAt(e){const r=renderer.domElement.getBoundingClientRect();ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ptr,camera);
+  const ms=[];doors.forEach(d=>d.g.traverse(m=>m.isMesh&&ms.push(m)));const h=ray.intersectObjects(ms,false);return h.length?doors.find(d=>d.key===h[0].object.userData.door):null}
+const allBtn=document.getElementById('allDoors');
+const sync=()=>allBtn.textContent=doors.some(d=>d.open)?'閂晒門':'開晒門';
+renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+renderer.domElement.addEventListener('pointerup',e=>{if(!down)return;const mv=Math.hypot(e.clientX-down[0],e.clientY-down[1]);down=null;if(mv>6)return;const d=doorAt(e);if(d){d.open=!d.open;sync()}});
+renderer.domElement.addEventListener('pointermove',e=>{if(e.buttons)return;renderer.domElement.style.cursor=doorAt(e)?'pointer':''});
+allBtn.onclick=()=>{const v=!doors.some(d=>d.open);doors.forEach(d=>d.open=v);sync()};
+const sunBtn=document.getElementById('sunBtn');sunBtn.onclick=()=>{sunOn=!sunOn;sunBtn.setAttribute('aria-pressed',sunOn);applySun()};
+const plantBtn=document.getElementById('plantBtn');plantBtn.onclick=()=>{plant.visible=!plant.visible;plantBtn.setAttribute('aria-pressed',plant.visible)};
+document.getElementById('resetBtn').onclick=resetView;
+
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(stage);resize();
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tick(){const k=reduce?1:0.09;doors.forEach(d=>{const t=d.open?d.target:0;d.g.rotation.y+=(t-d.g.rotation.y)*k});
+  controls.update();walls.forEach(w=>w.g.visible=camera.position.clone().sub(w.p).dot(w.n)>0);
+  renderer.render(scene,camera);requestAnimationFrame(tick)}
+tick();
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,744 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Shoe Bench 3D</title>
+<style>:root{color-scheme:light}html,body{background:#f4efe8;margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}</style>
+<style>
+.jlsb-wrap { padding: 32px max(16px, env(safe-area-inset-left, 0px)) 40px; }
+
+.jlsb{--jl-bg: #f4efe8;--jl-panel: #fbf8f4;--jl-stage: #efe8de;--jl-ink: #2a221b;--jl-muted: #76685a;--jl-line: #dccfbe;--jl-accent: #2a221b;--jl-accent-ink: #faf5ee;--jl-good: #2f6b3c;--jl-bad: #9a3b1f;--jl-wa: #1f7a4d;--jl-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;color:var(--jl-ink);font-family:var(--jl3d-font, inherit);font-size:15px;line-height:1.45;display:grid;gap:16px;max-width:1280px;margin:0 auto;box-sizing:border-box}
+.jlsb *,.jlsb *:before,.jlsb *:after{box-sizing:border-box}
+.jlsb [hidden]{display:none!important}
+.jlsb h2,.jlsb h3,.jlsb p{margin:0}
+.jlsb h2{font-size:1.4rem;line-height:1.15;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.jlsb h3{font-size:1.05rem;font-weight:700}
+.jlsb .jl-eyebrow{font-family:var(--jl-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--jl-muted)}
+.jlsb .jl-small{font-size:.78rem;color:var(--jl-muted)}
+.jlsb .jl-card{background:var(--jl-panel);border:1px solid var(--jl-line);border-radius:14px;padding:14px 16px;display:grid;gap:10px;align-content:start;min-width:0}
+.jlsb .jl-top{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px}
+.jlsb .jl-viewer{position:relative;min-width:0;height:clamp(420px,72vh,760px);background:var(--jl-stage);border:1px solid var(--jl-line);border-radius:16px;overflow:hidden}
+.jlsb .jl-stage{position:absolute;inset:0}
+.jlsb .jl-stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.jlsb .jl-loading{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--jl-mono);font-size:.8rem;color:var(--jl-muted);pointer-events:none}
+.jlsb .jl-hint{position:absolute;left:14px;bottom:12px;right:190px;font-family:var(--jl-mono);font-size:.68rem;color:var(--jl-muted);pointer-events:none}
+.jlsb .jl-caption{position:absolute;top:14px;right:14px;max-width:min(320px,calc(100% - 28px));background:#2a221bdb;color:#faf5ee;border-radius:12px;padding:10px 14px;display:grid;gap:4px;pointer-events:none}
+.jlsb .jl-caption .jl-step{font-family:var(--jl-mono);font-size:.66rem;letter-spacing:.1em;opacity:.75}
+.jlsb .jl-caption p{font-size:.92rem;font-weight:600;line-height:1.3}
+.jlsb .jl-ar{position:absolute;right:14px;bottom:12px;font:600 .85rem/1 inherit;font-family:inherit;color:var(--jl-accent-ink);background:var(--jl-accent);border:0;border-radius:999px;padding:11px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.jlsb .jl-ar svg{width:16px;height:16px}
+.jlsb .jl-ar-note{position:absolute;right:14px;bottom:14px;font-size:.72rem;color:var(--jl-muted);background:var(--jl-panel);border:1px solid var(--jl-line);border-radius:999px;padding:6px 12px}
+.jlsb .jl-side{display:grid;gap:12px;align-content:start;min-width:0}
+.jlsb .jl-choices{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.jlsb .jl-btn{font:inherit;font-size:.85rem;font-weight:500;color:var(--jl-ink);text-align:left;background:transparent;border:1px solid var(--jl-line);border-radius:10px;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:40px}
+.jlsb .jl-btn:hover{background:var(--jl-line)}
+.jlsb .jl-btn[aria-pressed=true],.jlsb .jl-btn[aria-checked=true]{background:var(--jl-accent);color:var(--jl-accent-ink);border-color:var(--jl-accent)}
+.jlsb .jl-btn:disabled{opacity:.45;cursor:default}
+.jlsb .jl-swatch{width:18px;height:18px;border-radius:5px;border:1px solid rgba(0,0,0,.25);flex:none}
+.jlsb .jl-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.jlsb .jl-slider{display:grid;grid-template-columns:92px 1fr 58px;align-items:center;gap:8px;font-size:.8rem}
+.jlsb .jl-slider output{font-family:var(--jl-mono);font-size:.75rem;text-align:right;font-variant-numeric:tabular-nums}
+.jlsb input[type=range]{width:100%;accent-color:var(--jl-accent)}
+.jlsb .jl-check{display:flex;align-items:center;gap:8px;font-size:.85rem;cursor:pointer}
+.jlsb .jl-check input{width:18px;height:18px;accent-color:var(--jl-accent)}
+.jlsb .jl-dims{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--jl-mono);font-size:.76rem}
+.jlsb .jl-dims dt{color:var(--jl-muted)}
+.jlsb .jl-dims dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.jlsb .jl-badge{font-family:var(--jl-mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--jl-line);border-radius:999px;padding:3px 8px;color:var(--jl-muted)}
+.jlsb .jl-badge.is-custom{border-color:var(--jl-accent);color:var(--jl-ink)}
+.jlsb .jl-link{font:inherit;font-size:.78rem;color:var(--jl-ink);background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.jlsb .jl-tools{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.jlsb .jl-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.jlsb label.jl-field{display:grid;gap:4px;font-size:.76rem;color:var(--jl-muted)}
+.jlsb .jl-field input,.jlsb .jl-field select,.jlsb .jl-field textarea{font:inherit;font-size:.92rem;color:var(--jl-ink);background:#fff;border:1px solid var(--jl-line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.jlsb .jl-field textarea{min-height:96px;resize:vertical}
+.jlsb .jl-result{border-radius:10px;padding:10px 12px;display:grid;gap:4px;font-size:.86rem;background:var(--jl-bg);border:1px solid var(--jl-line)}
+.jlsb .jl-result strong{font-size:.95rem}
+.jlsb .jl-result.is-good strong{color:var(--jl-good)}
+.jlsb .jl-result.is-bad strong{color:var(--jl-bad)}
+.jlsb .jl-result .jl-out{font-family:var(--jl-mono);font-size:.8rem;font-variant-numeric:tabular-nums}
+.jlsb .jl-primary{font:inherit;font-size:.88rem;font-weight:600;color:var(--jl-accent-ink);background:var(--jl-accent);border:0;border-radius:10px;padding:10px 14px;cursor:pointer;justify-self:start}
+.jlsb .jl-primary:disabled{opacity:.45;cursor:default}
+.jlsb .jl-inquiry{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px}
+.jlsb .jl-summary{margin:0;font-family:var(--jl-mono);font-size:.78rem;white-space:pre-wrap;background:var(--jl-bg);border:1px solid var(--jl-line);border-radius:10px;padding:10px 12px}
+.jlsb .jl-form{display:grid;gap:10px}
+.jlsb .jl-intro{align-content:start}
+.jlsb .jl-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.jlsb .jl-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.jlsb .jl-wa{font:inherit;font-size:.88rem;font-weight:600;color:#fff;background:var(--jl-wa);border-radius:10px;padding:10px 14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.jlsb .jl-wa svg{width:18px;height:18px}
+.jlsb .jl-notice{font-size:.82rem;border-radius:10px;padding:8px 12px;background:var(--jl-bg);border:1px solid var(--jl-line)}
+.jlsb .jl-notice.is-good{color:var(--jl-good);border-color:var(--jl-good)}
+.jlsb .jl-notice.is-bad{color:var(--jl-bad);border-color:var(--jl-bad)}
+.jlsb .jl-modal{position:fixed;inset:0;z-index:1000;background:#140f0a99;display:grid;place-items:center;padding:16px}
+.jlsb .jl-modal-box{background:var(--jl-panel);border-radius:16px;width:min(720px,100%);display:grid;gap:10px;padding:14px}
+.jlsb .jl-modal model-viewer{width:100%;height:min(60vh,520px);background:var(--jl-stage);border-radius:12px}
+.jlsb button:focus-visible,.jlsb a:focus-visible,.jlsb input:focus-visible,.jlsb select:focus-visible,.jlsb textarea:focus-visible{outline:2px solid #b07a3e;outline-offset:2px}
+@media (max-width: 900px){.jlsb .jl-top,.jlsb .jl-tools,.jlsb .jl-inquiry{grid-template-columns:minmax(0,1fr)}
+.jlsb .jl-viewer{height:clamp(360px,62vh,560px)}
+}
+@media (max-width: 480px){.jlsb .jl-hint{display:none}
+.jlsb .jl-form-row{grid-template-columns:1fr}
+.jlsb .jl-caption{left:14px;right:14px;max-width:none}
+}
+.jlsb .jl-fields-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width: 480px){.jlsb .jl-fields-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+<div class="jlsb-wrap">
+<div class="jlsb" data-mode="preview" data-whatsapp="1XXXXXXXXXX">
+<div class="jl-top">
+<section class="jl-viewer" aria-label="3D model of the shoe cabinet with cushioned seat">
+<div class="jl-stage"></div>
+<div class="jl-loading">Loading 3D model&hellip;</div>
+<div class="jl-caption" hidden aria-live="polite"><span class="jl-step"></span><p></p></div>
+<div class="jl-hint">Drag to rotate &middot; Scroll or pinch to zoom &middot; Tap the side door to open it</div>
+<button class="jl-ar" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>View in your room</button>
+<span class="jl-ar-note" hidden>Open this page on your phone to see it in your room</span>
+</section>
+<aside class="jl-side">
+<section class="jl-card">
+<span class="jl-eyebrow">Jalico &middot; Made in the GTA</span>
+<h2>Shoe Cabinet with Cushioned Seat</h2>
+<span class="jl-small">Finish</span>
+<div class="jl-choices" role="radiogroup" aria-label="Finish">
+<button class="jl-btn" type="button" role="radio" aria-checked="true" data-finish="birch"><span class="jl-swatch" style="background:#d6ad72"></span>Natural birch</button>
+<button class="jl-btn" type="button" role="radio" aria-checked="false" data-finish="walnut"><span class="jl-swatch" style="background:#4e3221"></span>Dark walnut</button>
+</div>
+<label class="jl-check"><input type="checkbox" id="jlsb-tray">Add rubber shoe tray (optional)</label>
+</section>
+<section class="jl-card" aria-label="Side door">
+<span class="jl-eyebrow">Side cabinet</span>
+<button class="jl-btn" type="button" aria-pressed="false" data-toggle="door">Open side door</button>
+<label class="jl-slider"><span>Side door</span><input type="range" min="0" max="100" value="0" data-slider="door" id="jlsb-slider-door"><output data-out="door">0&deg;</output></label>
+<label class="jl-check"><input type="checkbox" id="jlsb-show-shoes" checked>Show shoes in the model</label>
+</section>
+<section class="jl-card" aria-label="How it works">
+<span class="jl-eyebrow">How it works</span>
+<div class="jl-row">
+<button class="jl-primary" type="button" data-demo>Play demo</button>
+<label class="jl-check"><input type="checkbox" id="jlsb-loop">Loop</label>
+</div>
+</section>
+<section class="jl-card" aria-label="Size">
+<div class="jl-row"><span class="jl-eyebrow">Size</span><span class="jl-badge" data-size-badge>Standard size</span></div>
+<dl class="jl-dims" data-dims></dl>
+<button class="jl-link" type="button" data-reset-size hidden>Back to standard size</button>
+</section>
+</aside>
+</div>
+<div class="jl-tools">
+<section class="jl-card" aria-label="Will my shoes fit">
+<h3>Will my shoes fit?</h3>
+<p class="jl-small">Pick a shoe type or enter your own sizes. We count the pairs that fit on the two open shelves and in the side cabinet.</p>
+<label class="jl-field">Shoe type
+<select id="jlsb-preset" data-preset>
+<option value="sneakers">Adult sneakers</option>
+<option value="dress">Dress shoes</option>
+<option value="heels">Heels</option>
+<option value="ankle">Ankle boots</option>
+<option value="winter">Tall winter boots</option>
+<option value="kids">Kids&#39; shoes</option>
+<option value="flip">Flip-flops and slippers</option>
+<option value="custom">My own sizes</option>
+</select>
+</label>
+<div class="jl-fields jl-fields-4">
+<label class="jl-field">Length (mm)<input id="jlsb-shoe-l" type="number" inputmode="numeric" min="50" step="1" value="290" data-shoe="l"></label>
+<label class="jl-field">Width (mm)<input id="jlsb-shoe-w" type="number" inputmode="numeric" min="30" step="1" value="105" data-shoe="w"></label>
+<label class="jl-field">Height (mm)<input id="jlsb-shoe-h" type="number" inputmode="numeric" min="10" step="1" value="120" data-shoe="h"></label>
+<label class="jl-field">Pairs<input id="jlsb-shoe-n" type="number" inputmode="numeric" min="1" step="1" value="8" data-shoe="n"></label>
+</div>
+<div class="jl-result" data-fit-result></div>
+</section>
+<section class="jl-card" aria-label="Resize to fit">
+<h3>Resize the bench for your shoes</h3>
+<p class="jl-small">We build every piece to order. This works out the outside size that holds the number of pairs above, keeping a comfortable seat height.</p>
+<div class="jl-result" data-resize-result></div>
+<button class="jl-primary" type="button" data-apply-size>Show this size in 3D</button>
+</section>
+</div>
+<section class="jl-card jl-inquiry" id="jlsb-inquiry" aria-label="Send an inquiry">
+<div class="jl-form jl-intro">
+<h3>Ask us about your shoe bench</h3>
+<p class="jl-small">Your choices fill in automatically. We usually reply within one business day.</p>
+<pre class="jl-summary" data-summary></pre>
+<div class="jl-actions">
+<a class="jl-wa" data-whatsapp-link href="https://wa.me/1XXXXXXXXXX" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.1-1.2-.2-.2-.5-.3z"/></svg>
+Chat on WhatsApp
+</a>
+<span class="jl-small">+1 XXX XXX XXXX</span>
+</div>
+</div>
+<form class="jl-form jl-contact" id="jlsb-contact-form">
+
+<input type="hidden" name="contact[Product]" value="Custom Shoe Cabinet with Cushioned Seat">
+<input type="hidden" name="contact[Finish]" data-h="finish">
+<input type="hidden" name="contact[Rubber shoe tray]" data-h="tray">
+<input type="hidden" name="contact[Size W x D x H (mm)]" data-h="size">
+<input type="hidden" name="contact[Shoes]" data-h="shoes">
+<div class="jl-form-row">
+<label class="jl-field">Name<input type="text" name="contact[name]" id="jlsb-name" autocomplete="name" required></label>
+<label class="jl-field">Email<input type="email" name="contact[email]" id="jlsb-email" autocomplete="email" required></label>
+</div>
+<label class="jl-field">Phone (optional)<input type="tel" name="contact[phone]" id="jlsb-phone" autocomplete="tel"></label>
+<label class="jl-field">Message<textarea name="contact[body]" id="jlsb-body" placeholder="Anything else? Where it will go, timing, a different size or layout."></textarea></label>
+<button class="jl-primary" type="submit">Send inquiry</button>
+<p class="jl-notice" data-form-note hidden>This preview isn&#39;t connected to Shopify, so nothing was sent. On the store, inquiries go to the shop email.</p>
+</form>
+</section>
+<div class="jl-modal" hidden><div class="jl-modal-box"><div class="jl-row"><strong data-ar-title>Shoe bench</strong><button class="jl-link" type="button" data-close>Close</button></div><model-viewer ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1" alt="3D model of the shoe bench"></model-viewer><p class="jl-small">On a phone, tap the AR icon in the corner to place the bench in your room.</p></div></div>
+</div>
+</div>
+<script type="module">
+import * as s from "https://cdn.jsdelivr.net/npm/three@0.160.0/+esm";
+import { OrbitControls as wt } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js/+esm";
+import { RoundedBoxGeometry as bt } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js/+esm";
+import { RoomEnvironment as gt } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js/+esm";
+const oe = document.querySelector(".jlsb"), y = (e) => oe.querySelector(e), ne = (e) => [...oe.querySelectorAll(e)], xe = oe.dataset.mode || "preview", Mt = oe.dataset.whatsapp || "1XXXXXXXXXX", yt = "Custom Shoe Cabinet with Cushioned Seat", d = 1e-3, h = 18, j = 6, Pe = 115, Y = 259, Oe = 138, ae = 3, de = 14, T = 10, F = { W: 1200, D: 400, H: 450 }, $e = { W: [800, 2e3], D: [350, 600], H: [420, 520] }, St = (e) => e * Math.PI / 180;
+function se(e) {
+  const t = e.H - Pe, o = t - 3 * h, n = o - Oe, a = e.W - 3 * h - Y, l = h + n + h, c = e.D - j - h - 4, u = t - 2 * h, i = Math.floor((u - h) / 2);
+  return {
+    ...e,
+    Hc: t,
+    inner: o,
+    lowerClear: n,
+    upperClear: Oe,
+    leftW: a,
+    shelfTop: l,
+    cabDepth: c,
+    cabH: u,
+    cabLevel: i,
+    shelfDepth: e.D - j
+  };
+}
+const r = {
+  size: { ...F },
+  finish: "birch",
+  tray: !1,
+  showShoes: !0,
+  open: { door: 0 },
+  target: { door: 0 },
+  shoe: { l: 290, w: 105, h: 120, n: 8 },
+  preset: "sneakers"
+};
+let $ = se(r.size);
+function re(e, t, o) {
+  const n = 2 * t.w + 2 * T, a = (g) => Math.max(0, Math.floor((g + T) / n)), l = o ? e.leftW - 44 : e.leftW, c = e.lowerClear - (o ? de : 0), u = e.shelfDepth - (o ? 30 : 0), i = t.h + T <= c && t.l + T <= u, f = i ? a(l) : 0, w = t.h + T <= e.upperClear && t.l + T <= e.shelfDepth, b = w ? a(e.leftW) : 0;
+  let p = 0, M = "none";
+  return t.l + T <= e.cabDepth && (t.h + T <= e.cabLevel ? (p = 2 * a(Y), M = "two") : t.h + T <= e.cabH && (p = a(Y), M = "one")), { shelf: f, top: b, cab: p, cabMode: M, total: f + b + p, shelfClear: c, shelfOk: i, topOk: w };
+}
+const Ae = (e) => Math.ceil(e / 10) * 10;
+function vt(e, t) {
+  const o = { ...F };
+  o.D = Math.max(F.D, Ae(e.l + T + j + h + 4));
+  const n = e.h + T + (t ? de : 0), a = se(o);
+  n > a.lowerClear && (o.H = Math.min($e.H[1], F.H + Ae(n - a.lowerClear)));
+  let l = 0;
+  for (; re(se(o), e, t).total < e.n && l++ < 160; ) o.W += 10;
+  const c = re(se(o), e, t), u = o.W > $e.W[1] || o.D > $e.D[1] || c.total < e.n, i = o.W === F.W && o.D === F.D && o.H === F.H;
+  return { size: o, cap: c, tooBig: u, same: i };
+}
+const ie = y(".jl-stage"), D = new s.WebGLRenderer({ antialias: !0 });
+D.setPixelRatio(Math.min(window.devicePixelRatio, 2)), D.outputColorSpace = s.SRGBColorSpace, D.toneMapping = s.ACESFilmicToneMapping, D.shadowMap.enabled = !0, D.shadowMap.type = s.PCFSoftShadowMap, ie.appendChild(D.domElement);
+const J = new s.Scene();
+J.background = new s.Color("#efe8de"), J.environment = new s.PMREMGenerator(D).fromScene(new gt(), 0.04).texture;
+const _ = new s.PerspectiveCamera(35, 1, 0.02, 50), V = new wt(_, D.domElement);
+V.enableDamping = !0, V.maxPolarAngle = Math.PI * 0.495, V.minDistance = 0.5, V.maxDistance = 6, J.add(new s.HemisphereLight(16774890, 9075302, 0.6));
+const Q = new s.DirectionalLight(16773343, 1.5);
+Q.position.set(-1.2, 2.4, 1.8), Q.castShadow = !0, Q.shadow.mapSize.set(2048, 2048), Object.assign(Q.shadow.camera, { left: -1.4, right: 1.4, top: 1.4, bottom: -1.4 }), Q.shadow.bias = -4e-4, Q.shadow.normalBias = 0.01, J.add(Q);
+const Ce = new s.Mesh(new s.PlaneGeometry(20, 20), new s.ShadowMaterial({ opacity: 0.2 }));
+Ce.rotation.x = -Math.PI / 2, Ce.receiveShadow = !0, J.add(Ce);
+const he = {
+  birch: {
+    label: "Natural birch",
+    base: "#d6ad72",
+    dark: "rgba(165,112,52,0.22)",
+    light: "rgba(240,208,152,0.22)",
+    grain: [150, 98, 46],
+    fleck: "rgba(244,214,165,0.35)",
+    edge: "#3a2512",
+    swatch: "#d6ad72"
+  },
+  walnut: {
+    label: "Dark walnut",
+    base: "#523424",
+    dark: "rgba(30,17,10,0.35)",
+    light: "rgba(120,80,52,0.22)",
+    grain: [28, 16, 9],
+    fleck: "rgba(140,96,62,0.25)",
+    edge: "#120a05",
+    swatch: "#4e3221"
+  }
+};
+function Ie(e) {
+  let t = e;
+  return () => (t = t * 16807 % 2147483647) / 2147483647;
+}
+function xt(e, t) {
+  const o = document.createElement("canvas");
+  o.width = o.height = 1024;
+  const n = o.getContext("2d"), a = Ie(t);
+  n.fillStyle = e.base, n.fillRect(0, 0, 1024, 1024);
+  for (let f = 0; f < 28; f++)
+    n.fillStyle = a() > 0.5 ? e.dark : e.light, n.fillRect(0, a() * 1024, 1024, 10 + a() * 60);
+  const [l, c, u] = e.grain;
+  for (let f = 0; f < 280; f++) {
+    const w = a() * 1024, b = 2 + a() * 9, p = (1 + Math.floor(a() * 3)) * Math.PI * 2 / 1024, M = a() * 6.28;
+    n.strokeStyle = `rgba(${l + a() * 25 | 0},${c + a() * 20 | 0},${u + a() * 14 | 0},${0.12 + a() * 0.25})`, n.lineWidth = 0.6 + a() * 1.6, n.beginPath();
+    for (let g = 0; g <= 1024; g += 8) {
+      const k = w + Math.sin(g * p + M) * b;
+      g ? n.lineTo(g, k) : n.moveTo(g, k);
+    }
+    n.stroke();
+  }
+  for (let f = 0; f < 140; f++)
+    n.fillStyle = e.fleck, n.fillRect(a() * 1024, a() * 1024, 6 + a() * 26, 1 + a() * 2);
+  const i = new s.CanvasTexture(o);
+  return i.colorSpace = s.SRGBColorSpace, i.wrapS = i.wrapT = s.RepeatWrapping, i.anisotropy = D.capabilities.getMaxAnisotropy(), i;
+}
+const ze = {};
+for (const [e, t] of Object.entries(he))
+  ze[e] = {
+    wood: new s.MeshStandardMaterial({ map: xt(t, e === "birch" ? 11 : 29), roughness: 0.55, envMapIntensity: 0.6, name: `${e}-wood` }),
+    edge: new s.LineBasicMaterial({ color: t.edge, transparent: !0, opacity: 0.85 })
+  };
+const $t = new s.MeshStandardMaterial({ color: 10988464, metalness: 0.85, roughness: 0.35, name: "steel" });
+function Ct() {
+  const e = document.createElement("canvas");
+  e.width = e.height = 512;
+  const t = e.getContext("2d"), o = Ie(33);
+  t.fillStyle = "#ece0cf", t.fillRect(0, 0, 512, 512);
+  for (let a = 0; a < 2600; a++) {
+    const l = o() * 512, c = o() * 512, u = 2 + o() * 6;
+    t.strokeStyle = `rgba(150,128,100,${0.04 + o() * 0.08})`, t.lineWidth = 0.6, t.beginPath(), t.moveTo(l, c), t.lineTo(l + u * (o() - 0.5) * 2, c + u * (o() - 0.5) * 2), t.stroke();
+  }
+  const n = new s.CanvasTexture(e);
+  return n.colorSpace = s.SRGBColorSpace, n.wrapS = n.wrapT = s.RepeatWrapping, n.repeat.set(4, 2), n;
+}
+const zt = new s.MeshStandardMaterial({ map: Ct(), roughness: 0.5, envMapIntensity: 0.5, name: "cushion-leather" }), Dt = new s.MeshStandardMaterial({ color: 14272688, roughness: 0.55, name: "cushion-welt" });
+function Et() {
+  const e = document.createElement("canvas");
+  e.width = e.height = 256;
+  const t = e.getContext("2d");
+  t.fillStyle = "#26282b", t.fillRect(0, 0, 256, 256);
+  for (let n = 0; n < 256; n += 32) for (let a = 0; a < 256; a += 32)
+    t.save(), t.translate(a + 16, n + 16), t.rotate((a + n) / 32 % 2 ? -Math.PI / 4 : Math.PI / 4), t.fillStyle = "#3a3d41", t.fillRect(-11, -3, 22, 6), t.restore();
+  const o = new s.CanvasTexture(e);
+  return o.colorSpace = s.SRGBColorSpace, o.wrapS = o.wrapT = s.RepeatWrapping, o.repeat.set(12, 5), o;
+}
+const Tt = new s.MeshStandardMaterial({ map: Et(), roughness: 0.85, name: "rubber-tray" }), Lt = new s.MeshStandardMaterial({ color: 2040100, roughness: 0.6, name: "rubber-rim" });
+let ue = 1;
+function kt(e, t, o, n) {
+  const a = new s.BoxGeometry(e * d, t * d, o * d), l = a.attributes.position, c = a.attributes.normal, u = a.attributes.uv;
+  ue = ue * 48271 % 2147483647;
+  const i = ue % 1e3 / 1e3, f = (ue / 1e3 | 0) % 1e3 / 1e3;
+  for (let w = 0; w < l.count; w++) {
+    const b = l.getX(w), p = l.getY(w), M = l.getZ(w), g = Math.abs(c.getX(w)), k = Math.abs(c.getY(w));
+    let H, m;
+    g > 0.5 ? (H = n === "y" ? p : M, m = n === "y" ? M : p) : k > 0.5 ? (H = n === "z" ? M : b, m = n === "z" ? b : M) : (H = n === "y" ? p : b, m = n === "y" ? b : p), u.setXY(w, H / 0.7 + i, m / 0.7 + f);
+  }
+  return a;
+}
+function fe(e, t, o, n, a, l) {
+  const c = new s.Mesh(e, t);
+  return c.position.set(o * d, n * d, a * d), c.castShadow = c.receiveShadow = !0, l.add(c), c;
+}
+function Ht(e, t) {
+  const o = new s.LineSegments(new s.EdgesGeometry(e.geometry, 30), t || ze[r.finish].edge);
+  return o.userData.outline = !0, e.add(o), e;
+}
+function K(e, t, o, n, a, l, c, u, i) {
+  return Ht(fe(kt(e, t, o, c), i || ze[r.finish].wood, n, a, l, u));
+}
+const Ne = (e, t, o) => {
+  const n = Math.min(1, Math.max(0, (o - e) / (t - e)));
+  return n * n * (3 - 2 * n);
+}, De = (e) => Math.sqrt(Math.max(0, 1 - Math.pow(2 * e - 1, 8)));
+function Fe(e, t) {
+  const o = e[0].length, n = [], a = [];
+  e.forEach((u) => u.forEach((i) => n.push(i[0] * d, i[1] * d, i[2] * d)));
+  const l = t ? o : o - 1;
+  for (let u = 0; u < e.length - 1; u++) for (let i = 0; i < l; i++) {
+    const f = u * o + i, w = u * o + (i + 1) % o, b = (u + 1) * o + i, p = (u + 1) * o + (i + 1) % o;
+    a.push(f, b, w, w, b, p);
+  }
+  const c = new s.BufferGeometry();
+  return c.setAttribute("position", new s.Float32BufferAttribute(n, 3)), c.setIndex(a), c.computeVertexNormals(), c;
+}
+const Rt = {};
+function me(e, t = 0.6) {
+  const o = e + t;
+  return Rt[o] ||= new s.MeshStandardMaterial({ color: e, roughness: t, side: s.DoubleSide, name: "shoe" });
+}
+function Wt(e, t, o) {
+  const n = e.l, a = e.w, l = e.h, c = 40, u = 14, i = new s.Group(), f = (m) => a / 2 * (0.7 + 0.3 * Math.exp(-Math.pow((m - 0.66) / 0.28, 2))) * De(m), w = (m) => -t * 0.06 * a * Ne(0.45, 1, m), b = (m) => (m - 0.5) * n, p = l < 55, M = l > 0.6 * n, g = p ? Math.min(18, l * 0.45) : Math.max(8, Math.min(30, l * 0.2)), k = [];
+  for (let m = 0; m <= c; m++) {
+    const C = m / c, S = f(C), v = w(C), E = b(C);
+    k.push([[v + S * 0.9, 0, E], [v + S, g * 0.4, E], [v + S * 0.97, g, E], [v - S * 0.97, g, E], [v - S, g * 0.4, E], [v - S * 0.9, 0, E]]);
+  }
+  const H = new s.Mesh(Fe(k, !0), me(p ? o : "#f3f1ea", 0.75));
+  if (i.add(H), p) {
+    const m = me("#1b1b1b", 0.5), C = g, S = w(0.8) - t * 0.1 * a, v = b(0.8), E = Math.max(10, l - g - 6);
+    for (const R of [1, -1]) {
+      const I = w(0.5) + R * f(0.5) * 0.92, N = b(0.5), G = new s.CatmullRomCurve3([
+        new s.Vector3(S, C, v),
+        new s.Vector3(S, C + E, v - 14),
+        new s.Vector3(S + (I - S) * 0.6, C + E * 0.9, v + (N - v) * 0.55),
+        new s.Vector3(I, C + 1.5, N)
+      ].map((W) => W.multiplyScalar(d)));
+      i.add(new s.Mesh(new s.TubeGeometry(G, 24, 3.2 * d, 6, !1), m));
+    }
+  } else {
+    const m = M ? Math.min(0.3 * n, l - g) : l - g, C = m * 0.42, S = (G) => C + (m - C) * Ne(0.9, 0.36, G), v = [];
+    for (let G = 0; G <= c; G++) {
+      const W = G / c, z = f(W) * 0.97, B = S(W) * Math.pow(De(W), 0.3), O = w(W), Se = b(W), ft = g - 1.5, je = [];
+      for (let ve = 0; ve <= u; ve++) {
+        const Ge = Math.PI * ve / u, Be = Math.cos(Ge), mt = Math.sin(Ge);
+        je.push([O + z * Math.sign(Be) * Math.pow(Math.abs(Be), 0.55), ft + B * Math.pow(mt, 0.7), Se]);
+      }
+      v.push(je);
+    }
+    const E = me(o, 0.55);
+    if (i.add(new s.Mesh(Fe(v, !1), E)), M) {
+      const W = f(0.24) * 0.98, z = n * 0.2, B = g + 10, O = new s.Mesh(new s.CylinderGeometry(1, 1.04, 1, 24, 1, !0), E);
+      O.scale.set(W * d, (l - B) * d, z * d), O.position.set(w(0.24) * d, (B + l) / 2 * d, b(0.24) * d), i.add(O);
+    }
+    const R = M ? 0.24 : 0.2, I = g - 1.5 + S(R) * Math.pow(De(R), 0.3), N = new s.Mesh(new s.CircleGeometry(1, 24).rotateX(-Math.PI / 2), me("#2a211c", 0.9));
+    N.scale.set(f(R) * 0.62 * d, 1, n * (M ? 0.18 : 0.12) * d), N.position.set(w(R) * d, (M ? l - 6 : I + 0.6) * d, b(R) * d), i.add(N);
+  }
+  return i.traverse((m) => {
+    m.isMesh && (m.castShadow = !0, m.receiveShadow = !0);
+  }), i;
+}
+const Ve = ["#f1f0ec", "#2e3a52", "#8f979c", "#7a2e2e", "#1d1e20", "#b8643c"];
+let x = null, X = null, Xe = null, A = null, L = null;
+function jt(e) {
+  e.traverse((t) => {
+    t.geometry && t.geometry.dispose();
+  });
+}
+function q(e = !1) {
+  x && (J.remove(x), jt(x)), $ = se(r.size);
+  const { W: t, D: o, Hc: n, leftW: a, lowerClear: l } = $;
+  ue = 1, x = new s.Group(), x.name = "Jalico shoe bench", K(t, h, o, 0, n - h / 2, 0, "x", x), K(t, h, o, 0, h / 2, 0, "x", x);
+  for (const z of [-1, 1]) K(h, n - 2 * h, o, z * (t / 2 - h / 2), n / 2, 0, "y", x);
+  K(t - 2 * h, n - 2 * h, j, 0, n / 2, -o / 2 + j / 2, "y", x);
+  const c = t / 2 - h - Y - h / 2;
+  K(h, n - 2 * h, o - j, c, n / 2, j / 2, "y", x);
+  const u = -t / 2 + h, i = u + a / 2;
+  K(a, h, o - j, i, h + l + h / 2, j / 2, "x", x);
+  const f = c + h / 2 + Y / 2, w = o - j - h - 10;
+  Xe = K(Y - 2, h, w, f, h + $.cabLevel + h / 2, -o / 2 + j + w / 2, "x", x), A = new s.Group();
+  const b = a - 14, p = o - j - 26, M = o / 2 - 10 - p / 2, g = fe(new s.BoxGeometry(b * d, 5 * d, p * d), Tt, i, h + 2.5, M, A);
+  g.name = "tray";
+  for (const [z, B, O, Se] of [[b, 10, 0, p / 2 - 5], [b, 10, 0, -p / 2 + 5], [10, p, b / 2 - 5, 0], [10, p, -b / 2 + 5, 0]])
+    fe(new s.BoxGeometry(z * d, de * d, B * d), Lt, i + O, h + de / 2, M + Se, A);
+  A.name = "ShoeTray", A.visible = r.tray, x.add(A);
+  const k = Y - 2 * ae, H = n - 2 * h - 2 * ae;
+  X = new s.Group(), X.name = "Door", X.position.set((t / 2 - h - ae) * d, 0, o / 2 * d), K(k, H, h, -k / 2, h + ae + H / 2, -h / 2, "y", X);
+  for (const z of [h + ae + 90, h + ae + H - 90]) {
+    const B = fe(new s.CylinderGeometry(17.5 * d, 17.5 * d, 2 * d, 20).rotateX(Math.PI / 2), $t, -24, z, -h - 1, X);
+    B.name = "cup-hinge";
+  }
+  X.traverse((z) => {
+    z.isMesh && (z.userData.part = "door");
+  }), x.add(X);
+  const m = t - 12, C = o - 8, S = Pe - 2, v = new s.Mesh(new bt(m * d, S * d, C * d, 5, 26 * d), zt);
+  v.position.set(0, (n + 1 + S / 2) * d, 0), v.castShadow = v.receiveShadow = !0, v.name = "Cushion", x.add(v);
+  const E = (n + S - 22) * d, R = (m / 2 - 3) * d, I = (C / 2 - 3) * d, N = new s.CurvePath(), G = [[-R, -I], [R, -I], [R, I], [-R, I]];
+  for (let z = 0; z < 4; z++) {
+    const B = G[z], O = G[(z + 1) % 4];
+    N.add(new s.LineCurve3(new s.Vector3(B[0], E, B[1]), new s.Vector3(O[0], E, O[1])));
+  }
+  const W = new s.Mesh(new s.TubeGeometry(N, 120, 2.2 * d, 6, !0), Dt);
+  W.name = "Welt", x.add(W), L = new s.Group(), L.name = "Shoes", x.add(L), Gt(u, f), J.add(x), qe(), e && Te(!1), nt();
+}
+function Gt(e, t) {
+  L.clear();
+  const o = $, n = r.shoe, a = re(o, n, r.tray);
+  if (Xe.visible = a.cabMode !== "one" || !r.showShoes, !r.showShoes || !n.l || !n.w || !n.h) return;
+  let l = Math.min(n.n || 0, a.total), c = 0;
+  const u = (p, M, g, k) => {
+    const H = Ve[c++ % Ve.length], m = new s.Group();
+    for (const C of [-1, 1]) {
+      const S = Wt(n, C, H);
+      S.position.x = C * (n.w / 2 + T / 2) * d, m.add(S);
+    }
+    m.position.set(M * d, g * d, k * d), p.add(m);
+  }, i = 2 * n.w + 2 * T, f = h + (r.tray ? de - 4 : 0);
+  for (let p = 0; p < a.shelf && l > 0; p++, l--)
+    u(L, e + (r.tray ? 22 : 0) + i * p + i / 2, f, o.D / 2 - T - (r.tray ? 12 : 0) - n.l / 2, !1);
+  const w = a.cabMode === "two" ? a.cab / 2 : a.cab, b = a.cabMode === "two" ? [h, h + o.cabLevel + h] : a.cabMode === "one" ? [h] : [];
+  for (let p = 0; p < a.top && l > 0; p++, l--)
+    u(L, e + i * p + i / 2, o.shelfTop, o.D / 2 - T - n.l / 2, !1);
+  for (const p of b) for (let M = 0; M < w && l > 0; M++, l--)
+    u(L, t + (M - (w - 1) / 2) * i, p, o.D / 2 - h - 8 - n.l / 2, !1);
+}
+const Bt = (e) => e < 0.5 ? 2 * e * e : 1 - Math.pow(-2 * e + 2, 2) / 2;
+function qe() {
+  X.rotation.y = St(100) * Bt(r.open.door);
+}
+function ce(e, t) {
+  r.target[e] = Math.min(1, Math.max(0, t)), Je();
+}
+const Ue = ne("[data-toggle]"), Ye = ne("[data-slider]"), Pt = ne("[data-out]");
+function Je() {
+  Ue.forEach((e) => {
+    const t = e.dataset.toggle, o = r.target[t] > 0.5;
+    e.setAttribute("aria-pressed", o ? "true" : "false"), e.textContent = (o ? "Close " : "Open ") + "side door";
+  }), Ye.forEach((e) => {
+    document.activeElement !== e && (e.value = Math.round(r.target[e.dataset.slider] * 100));
+  }), Pt.forEach((e) => {
+    e.textContent = Math.round(r.target[e.dataset.out] * 100) + "\xB0";
+  });
+}
+Ue.forEach((e) => e.addEventListener("click", () => {
+  te();
+  const t = e.dataset.toggle;
+  ce(t, r.target[t] > 0.5 ? 0 : 1);
+})), Ye.forEach((e) => e.addEventListener("input", () => {
+  te(), ce(e.dataset.slider, e.value / 100);
+}));
+const _e = new s.Raycaster(), Ke = new s.Vector2();
+let we = null;
+function Ze(e) {
+  const t = D.domElement.getBoundingClientRect();
+  Ke.set((e.clientX - t.left) / t.width * 2 - 1, -((e.clientY - t.top) / t.height) * 2 + 1), _e.setFromCamera(Ke, _);
+  const o = _e.intersectObjects([X], !0).find((n) => n.object.isMesh && n.object.userData.part);
+  return o ? o.object.userData.part : null;
+}
+D.domElement.addEventListener("pointerdown", (e) => {
+  we = { x: e.clientX, y: e.clientY };
+}), D.domElement.addEventListener("pointerup", (e) => {
+  if (!we || Math.hypot(e.clientX - we.x, e.clientY - we.y) > 6) return;
+  const t = Ze(e);
+  t && (te(), ce(t, r.target[t] > 0.5 ? 0 : 1));
+}), D.domElement.addEventListener("pointermove", (e) => {
+  e.pointerType === "mouse" && (D.domElement.style.cursor = Ze(e) ? "pointer" : "grab");
+});
+const be = { theta: -0.55, phi: 1.08, r: 1 };
+let P = null;
+function Qe() {
+  return new s.Vector3(0, $.H * 0.42 * d, $.D * 0.1 * d);
+}
+function Ee(e = 1) {
+  const t = ie.clientWidth / Math.max(1, ie.clientHeight);
+  return Math.max($.W, $.H * 1.6) * d * 2.15 * e * (t < 0.9 ? 1.5 : 1);
+}
+function et(e, t, o, n) {
+  _.position.copy(n).add(new s.Vector3().setFromSpherical(new s.Spherical(o, t, e))), V.target.copy(n);
+}
+function Te(e) {
+  const t = Qe();
+  e ? P = { theta: be.theta, phi: be.phi, r: Ee(), target: t } : et(be.theta, be.phi, Ee(), t);
+}
+function Ot(e) {
+  if (!P) return;
+  const t = _.position.clone().sub(V.target), o = new s.Spherical().setFromVector3(t), n = Math.min(1, e * 2.2);
+  let a = P.theta - o.theta;
+  a = Math.atan2(Math.sin(a), Math.cos(a));
+  const l = o.theta + a * n, c = o.phi + (P.phi - o.phi) * n, u = o.radius + (P.r - o.radius) * n;
+  et(l, c, u, V.target.clone().lerp(P.target, n)), Math.abs(a) < 2e-3 && Math.abs(P.phi - c) < 2e-3 && Math.abs(P.r - u) < 2e-3 && (P = null);
+}
+V.addEventListener("start", () => {
+  P = null, te();
+}), ne("[data-finish]").forEach((e) => e.addEventListener("click", () => {
+  r.finish = e.dataset.finish, ne("[data-finish]").forEach((t) => t.setAttribute("aria-checked", t === e ? "true" : "false")), q(), ee(), dt();
+}));
+const tt = y("#jlsb-tray"), ot = y("#jlsb-show-shoes");
+tt.addEventListener("change", () => {
+  r.tray = tt.checked, q(), ee();
+}), ot.addEventListener("change", () => {
+  r.showShoes = ot.checked, q();
+});
+const U = (e) => (e / 25.4).toFixed(1), Le = () => ["W", "D", "H"].every((e) => r.size[e] === F[e]), pe = (e) => `${e.W} \xD7 ${e.D} \xD7 ${e.H} mm`;
+function nt() {
+  const e = $, t = [
+    ["Width", `${e.W} mm`],
+    ["Depth", `${e.D} mm`],
+    ["Seat height", `${e.H} mm`],
+    ["Inches", `${U(e.W)} \xD7 ${U(e.D)} \xD7 ${U(e.H)}`],
+    ["Top shelf inside", `${e.leftW} \xD7 ${e.shelfDepth} \xD7 ${e.upperClear}`],
+    ["Bottom shelf inside", `${e.leftW} \xD7 ${e.shelfDepth} \xD7 ${e.lowerClear}`],
+    ["Side cabinet inside", `${Y} \xD7 ${e.cabDepth} \xD7 ${e.cabH}`],
+    ["Boards", `${h} mm`]
+  ];
+  y("[data-dims]").innerHTML = t.map(([a, l]) => `<dt>${a}</dt><dd>${l}</dd>`).join("");
+  const o = Le(), n = y("[data-size-badge]");
+  n.textContent = o ? "Standard size" : "Custom size", n.classList.toggle("is-custom", !o), y("[data-reset-size]").hidden = o, Je();
+}
+y("[data-reset-size]").addEventListener("click", () => {
+  r.size = { ...F }, q(), Te(!0), ee();
+});
+const At = {
+  sneakers: { l: 290, w: 105, h: 120 },
+  dress: { l: 295, w: 100, h: 100 },
+  heels: { l: 250, w: 85, h: 125 },
+  ankle: { l: 285, w: 100, h: 160 },
+  winter: { l: 305, w: 115, h: 300 },
+  kids: { l: 190, w: 75, h: 85 },
+  flip: { l: 260, w: 100, h: 35 }
+}, at = ne("[data-shoe]"), ke = y("[data-preset]");
+function He() {
+  at.forEach((e) => {
+    r.shoe[e.dataset.shoe] = Math.max(0, Math.round(Number(e.value) || 0));
+  });
+}
+ke.addEventListener("change", () => {
+  const e = At[ke.value];
+  if (e) for (const t of ["l", "w", "h"]) y(`[data-shoe="${t}"]`).value = e[t];
+  He(), ee(), rt();
+}), at.forEach((e) => e.addEventListener("input", () => {
+  e.dataset.shoe !== "n" && (ke.value = "custom"), He(), ee(), rt();
+}));
+let st = 0;
+function rt() {
+  clearTimeout(st), st = setTimeout(() => q(), 250);
+}
+let ge = null;
+const Me = (e, t) => `${e} ${t}${e === 1 ? "" : "s"}`;
+function It() {
+  const e = r.shoe, t = y("[data-fit-result]"), o = y("[data-resize-result]"), n = y("[data-apply-size]");
+  if (!e.l || !e.w || !e.h || !e.n) {
+    t.className = o.className = "jl-result", t.innerHTML = "<span>Enter the shoe size and number of pairs.</span>", o.innerHTML = "<span>Enter the shoe size and number of pairs to see a custom size.</span>", n.disabled = !0, ge = null;
+    return;
+  }
+  const a = re($, e, r.tray), l = a.total >= e.n, c = [];
+  a.top && c.push(`top shelf ${a.top}`), a.shelf && c.push(`bottom shelf ${a.shelf}`), a.cab && c.push(`side cabinet ${a.cab}${a.cabMode === "one" ? " (shelf removed)" : ""}`);
+  const u = [];
+  a.topOk || u.push(`Too tall or long for the top shelf (${$.upperClear} mm clear height).`), a.shelfOk || u.push(`Too tall or long for the bottom shelf (${a.shelfClear} mm clear height).`), t.className = "jl-result " + (a.total === 0 ? "is-bad" : l ? "is-good" : "is-bad"), t.innerHTML = a.total === 0 ? `<strong>Doesn't fit at this size</strong><span>${u.join(" ")}</span><span class="jl-out">Outside size: ${pe($)}</span>` : `<strong>${Me(a.total, "pair")} fit${l ? `, enough for your ${e.n}` : `, you need ${e.n}`}</strong>
+       <span>${c.join(" \xB7 ")}</span>${u.length ? `<span>${u.join(" ")}</span>` : ""}
+       <span class="jl-out">Outside size: ${pe($)} (${U($.W)} \xD7 ${U($.D)} \xD7 ${U($.H)} in)</span>`;
+  const i = vt(e, r.tray);
+  ge = i;
+  const f = i.size;
+  i.same && !i.tooBig ? (o.className = "jl-result is-good", o.innerHTML = `<strong>The standard size already fits ${Me(e.n, "pair")}</strong><span class="jl-out">Outside size: ${pe(f)}</span>`) : (o.className = "jl-result " + (i.tooBig ? "is-bad" : "is-good"), o.innerHTML = `<strong>${i.tooBig ? "Bigger than we usually build" : `Custom size for ${Me(e.n, "pair")}`}</strong>
+      <span class="jl-out">Outside size: ${pe(f)}<br>(${U(f.W)} \xD7 ${U(f.D)} \xD7 ${U(f.H)} in, W \xD7 D \xD7 seat height)</span>
+      <span>Holds ${Me(i.cap.total, "pair")}.</span>
+      ${i.tooBig ? "<span>Send us an inquiry and we'll suggest options, like a second bench or a taller boot cabinet.</span>" : ""}`), n.disabled = !1, n.textContent = i.same ? "Show standard size in 3D" : "Show this size in 3D";
+}
+y("[data-apply-size]").addEventListener("click", () => {
+  ge && (r.size = { ...ge.size }, q(), Te(!0), ee());
+});
+function Nt() {
+  const e = r.shoe, t = re($, e, r.tray), o = [
+    `Finish: ${he[r.finish].label}`,
+    "Layout: two open shelves and a side cabinet",
+    `Rubber shoe tray: ${r.tray ? "yes" : "no"}`,
+    `Size: ${pe(r.size)} (W \xD7 D \xD7 seat height)${Le() ? ", standard" : ", custom"}`
+  ];
+  return e.l && e.w && e.h && e.n && o.push(`Shoes: ${e.n} pairs, ${e.l} \xD7 ${e.w} \xD7 ${e.h} mm (${t.total} pairs fit at this size)`), o;
+}
+function Ft() {
+  const e = Nt();
+  y("[data-summary]").textContent = e.join(`
+`);
+  const t = (n, a) => {
+    const l = y(`[data-h="${n}"]`);
+    l && (l.value = a);
+  };
+  t("finish", he[r.finish].label), t("tray", r.tray ? "Yes" : "No"), t("size", `${r.size.W} x ${r.size.D} x ${r.size.H}${Le() ? " (standard)" : " (custom)"}`), t("shoes", e[4] || "Not entered");
+  const o = `Hi Jalico, I'm interested in the ${yt}.
+${e.join(`
+`)}`;
+  y("[data-whatsapp-link]").href = `https://wa.me/${Mt}?text=${encodeURIComponent(o)}`;
+}
+function ee() {
+  It(), Ft(), nt();
+}
+const it = y("form.jl-contact");
+it && xe === "preview" && it.addEventListener("submit", (e) => {
+  e.preventDefault(), y("[data-form-note]").hidden = !1;
+});
+const Re = [
+  { text: () => `Built from 18 mm ${he[r.finish].label.toLowerCase()} boards, with a padded seat on top`, cam: [-0.55, 1.05, 1], act: () => ce("door", 0) },
+  { text: () => "Two open shelves keep everyday shoes in easy reach", cam: [-0.25, 1.15, 0.8], act: () => {
+    L && (L.visible = !0);
+  } },
+  { text: () => "Sit on the padded seat to put your shoes on", cam: [0.3, 0.9, 0.95], act: () => {
+  } },
+  { text: () => "The side cabinet opens for boots, umbrellas and leashes", cam: [0.55, 1.05, 0.8], act: () => ce("door", 1) },
+  { text: () => "Add the optional rubber tray for wet and muddy shoes", cam: [-0.2, 1.2, 0.85], low: !0, act: () => {
+    ce("door", 0), A.visible = !0;
+  } },
+  { text: () => "Made to order in your size and finish", cam: [-0.9, 1.05, 1.05], act: () => {
+    A.visible = r.tray, L && (L.visible = !0);
+  } }
+], ye = y(".jl-caption"), Vt = ye.querySelector(".jl-step"), Xt = ye.querySelector("p"), We = y("[data-demo]"), qt = y("#jlsb-loop");
+let Z = null;
+function ct(e) {
+  if (!Z) return;
+  if (e >= Re.length)
+    if (qt.checked) e = 0;
+    else {
+      te();
+      return;
+    }
+  const t = Re[e];
+  Z.i = e, t.act();
+  const o = Qe();
+  t.low && (o.y = (h + $.lowerClear * 0.5) * d), P = { theta: t.cam[0], phi: t.cam[1], r: Ee(t.cam[2]), target: o }, Vt.textContent = `STEP ${e + 1} / ${Re.length}`, Xt.textContent = t.text(), ye.hidden = !1, Z.timer = setTimeout(() => ct(e + 1), 3400);
+}
+function Ut() {
+  te(), Z = { i: 0, timer: 0 }, We.textContent = "Stop demo", ct(0);
+}
+function te() {
+  Z && (clearTimeout(Z.timer), Z = null, ye.hidden = !0, We.textContent = "Play demo", A && (A.visible = r.tray), L && (L.visible = !0));
+}
+We.addEventListener("click", () => Z ? te() : Ut());
+const le = y(".jl-ar"), lt = y(".jl-ar-note");
+function dt() {
+  if (xe !== "shopify") return;
+  const e = JSON.parse(oe.dataset.models || "{}"), t = e[r.finish] || e.birch || e.walnut;
+  if (!t) {
+    le.hidden = !0, lt.hidden = !0;
+    return;
+  }
+  le.setAttribute("data-shopify-model3d-id", t);
+}
+async function ht(e) {
+  const { GLTFExporter: t } = await import("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/exporters/GLTFExporter.js/+esm"), o = { finish: r.finish, open: { ...r.open }, target: { ...r.target }, show: r.showShoes };
+  r.finish = e, r.open = { door: 0 }, r.target = { door: 0 }, r.showShoes = !1, q();
+  const n = x.clone(!0), a = [];
+  n.traverse((c) => {
+    (c.userData.outline || c.name === "Shoes" || c.name === "ShoeTray" && !r.tray) && a.push(c);
+  }), a.forEach((c) => c.parent.remove(c)), n.name = `Jalico shoe bench (${e})`, n.updateMatrixWorld(!0);
+  const l = await new t().parseAsync(n, { binary: !0, maxTextureSize: 1024 });
+  return Object.assign(r, { finish: o.finish, open: o.open, target: o.target, showShoes: o.show }), q(), l;
+}
+if (xe === "shopify") {
+  dt();
+  const e = JSON.parse(oe.dataset.modelsJson || "[]");
+  e.length && window.Shopify && Shopify.loadFeatures ? Shopify.loadFeatures([{ name: "shopify-xr", version: "1.0", onLoad: (t) => {
+    t || (window.ShopifyXR.addModels(e), window.ShopifyXR.setupXRElements(), setTimeout(() => {
+      le.hasAttribute("data-shopify-xr-hidden") && (le.hidden = !0, lt.hidden = !1);
+    }, 300));
+  } }]) : le.hidden = !0;
+} else {
+  const e = y(".jl-modal");
+  let t = !1;
+  le.addEventListener("click", async () => {
+    t || (await import("https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"), t = !0);
+    const o = e.querySelector("model-viewer"), n = await ht(r.finish);
+    o.dataset.url && URL.revokeObjectURL(o.dataset.url), o.dataset.url = URL.createObjectURL(new Blob([n], { type: "model/gltf-binary" })), o.setAttribute("src", o.dataset.url), e.querySelector("[data-ar-title]").textContent = `Shoe bench, ${he[r.finish].label.toLowerCase()}`, e.hidden = !1;
+  }), e.addEventListener("click", (o) => {
+    (o.target === e || o.target.closest("[data-close]")) && (e.hidden = !0);
+  });
+}
+function ut() {
+  const e = ie.clientWidth, t = ie.clientHeight;
+  !e || !t || (D.setSize(e, t, !1), _.aspect = e / t, _.fov = e / t < 0.9 ? 44 : 35, _.updateProjectionMatrix());
+}
+new ResizeObserver(ut).observe(ie), ut();
+const pt = matchMedia("(prefers-reduced-motion: reduce)").matches, Yt = new s.Clock();
+D.setAnimationLoop(() => {
+  const e = Math.min(Yt.getDelta(), 0.05);
+  let t = !1;
+  for (const o of ["door"]) {
+    const n = r.target[o] - r.open[o];
+    n && (r.open[o] += Math.sign(n) * Math.min(pt ? 1 : e * 1.6, Math.abs(n)), t = !0);
+  }
+  t && qe(), Ot(pt ? 1 : e), V.update(), D.render(J, _);
+}), He(), q(!0), ee(), y(".jl-loading").hidden = !0, window.__jlsb = { exportGLB: ht, state: r, capacity: re, geom: se };
+</script>
+
+</body></html>

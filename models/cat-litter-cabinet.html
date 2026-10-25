@@ -1,0 +1,751 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jalico Cat Litter Cabinet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500&display=swap">
+<style>
+/* Layout: brand header strip, full-width 3D stage, control bar beneath, spec notes */
+:root{
+  --bg:#F3ECE1; --surface:#E6D9C6; --line:#DCCDB6; --fg:#2A2119; --muted:#6B5A48; --accent:#B5602A;
+  --stage-top:#F7F1E8; --stage-bot:#E4D6C1;
+  --display:"Noto Serif TC","Songti TC",Georgia,serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1E1812; --surface:#2A2119; --line:#3A2F24; --fg:#F3ECE1; --muted:#BCA98F; --accent:#E8A15C;
+  --stage-top:#2E251C; --stage-bot:#17120D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1E1812; --surface:#2A2119; --line:#3A2F24; --fg:#F3ECE1; --muted:#BCA98F; --accent:#E8A15C;
+  --stage-top:#2E251C; --stage-bot:#17120D; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding-block:20px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+.tag{display:inline-block;background:var(--fg);color:var(--bg);font-size:11px;letter-spacing:.14em;padding:3px 9px;border-radius:6px;font-weight:500}
+h1{font-family:var(--display);font-size:clamp(22px,4vw,30px);margin:6px 0 0;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:14px}
+.stage{position:relative;height:min(68vh,620px);min-height:360px;border-radius:14px;overflow:hidden;
+  background:linear-gradient(var(--stage-top),var(--stage-bot));border:1px solid var(--line)}
+#c{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#c:active{cursor:grabbing}
+.steps{position:absolute;top:12px;right:12px;margin:0;padding:10px 14px 10px 30px;max-width:min(300px,62%);
+  background:color-mix(in srgb,var(--bg) 86%,transparent);border:1px solid var(--line);border-radius:10px;
+  font-size:13px;line-height:1.45;color:var(--muted);display:flex;flex-direction:column;gap:4px;pointer-events:none}
+.steps li{transition:color .2s}
+.steps li.on{color:var(--fg);font-weight:500}
+.steps li.on::marker{color:var(--accent)}
+@media (max-width:520px){.steps{font-size:11.5px;padding:8px 10px 8px 24px}}
+.hint{position:absolute;left:12px;bottom:10px;font-size:12px;color:var(--muted);pointer-events:none}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.ctl{display:flex;align-items:center;gap:10px;font-size:14px}
+input[type=range]{width:180px;accent-color:var(--accent)}
+.num{font-variant-numeric:tabular-nums;color:var(--muted);min-width:3ch}
+button{font:inherit;font-size:14px;background:var(--surface);color:var(--fg);border:1px solid var(--line);
+  border-radius:8px;padding:6px 12px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:flex;gap:6px}
+#doorBtn{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:500;min-width:84px}
+.fit{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px 28px}
+@media (max-width:720px){.fit{grid-template-columns:1fr}}
+.fit h2{font-family:var(--display);font-size:18px;margin:0}
+.fit .lead{margin:2px 0 0;color:var(--muted);font-size:13px}
+.dims{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:flex-end}
+.dims label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.dims input{width:76px;font:inherit;font-size:15px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);
+  background:var(--bg);color:var(--fg);font-variant-numeric:tabular-nums}
+.dims select{font:inherit;font-size:14px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.presets button{font-size:12px;padding:4px 10px}
+.verdict{display:flex;flex-direction:column;gap:8px;min-width:0}
+.pill{align-self:flex-start;font-size:13px;font-weight:500;padding:4px 12px;border-radius:999px;color:#fff}
+.pill.ok{background:#4E7A4A}.pill.tight{background:#B07A1E}.pill.no{background:#A8402F}
+.rows{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;font-size:13px;align-items:baseline}
+.rows .k{color:var(--muted)}.rows .v{text-align:right;font-variant-numeric:tabular-nums}
+.rows .s{font-size:12px;text-align:right}
+.s.ok{color:#4E7A4A}.s.tight{color:#B07A1E}.s.no{color:#A8402F}
+:root[data-theme="dark"] .s.ok{color:#8DBF86}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .s.ok{color:#8DBF86}:root:not([data-theme="light"]) .s.no{color:#E58A78}:root:not([data-theme="light"]) .s.tight{color:#E2B25A}}
+:root[data-theme="dark"] .s.no{color:#E58A78}:root[data-theme="dark"] .s.tight{color:#E2B25A}
+.mode{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:14px}
+.mlab{font-size:12px;color:var(--muted)}
+.cabsize{margin:8px 0 0;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+.sim{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:-4px}
+.sim button{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.sim #sLoop{background:var(--accent);border-color:var(--accent)}
+.sim #sLoop[aria-pressed="true"]{background:var(--surface);color:var(--fg);border-color:var(--accent)}
+.sim button:disabled{opacity:.45;cursor:default}
+.sstat{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:0}
+.ctabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:-8px}
+.ctabs button{border-radius:10px 10px 0 0;border-bottom:none;padding:8px 16px;background:transparent;color:var(--muted)}
+.ctabs button[aria-selected="true"]{background:var(--surface);color:var(--fg);font-weight:500}
+.fit h2{text-wrap:balance}
+.pill.custom{background:var(--accent);color:var(--bg)}
+.rows .big{font-weight:500;color:var(--fg)}
+.advice{font-size:13px;color:var(--muted);margin:0}
+[hidden]{display:none!important}
+.inq .inq-l{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.inq input,.inq textarea{font:inherit;font-size:14px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);width:100%;box-sizing:border-box}
+.inq .inq-details{margin-top:4px;resize:vertical;font-variant-numeric:tabular-nums;line-height:1.5;color:var(--fg)}
+.inq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inq-wide{grid-column:1/-1}
+@media (max-width:520px){.inq-grid{grid-template-columns:1fr}}
+.inq-send{margin-top:12px;background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:500;padding:8px 18px}
+.wa-btn{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:8px;background:#25D366;color:#0b2e17;font-weight:500;text-decoration:none;font-size:14px}
+.inq-note{font-size:12px;color:var(--muted);margin:8px 0 0}
+.inq-ok{font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:0 0 10px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 24px;font-size:14px;
+  border-top:1px solid var(--line);padding-top:14px}
+.notes h2{font-family:var(--display);font-size:15px;margin:0 0 4px}
+.notes p,.notes ul{margin:0;color:var(--muted)}
+.notes ul{padding-left:1.1em}
+.notes b{color:var(--accent);font-weight:500}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <span class="tag">JALICO</span>
+      <h1>Cat Litter Cabinet</h1>
+    </div>
+  </header>
+
+  <div class="stage">
+    <canvas id="c" aria-label="3D model of the cat litter cabinet"></canvas>
+    <ol class="steps" id="steps" hidden aria-live="polite">
+      <li>Open the cabinet door</li>
+      <li>Slide the bolt, lift the lid, pour litter into the storage container</li>
+      <li>Pull the walnut handle to drop litter into the box</li>
+      <li>Close the door, then start again from step 1</li>
+    </ol>
+  </div>
+
+  <div class="controls">
+    <button id="doorBtn">Open door</button>
+    <label class="ctl" for="door">Door angle
+      <input id="door" type="range" min="0" max="110" value="0">
+      <span class="num" id="doorVal">0°</span>
+    </label>
+    <div class="seg" role="group" aria-label="Wood finish">
+      <button id="fNatural" aria-pressed="true">Natural birch</button>
+      <button id="fWalnut" aria-pressed="false">Dark walnut</button>
+    </div>
+    <button id="boxBtn" aria-pressed="false">Show litter box</button>
+    <button id="reset">Reset view</button>
+  </div>
+
+  <div class="sim">
+    <span class="mlab">Demo</span>
+    <button id="sPour">① Refill the container</button>
+    <button id="sDrop">② Drop litter into the box</button>
+    <button id="sLoop" aria-pressed="false">③ Loop: door + ① + ②</button>
+    <span class="sstat" id="sStat" aria-live="polite"></span>
+  </div>
+
+  <div class="ctabs" role="tablist" aria-label="Size calculators">
+    <button role="tab" id="tStd" aria-selected="true" aria-controls="calcStd">Standard size</button>
+    <button role="tab" id="tCus" aria-selected="false" aria-controls="calcCus">Custom size for your box</button>
+  </div>
+
+  <section class="fit" id="calcStd" role="tabpanel" aria-labelledby="tStd">
+    <div>
+      <h2>Will your litter box fit?</h2>
+      <p class="lead">The standard cabinet is 50 × 48 × 70 cm. Enter your litter box's length, width and height to see it placed in the lower compartment.</p>
+      <div class="dims">
+        <label for="sL">Length<input id="sL" type="number" min="1" step="0.5" inputmode="decimal" value="40"></label>
+        <label for="sW">Width<input id="sW" type="number" min="1" step="0.5" inputmode="decimal" value="30"></label>
+        <label for="sH">Height<input id="sH" type="number" min="1" step="0.5" inputmode="decimal" value="15"></label>
+        <label for="sU">Unit<select id="sU"><option value="cm">cm</option><option value="in">inch</option></select></label>
+      </div>
+    </div>
+    <div class="verdict" aria-live="polite">
+      <span class="pill ok" id="sPill">Fits</span>
+      <div class="rows" id="sRows"></div>
+      <p class="advice" id="sAdvice"></p>
+    </div>
+  </section>
+
+  <section class="fit" id="calcCus" role="tabpanel" aria-labelledby="tCus" hidden>
+    <div>
+      <h2>Need a special size? We'll size it to your box</h2>
+      <p class="lead">If your box doesn't fit the standard cabinet, or you want a snug fit, enter its size and the cabinet resizes around it. We leave 2.5 cm on each side so the box slides out easily for cleaning, and 18 cm above it so your cat can squat comfortably.</p>
+      <div class="dims">
+        <label for="cL">Length<input id="cL" type="number" min="1" step="0.5" inputmode="decimal" value="56"></label>
+        <label for="cW">Width<input id="cW" type="number" min="1" step="0.5" inputmode="decimal" value="40"></label>
+        <label for="cH">Height<input id="cH" type="number" min="1" step="0.5" inputmode="decimal" value="18"></label>
+        <label for="cU">Unit<select id="cU"><option value="cm">cm</option><option value="in">inch</option></select></label>
+      </div>
+    </div>
+    <div class="verdict" aria-live="polite">
+      <span class="pill custom">Custom size</span>
+      <div class="rows" id="cRows"></div>
+      <p class="advice" id="cAdvice"></p>
+    </div>
+  </section>
+
+  <section class="fit inq" id="inquiry" aria-labelledby="inqTitle">
+    <div>
+      <h2 id="inqTitle">Ready to order? Send us your sizes</h2>
+      <p class="lead">The sizes and finish you picked above are filled in for you. Leave your name and email and we'll reply with a quote.</p>
+      <label class="inq-l" for="inqDetails">Your cabinet details (filled in automatically)</label>
+      <textarea id="inqDetails" class="inq-details" rows="6" readonly></textarea>
+      <a id="waBtn" class="wa-btn" href="#" target="_blank" rel="noopener" hidden>Ask on WhatsApp</a>
+    </div>
+    <div>
+      <form id="inqForm" method="post" action="/contact#contact_form" accept-charset="UTF-8"><!--INQFORM-OPEN-->
+        <!--INQFORM-STATUS-->
+        <input type="hidden" name="contact[Cabinet details]" id="inqHidden">
+        <div class="inq-grid">
+          <label class="inq-l" for="inqName">Name<input id="inqName" name="contact[name]" type="text" autocomplete="name" required></label>
+          <label class="inq-l" for="inqEmail">Email<input id="inqEmail" name="contact[email]" type="email" autocomplete="email" required></label>
+          <label class="inq-l" for="inqPhone">Phone (optional)<input id="inqPhone" name="contact[phone]" type="tel" autocomplete="tel"></label>
+          <label class="inq-l inq-wide" for="inqMsg">Message (optional)<textarea id="inqMsg" name="contact[body]" rows="3" placeholder="e.g. where it will go, when you need it, anything else"></textarea></label>
+        </div>
+        <button type="submit" class="inq-send">Send inquiry</button>
+        <p class="inq-note" id="inqNote" hidden>This preview isn't connected to Shopify, so nothing was sent. Once it's on Shopify, inquiries go to the store's email.</p>
+      </form><!--INQFORM-CLOSE-->
+    </div>
+  </section>
+
+  <section class="notes">
+    <div>
+      <h2>How it's built</h2>
+      <ul>
+        <li>Upper level: a full-width litter storage container. Its sloped floor guides litter to the gate at the front, and a window shows the level.</li>
+        <li>Lower level: space for the litter box, with a rounded cat entrance on the right side.</li>
+        <li>Top: a lift-up refill lid held shut by a black surface bolt. Pull the walnut handle and litter drops through an opening in the middle shelf into the box.</li>
+        <li>Left-hinged door with a finger-pull notch on the edge.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Materials</h2>
+      <p>18 mm boards in two finishes: <b>Natural birch</b>, a warm honey tone with fine, even grain, and <b>Dark walnut</b>, a deep chocolate brown with stronger grain.</p>
+    </div>
+    <div>
+      <h2>Sizes</h2>
+      <p>Standard size is W 500 × D 480 × H 700 mm. The custom-size option widens, deepens or raises the lower compartment to suit your box; the storage container keeps the same height. All sizes are for illustration; final dimensions are confirmed when you order.</p>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled=false;   // no shadowsrenderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.85;
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(35,1,10,20000);
+const controls=new THREE.OrbitControls(camera,canvas);
+controls.enableDamping=true;controls.target.set(0,330,0);
+controls.minDistance=700;controls.maxDistance=4000;controls.maxPolarAngle=Math.PI*0.52;
+function resetView(){camera.position.set(1150,1050,1650);controls.target.set(-80,330,0);controls.update();}
+resetView();
+
+// Lights
+scene.add(new THREE.HemisphereLight(0xfff6ea,0x8a7660,0.62));
+const sun=new THREE.DirectionalLight(0xfff1dd,0.95);
+sun.position.set(900,1600,1100);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-1100,right:1100,top:1100,bottom:-500,near:100,far:4000});
+sun.shadow.bias=-0.0005;scene.add(sun);
+const fill=new THREE.DirectionalLight(0xe8eefc,0.35);fill.position.set(-1200,600,-400);scene.add(fill);
+
+// Ground shadow catcher
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(6000,6000),new THREE.ShadowMaterial({opacity:0.18}));
+ground.rotation.x=-Math.PI/2;ground.visible=false;scene.add(ground);
+
+// ---- White oak procedural texture ----
+function rand(s){return function(){s=(s*16807)%2147483647;return (s-1)/2147483646;};}
+function oakTexture(base,dark,ray,rays=220,seed=7){
+  const S=1024,cv=document.createElement('canvas');cv.width=cv.height=S;
+  const g=cv.getContext('2d'),r=rand(seed);
+  g.fillStyle=base;g.fillRect(0,0,S,S);
+  // long straight grain lines (vertical in texture space)
+  for(let i=0;i<260;i++){
+    let x=r()*S;const w=0.6+r()*2.6;g.strokeStyle=dark;g.globalAlpha=0.06+r()*0.22;g.lineWidth=w;
+    g.beginPath();g.moveTo(x,0);
+    for(let y=0;y<=S;y+=32){x+=(r()-0.5)*2.2;g.lineTo(x,y);}
+    g.stroke();
+  }
+  // soft color bands
+  for(let i=0;i<14;i++){const x=r()*S,w=20+r()*70;g.globalAlpha=0.05+r()*0.06;
+    g.fillStyle=r()>0.5?dark:'#fff7e8';g.fillRect(x,0,w,S);}
+  // ray flecks — signature of quarter-sawn white oak
+  for(let i=0;i<rays;i++){
+    const x=r()*S,y=r()*S,len=8+r()*34,h=2+r()*4;
+    g.globalAlpha=0.10+r()*0.18;g.fillStyle=ray;
+    g.beginPath();g.ellipse(x,y,h,len*0.5,Math.PI/2+(r()-0.5)*0.25,0,Math.PI*2);g.fill();
+  }
+  g.globalAlpha=1;
+  const t=new THREE.CanvasTexture(cv);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/650,1/650);
+  t.encoding=THREE.sRGBEncoding;t.anisotropy=renderer.capabilities.getMaxAnisotropy();
+  return t;
+}
+const finishes={
+  natural:oakTexture('#D2B48A','#957049','#E2CBA6',0,21),
+  walnut:oakTexture('#5E3F2A','#20140C','#7A563C',40,13)
+};
+const finishLook={natural:{rough:0.62,edge:0x2b1d12,edgeA:0.8},walnut:{rough:0.5,edge:0xc8a37c,edgeA:0.45}};
+// polygonOffset pushes wood faces back a hair so outline lines sitting on a touching panel (e.g. board-to-side seams) are not hidden
+const oak=new THREE.MeshStandardMaterial({map:finishes.natural,roughness:0.62,metalness:0,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:2});
+const edgeMat=new THREE.LineBasicMaterial({color:0x2b1d12,transparent:true,opacity:0.8});
+// Top panel + lid: same wood, grain turned 90° so it runs left-right across the top
+const rot=t=>{const c=t.clone();c.rotation=Math.PI/2;c.needsUpdate=true;return c;};
+const finishesTop={natural:rot(finishes.natural),walnut:rot(finishes.walnut)};
+const oakTop=new THREE.MeshStandardMaterial({map:finishesTop.natural,roughness:0.62,metalness:0,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:2});
+const hingeMat=new THREE.MeshStandardMaterial({color:0x34363a,roughness:0.32,metalness:0.7});
+const blackMat=new THREE.MeshStandardMaterial({color:0x1b1b1d,roughness:0.38,metalness:0.55});
+const walnutRod=new THREE.MeshStandardMaterial({color:0x8A5634,roughness:0.5});
+const grooveMat=new THREE.LineBasicMaterial({color:0x3b2a1c});
+
+// ---- Panel builder (shape in mm, extruded along +Z by thickness) ----
+const T=18,plinth=60,ov=10,UPPER=264;   // board, toe-kick, top overhang, chute compartment height
+const STD={W:500,D:480,H:700,shelfY:400};
+let W,D,H,shelfY,HOLE,door,cab=null,edgeObjs=[],capacityL=0;
+const SIM={store:0.45,boxFrac:0.3,geo:null,busy:false};
+let showBox=false;   // litter box hidden until the viewer adds it
+let lidPivot,boltPin,gate,storeMesh,boxFill=null,boxInfo=null;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function storeLevel(){const G=SIM.geo;return G.yLow+(G.yTop-G.yLow)*SIM.store;}
+function setStore(f){SIM.store=Math.max(0,Math.min(1,f));if(!storeMesh)return;
+  // litter body = everything between the sloped floor and the current level, so it sits on the floor
+  const G=SIM.geo,L=storeLevel(),pts=[];
+  const zAt=y=>G.zB+(y-G.yHigh)/(G.yLow-G.yHigh)*(G.outZ0-G.zB);
+  if(L>=G.yHigh){pts.push([G.zB,L],[G.zB,G.yHigh]);}else{pts.push([zAt(L),L]);}
+  pts.push([G.outZ0,G.yLow],[G.zFront-1,G.yLow],[G.zFront-1,L]);
+  const sh=new THREE.Shape();pts.forEach(([z,y],i)=>i?sh.lineTo(z,y):sh.moveTo(z,y));
+  storeMesh.geometry.dispose();
+  storeMesh.geometry=new THREE.ExtrudeGeometry(sh,{depth:G.cw-4,bevelEnabled:false});}
+function setBoxFill(f){SIM.boxFrac=f;if(!boxFill)return;
+  const h=Math.max(3,boxInfo.bh*f);boxFill.scale.y=h;boxFill.position.y=BASE_T+boxInfo.w+h/2;}
+const PI2=Math.PI/2;
+function rrect(path,x,y,w,h,r){
+  path.moveTo(x+r,y);path.lineTo(x+w-r,y);path.quadraticCurveTo(x+w,y,x+w,y+r);
+  path.lineTo(x+w,y+h-r);path.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  path.lineTo(x+r,y+h);path.quadraticCurveTo(x,y+h,x,y+h-r);
+  path.lineTo(x,y+r);path.quadraticCurveTo(x,y,x+r,y);
+}
+function panel(w,h,{t=T,holes=[],shape=null,mat=oak}={}){
+  let s=shape;
+  if(!s){s=new THREE.Shape();s.moveTo(0,0);s.lineTo(w,0);s.lineTo(w,h);s.lineTo(0,h);s.lineTo(0,0);}
+  holes.forEach(fn=>{const p=new THREE.Path();fn(p);s.holes.push(p);});
+  const geo=new THREE.ExtrudeGeometry(s,{depth:t,bevelEnabled:false,curveSegments:16});
+  const m=new THREE.Mesh(geo,mat);m.castShadow=true;m.receiveShadow=true;
+  const e=new THREE.LineSegments(new THREE.EdgesGeometry(geo,25),edgeMat);
+  e.visible=edgesOn;m.add(e);edgeObjs.push(e);
+  return m;
+}
+let edgesOn=true,hingeArms=[];
+const _kn=new THREE.Vector3();
+function updateHinges(){doorPivot.updateMatrixWorld(true);
+  for(const h of hingeArms){_kn.copy(h.kn).applyMatrix4(doorPivot.matrixWorld);
+    h.arm.position.copy(h.base).add(_kn).multiplyScalar(0.5);h.arm.scale.z=Math.max(1,h.base.distanceTo(_kn)+10);h.arm.lookAt(_kn);}}
+const doorPivot=new THREE.Group();scene.add(doorPivot);
+
+function buildCabinet(d){
+  if(cab){cab.traverse(o=>{if(o.geometry)o.geometry.dispose();});scene.remove(cab);}
+  doorPivot.children.slice().forEach(c=>{c.traverse(o=>{if(o.geometry)o.geometry.dispose();});doorPivot.remove(c);});
+  edgeObjs=[];
+  ({W,D,H,shelfY}=d);
+  cab=new THREE.Group();scene.add(cab);
+  const place=(m,{x=0,y=0,z=0,rx=0,ry=0})=>{m.position.set(x,y,z);m.rotation.set(rx,ry,0);cab.add(m);return m;};
+  const bodyTop=H-T;
+  // cat entrance: long opening on the right side, sized to the panel
+  const hx=45,hy=110;
+  const holeFull=Math.max(140,D-hx-T-50),holeW=Math.round(holeFull*2/3);   // entrance width cut by 1/3, kept centred where it was
+  HOLE={x:hx+(holeFull-holeW)/2,y:hy,w:holeW,h:Math.max(120,Math.min(240,shelfY-35-hy)),r:42};
+  // Sides
+  place(panel(D,bodyTop),{x:-W/2,z:D/2,ry:PI2});
+  place(panel(D,bodyTop,{holes:[p=>rrect(p,HOLE.x,HOLE.y,HOLE.w,HOLE.h,HOLE.r)]}),{x:W/2-T,z:D/2,ry:PI2});
+  // Upper container geometry (needed for the top lid opening and the shelf outlet)
+  const chY=shelfY+T,chH=bodyTop-chY,cw=W-2*T;
+  const zFront=D/2-45-T;                        // container front board, set back so the door closes
+  const chD=zFront-(-D/2+T);
+  const outZ0=zFront-120,outZ1=zFront-60,outW=110;  // outlet hole in the middle shelf, set back towards the box centre
+  const lidW=Math.min(320,cw-80),lidD=Math.min(240,chD-100),lidCz=ov/2;
+  // Back, top (with refill opening)
+  place(panel(W-2*T,bodyTop),{x:-W/2+T,z:-D/2});
+  const tx=W/2+ov-lidW/2, ty=D/2+ov-(lidCz+lidD/2);
+  place(panel(W+2*ov,D+ov,{holes:[p=>{p.moveTo(tx,ty);p.lineTo(tx+lidW,ty);p.lineTo(tx+lidW,ty+lidD);p.lineTo(tx,ty+lidD);p.lineTo(tx,ty);}],mat:oakTop}),
+    {x:-W/2-ov,y:H-T,z:D/2+ov,rx:-PI2});
+  // Refill lid, hinged at its back edge
+  lidPivot=new THREE.Group();lidPivot.position.set(0,H,lidCz-lidD/2);cab.add(lidPivot);
+  const lidP=panel(lidW-4,lidD-4,{mat:oakTop});lidP.position.set(-lidW/2+2,-T,lidD-2);lidP.rotation.x=-PI2;lidPivot.add(lidP);
+  // Black surface-mounted barrel bolt on the lid's front edge, keeper on the top panel
+  const bk=(geo,x,y,z,par)=>{const m=new THREE.Mesh(geo,blackMat);m.position.set(x,y,z);m.castShadow=true;par.add(m);return m;};
+  // whole bolt set built at full size around the lid's front edge, then scaled to 2/3
+  const BS=2/3;
+  const boltSet=new THREE.Group();boltSet.position.set(0,0,lidD);boltSet.scale.setScalar(BS);lidPivot.add(boltSet);
+  bk(new THREE.BoxGeometry(26,18,66),0,9,-50,boltSet);                   // bolt housing
+  boltPin=new THREE.Group();boltSet.add(boltPin);
+  const pin=bk(new THREE.CylinderGeometry(6.5,6.5,74,20),0,9,-12,boltPin);pin.rotation.x=PI2;
+  bk(new THREE.CylinderGeometry(7,7,18,20),0,24,-46,boltPin);            // thumb knob
+  const keeper=bk(new THREE.BoxGeometry(26,22,22),0,H+11*BS,lidCz+lidD/2+16*BS,cab);keeper.scale.setScalar(BS);   // keeper block
+  // Floor, middle shelf (with outlet hole), toe kick
+  place(panel(W-2*T,D-T-12),{x:-W/2+T,y:plinth,z:D/2-12,rx:-PI2});
+  const sy0=(D/2-12)-outZ1;
+  place(panel(W-2*T,D-T-12,{holes:[p=>rrect(p,cw/2-outW/2,sy0,outW,outZ1-outZ0,8)]}),{x:-W/2+T,y:shelfY,z:D/2-12,rx:-PI2});
+  place(panel(W-2*T,plinth),{x:-W/2+T,y:0,z:D/2-30-T});
+  // Container front board: viewing window + slot for the sliding gate
+  place(panel(cw,chH,{holes:[
+    p=>rrect(p,(cw-86)/2,78,86,chH-108,6)   /* viewing window, centred */,
+    p=>rrect(p,(cw-150)/2,39-12,150,24,12)          // oval slot, centred at the handle height
+  ]}),{x:-cw/2,y:chY,z:zFront});
+  // Sloped floor: back high -> front low, ends at the outlet
+  const drop=Math.min(130,(chD-60)*0.35),lift=46;   // slope ends just above the gate plate
+  const slope=panel(cw,Math.hypot(outZ0-(-D/2+T),drop),{t:12});
+  slope.position.set(-cw/2,chY+lift+drop,-D/2+T);slope.rotation.x=PI2+Math.atan2(drop,outZ0-(-D/2+T));cab.add(slope);
+  // Sliding gate: inner plate + oval cover plate + walnut handle all move together
+  gate=new THREE.Group();gate.position.set(0,chY,zFront);cab.add(gate);
+  const py=39;                                         // handle height: halfway between board bottom and window
+  const plate=new THREE.Mesh(new THREE.BoxGeometry(140,6,130),oak);plate.position.set(0,py,-60);gate.add(plate);   // inner gate plate over the outlet
+  const tenon=new THREE.Mesh(new THREE.BoxGeometry(120,6,T+30),oak);tenon.position.set(0,py,(T-30)/2);gate.add(tenon); // runs through the slot
+  // Oval cover plate: just larger than the slot; its back sits flat on the front board when closed
+  const CW=176,CH=30,CT=10,cs=new THREE.Shape(),r=CH/2;
+  cs.moveTo(-CW/2+r,-r);cs.lineTo(CW/2-r,-r);cs.absarc(CW/2-r,0,r,-PI2,PI2,false);
+  cs.lineTo(-CW/2+r,r);cs.absarc(-CW/2+r,0,r,PI2,3*PI2,false);
+  const cover=panel(0,0,{shape:cs,t:CT});cover.position.set(0,py,T);gate.add(cover);
+  // Pull handle: walnut rod with black collars on short black posts fixed to the cover plate
+  const cyl=(rr,l,mat,x,y,z,axis)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(rr,rr,l,24),mat);
+    if(axis==='x')m.rotation.z=PI2;else m.rotation.x=PI2;m.position.set(x,y,z);m.castShadow=true;gate.add(m);return m;};
+  const z0=T+CT,rodZ=z0+22;
+  for(const sx of [-52,52]){
+    cyl(5,rodZ-z0,blackMat,sx,py,(z0+rodZ)/2,'z');     // post
+    cyl(10.5,16,blackMat,sx,py,rodZ,'x');              // collar
+  }
+  cyl(8.5,150,walnutRod,0,py,rodZ,'x');                // walnut rod
+  // Litter inside the container (level shown through the window)
+  const fillBase=chY+lift+drop*0.55, fillMax=bodyTop-12-fillBase;
+  const yLow=chY+lift+4,yHigh=chY+lift+drop+4,yTop=bodyTop-12,zB=-D/2+T+1;
+  storeMesh=new THREE.Mesh(new THREE.BufferGeometry(),litterMat);
+  storeMesh.rotation.y=-PI2;storeMesh.position.x=(cw-4)/2;cab.add(storeMesh);   // shape x -> world z, extrude across the width
+  SIM.geo={chY,cw,chD,zFront,outZ0,outZ1,outW,lidCz,lidD,lidW,fillBase,fillMax,yLow,yHigh,yTop,zB};
+  capacityL=cw*chD*fillMax/1e6;
+  setStore(SIM.store);
+  // Door with finger notch on the free edge (~2/3 up)
+  const db=plinth+T/2;                     // door bottom = middle of the bottom board's thickness, leaving a gap above the floor
+  doorPivot.position.set(-W/2,db,D/2);
+  const n=Math.round(bodyTop*0.71)-db,ds=new THREE.Shape();
+  ds.moveTo(0,0);ds.lineTo(W,0);ds.lineTo(W,n-45);
+  ds.quadraticCurveTo(W,n-28,W-14,n-22);ds.quadraticCurveTo(W-26,n-17,W-26,n);
+  ds.lineTo(W-26,n+40);ds.quadraticCurveTo(W-26,n+56,W-14,n+61);ds.quadraticCurveTo(W,n+67,W,n+84);
+  ds.lineTo(W,bodyTop-db);ds.lineTo(0,bodyTop-db);ds.lineTo(0,0);
+  door=panel(W,bodyTop-db,{shape:ds});doorPivot.add(door);
+  // Two dark-grey cup hinges (as in the reference photo): rectangular flange + cup on the door back,
+  // knuckle at the hinge edge, arm + cross-shaped mounting plate on the left side panel's inner face
+  hingeArms=[];
+  const dh=bodyTop-db,sideIn=-W/2+T;
+  const hm=(geo,x,y,z,par,mat=hingeMat)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);par.add(m);return m;};
+  for(const yc of [110,dh-110]){
+    hm(new THREE.BoxGeometry(24,72,3),30,yc,-1.5,doorPivot);                                   // rectangular flange
+    const cup=hm(new THREE.CylinderGeometry(19,19,4,32),30,yc,-2,doorPivot);cup.rotation.x=PI2; // round cup
+    for(const sy of [-27,27]){const sc=hm(new THREE.CylinderGeometry(3.2,3.2,1,12),30,yc+sy,-3.3,doorPivot,blackMat);sc.rotation.x=PI2;} // screws
+    hm(new THREE.BoxGeometry(18,22,14),20,yc,-10,doorPivot);                                   // knuckle
+    // arm: one end fixed at the mounting plate, other end follows the knuckle on the door every frame
+    const arm=hm(new THREE.BoxGeometry(16,22,1),0,0,0,cab);
+    hingeArms.push({arm,base:new THREE.Vector3(sideIn+11,db+yc,D/2-70),kn:new THREE.Vector3(20,yc,-10)});
+    hm(new THREE.BoxGeometry(3,22,56),sideIn+1.5,db+yc,D/2-58,cab);                            // mounting plate (long)
+    hm(new THREE.BoxGeometry(3,56,18),sideIn+1.5,db+yc,D/2-58,cab);                            // mounting plate (cross wings)
+  }
+  // frame the camera target on the new size
+  controls.target.set(-80,H*0.47,0);
+}
+
+// ---- UI ----
+// Door: animated towards a target angle
+const doorIn=document.getElementById('door'),doorVal=document.getElementById('doorVal'),doorBtn=document.getElementById('doorBtn');
+let doorAngle=0,doorTarget=0;
+function setDoorTarget(a){doorTarget=a;doorIn.value=a;doorVal.textContent=Math.round(a)+'°';doorBtn.textContent=a>5?'Close door':'Open door';}
+doorIn.addEventListener('input',()=>setDoorTarget(+doorIn.value));
+doorBtn.onclick=()=>setDoorTarget(doorTarget>5?0:100);
+const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();let down=null;
+canvas.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];});
+canvas.addEventListener('pointerup',e=>{
+  if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;
+  const r=canvas.getBoundingClientRect();
+  ptr.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(ptr,camera);
+  if(door&&ray.intersectObject(door,false).length)setDoorTarget(doorTarget>5?0:100);
+});
+
+// Finishes
+const fBtns={natural:document.getElementById('fNatural'),walnut:document.getElementById('fWalnut')};
+function setFinish(k){curFinish=k;if(typeof updateInquiry==='function')setTimeout(updateInquiry);oak.map=finishes[k];oak.roughness=finishLook[k].rough;oak.needsUpdate=true;
+  oakTop.map=finishesTop[k];oakTop.roughness=finishLook[k].rough;oakTop.needsUpdate=true;
+  edgeMat.color.setHex(finishLook[k].edge);edgeMat.opacity=finishLook[k].edgeA;
+  for(const n in fBtns)fBtns[n].setAttribute('aria-pressed',n===k);}
+for(const n in fBtns)fBtns[n].onclick=()=>setFinish(n);
+
+// ---- Litter box fit / cabinet sizing ----
+const SIDE_GAP=25,HEADROOM=180;  // auto-size: 2.5 cm each side, 18 cm above the box
+const plastic=new THREE.MeshStandardMaterial({color:0xC9CFD3,roughness:0.45,transparent:true,opacity:1});
+const boxBase=new THREE.MeshStandardMaterial({color:0xF4F4F1,roughness:0.55});   // white base board under the litter box
+const litterMat=new THREE.MeshBasicMaterial({color:0x4A2E18});   // unlit: no shading or shadows on the litter
+const boxGroup=new THREE.Group();scene.add(boxGroup);
+const BASE_T=0;    // no separate board: the box's own grey bottom sits on the cabinet floor
+function buildBox(bx,bz,bh){
+  while(boxGroup.children.length){const c=boxGroup.children.pop();c.geometry.dispose();}
+  const w=5,add=(sx,sy,sz,x,y,z,m=plastic)=>{const me=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),m);
+    me.position.set(x,y,z);me.castShadow=me.receiveShadow=true;boxGroup.add(me);};
+  const B=BASE_T;
+  add(bx,w,bz,0,B+w/2,0);                             // litter box bottom (same grey plastic as the box)
+  add(bx,bh,w,0,B+bh/2,-bz/2+w/2);add(bx,bh,w,0,B+bh/2,bz/2-w/2);
+  add(w,bh,bz-2*w,-bx/2+w/2,B+bh/2,0);add(w,bh,bz-2*w,bx/2-w/2,B+bh/2,0);
+  boxFill=new THREE.Mesh(new THREE.BoxGeometry(bx-2*w,1,bz-2*w),litterMat);boxGroup.add(boxFill);
+  return w;
+}
+let sStatReady=false,touched=false,lastKey='',active='std';
+const $=id=>document.getElementById(id);
+const calc={s:{L:$('sL'),W:$('sW'),H:$('sH'),U:$('sU')},c:{L:$('cL'),W:$('cW'),H:$('cH'),U:$('cU')}};
+const factor=u=>u==='cm'?10:25.4;
+const mkFmt=u=>({mm:v=>(Math.round(v/factor(u)*10)/10)+(u==='cm'?' cm':'″'),n:v=>String(Math.round(v/factor(u)*10)/10)});
+function readBox(k){const c=calc[k],f=factor(c.U.value);
+  const L=(+c.L.value||0)*f,Wd=(+c.W.value||0)*f,Hh=(+c.H.value||0)*f;
+  return {valid:L>0&&Wd>0&&Hh>0,a:[Math.max(L,Wd),Math.min(L,Wd)],Hh,u:c.U.value};}
+const LABEL={ok:'OK',tight:'Tight',no:'Too small'};
+function grade(m,tight){return m<0?'no':m<tight?'tight':'ok';}
+const row=(k,v,g,lab)=>`<span class="k">${k}</span><span class="v">${v}</span><span class="s ${g||''}">${g?(lab||LABEL[g]):''}</span>`;
+function autoDims(bx,bz,bh){
+  const inW=Math.max(380,bx+2*SIDE_GAP),inD=Math.max(380,bz+2*SIDE_GAP),inH=Math.max(280,bh+HEADROOM);
+  const r5=v=>Math.ceil(v/5)*5;
+  const Wc=r5(inW+2*T),Dc=r5(inD+T),sh=plinth+T+r5(inH);
+  return {W:Wc,D:Dc,shelfY:sh,H:sh+T+UPPER+T};
+}
+function interior(){const IN={x0:-W/2+T,x1:W/2-T,z0:-D/2+T,z1:D/2,y0:plinth+T,y1:shelfY};
+  return Object.assign(IN,{w:IN.x1-IN.x0,d:IN.z1-IN.z0,h:IN.y1-IN.y0});}
+function ensureCabinet(dims){const key=[dims.W,dims.D,dims.H,dims.shelfY].join();if(key!==lastKey){buildCabinet(dims);lastKey=key;}}
+function placeBox(IN,bx,bz,Hh,look){
+  boxGroup.visible=showBox;   // litter box is optional (toggle button)
+  plastic.color.setHex(look==='no'?0xD9634F:look==='tight'?0xE2B25A:0xC9CFD3);plastic.opacity=look==='no'?0.75:1;
+  const cz=Math.max(IN.z0+bz/2,IN.z1-70-bz/2);   // pushed back: front edge 7 cm behind the door
+  const LIFT=0;                                     // box sits directly on the cabinet floor
+  boxGroup.position.set(0,IN.y0+LIFT,cz);
+  const bw=buildBox(bx,bz,Hh);
+  boxInfo={cx:0,cz,bx,bz,bh:Hh,w:bw,y0:IN.y0+LIFT,maxFrac:Math.max(0.1,(Hh-12)/Hh)};
+  setBoxFill(Math.min(SIM.boxFrac,boxInfo.maxFrac));
+  if(touched&&doorTarget<60)setDoorTarget(100);
+}
+// ---- Calculator 1: standard size fit check ----
+function updateStd(){
+  const r=readBox('s'),F=mkFmt(r.u);
+  if(active==='std')ensureCabinet(STD);
+  const IN=(()=>{const IN={x0:-STD.W/2+T,x1:STD.W/2-T,z0:-STD.D/2+T,z1:STD.D/2,y0:plinth+T,y1:STD.shelfY};
+    return Object.assign(IN,{w:IN.x1-IN.x0,d:IN.z1-IN.z0,h:IN.y1-IN.y0});})();
+  if(!r.valid){SUM.std=null;$('sRows').innerHTML='';$('sAdvice').textContent='Enter the length, width and height of your litter box.';if(active==='std')boxGroup.visible=false;return;}
+  const HB=110-IN.y0,HT=110+Math.max(120,Math.min(240,STD.shelfY-35-110))-IN.y0;
+  let bx=r.a[0],bz=r.a[1];if(bx>IN.w&&r.a[0]<=IN.d&&r.a[1]<=IN.w){bx=r.a[1];bz=r.a[0];}
+  const mw=IN.w-bx,md=IN.d-bz,mh=IN.h-r.Hh;
+  const gW=grade(mw,20),gD=grade(md,20),gH=grade(mh,150),gDoor=r.Hh>HT?'no':'ok';
+  const all=[gW,gD,gH,gDoor],overall=all.includes('no')?'no':all.includes('tight')?'tight':'ok';
+  const pill=$('sPill');pill.className='pill '+overall;pill.textContent={ok:'Fits',tight:'Fits, but tight',no:"Doesn't fit"}[overall];
+  $('sRows').innerHTML=row('Lower compartment',`${F.mm(IN.w)} × ${F.mm(IN.d)} × ${F.mm(IN.h)}`)+
+    row('Side clearance',F.mm(mw),gW)+row('Front/back clearance',F.mm(md),gD)+row('Headroom',F.mm(mh),gH)+
+    row('Cat entrance',`${F.mm(HB)}–${F.mm(HT)} above floor`,gDoor,gDoor==='no'?'Blocked':'Clear');
+  const tips=[];
+  if(gW==='no'||gD==='no')tips.push("This box is too big for the standard cabinet. Try the 'Custom size for your box' tab to see what size you'd need.");
+  else if(gW==='tight'||gD==='tight')tips.push('Less than 1 cm on a side makes the box hard to slide in and out for cleaning.');
+  if(gH==='no')tips.push('The box is taller than the lower compartment.');else if(gH==='tight')tips.push('Less than 15 cm above the box may feel cramped for a large cat.');
+  if(gDoor==='no')tips.push('The box rim is higher than the cat entrance and would block it.');
+  else if(r.Hh>HB)tips.push(`The box rim sits ${F.mm(r.Hh-HB)} above the bottom of the entrance, so your cat will step over the rim to get in.`);
+  $('sAdvice').textContent=tips.join(' ')||'Comfortable fit, easy to slide in and out for cleaning.';
+  SUM.std={k:'s',u:r.u,overall,mw,md,mh,F};
+  if(active==='std')placeBox(interior(),bx,bz,r.Hh,overall);
+}
+// ---- Calculator 2: custom size from the litter box ----
+function updateCus(){
+  const r=readBox('c'),F=mkFmt(r.u);
+  if(!r.valid){SUM.cus=null;$('cRows').innerHTML='';$('cAdvice').textContent='Enter the length, width and height of your litter box.';if(active==='cus')boxGroup.visible=false;return;}
+  const dims=autoDims(r.a[0],r.a[1],r.Hh);
+  if(active==='cus')ensureCabinet(dims);
+  const iw=dims.W-2*T,id=dims.D-T,ih=dims.shelfY-plinth-T;
+  const ow=dims.W+2*ov,od=dims.D+ov,oh=dims.H,sw=STD.W+2*ov,sd=STD.D+ov,sh=STD.H;
+  const diff=(v,b)=>{const d=v-b;return Math.abs(d)<1?'Same as standard':(d>0?'+':'−')+F.mm(Math.abs(d)).trim()+' vs standard';};
+  const cw=dims.W-2*T,zF=dims.D/2-45-T,chD=zF-(-dims.D/2+T),chH=dims.H-T-dims.shelfY-T;
+  const cap=cw*chD*(chH-46-Math.min(130,(chD-60)*0.35)*0.55-12)/1e6;
+  const u=r.u==='cm'?'cm':'inch';
+  SUM.cus={k:'c',u:r.u,ow,od,oh,F};
+  $('cRows').innerHTML=
+    `<span class="k">Cabinet (outside)</span><span class="v big">${F.n(ow)} × ${F.n(od)} × ${F.n(oh)} ${u}</span><span></span>`+
+    row('Width',F.mm(ow))+`<span class="k"></span><span class="v s">${diff(ow,sw)}</span><span></span>`+
+    row('Depth',F.mm(od))+`<span class="k"></span><span class="v s">${diff(od,sd)}</span><span></span>`+
+    row('Height',F.mm(oh))+`<span class="k"></span><span class="v s">${diff(oh,sh)}</span><span></span>`+
+    row('Lower compartment',`${F.mm(iw)} × ${F.mm(id)} × ${F.mm(ih)}`)+
+    row('Storage container',`approx. ${Math.round(cap)} L`);
+  const tips=['Cabinet sized to your box.'];
+  if(r.a[0]+2*SIDE_GAP<380||r.a[1]+2*SIDE_GAP<380||r.Hh+HEADROOM<280)tips.push('Your box is small, so the cabinet uses its minimum size.');
+  tips.push('Sizes are for illustration; final dimensions are confirmed in your custom quote.');
+  $('cAdvice').textContent=tips.join(' ');
+  if(active==='cus'){const IN=interior();let bx=r.a[0],bz=r.a[1];placeBox(IN,bx,bz,r.Hh,'ok');}
+}
+// ---- Inquiry: summary of what the viewer picked, sent with the Shopify contact form / WhatsApp ----
+const WA_NUMBER='';   // e.g. '14165551234' (country code + number, digits only). Empty = WhatsApp button hidden.
+const SUM={std:null,cus:null};let curFinish='natural';
+const JT={"modeStd": "Option: Standard size (50 × 48 × 70 cm)", "modeCus": "Option: Custom size for my box", "box": "Litter box size", "result": "Result", "res": {"ok": "Fits", "tight": "Fits, but tight", "no": "Doesn't fit"}, "clear": "Clearance: sides {w}, front/back {d}, headroom {h}", "cab": "Suggested cabinet (outside)", "finish": "Finish", "fin": {"natural": "Natural birch", "walnut": "Dark walnut"}, "nobox": "(no litter box size entered yet)", "waHead": "Hi Jalico, I'd like to ask about the cat litter cabinet:"};
+function buildSummary(){
+  const k=active==='cus'?'c':'s',c=calc[k],d=active==='cus'?SUM.cus:SUM.std,lines=[];
+  lines.push(active==='cus'?JT.modeCus:JT.modeStd);
+  if(!d){lines.push(JT.box+': '+JT.nobox);}
+  else{
+    const un=d.u==='cm'?' cm':' inch';
+    lines.push(`${JT.box}: ${c.L.value} × ${c.W.value} × ${c.H.value}${un}`);
+    if(k==='s'){lines.push(`${JT.result}: ${JT.res[d.overall]}`);
+      lines.push(JT.clear.replace('{w}',d.F.mm(d.mw)).replace('{d}',d.F.mm(d.md)).replace('{h}',d.F.mm(d.mh)));}
+    else lines.push(`${JT.cab}: ${d.F.n(d.ow)} × ${d.F.n(d.od)} × ${d.F.n(d.oh)}${un}`);
+  }
+  lines.push(`${JT.finish}: ${JT.fin[curFinish]}`);
+  return lines.join('\n');
+}
+function updateInquiry(){
+  const t=buildSummary();const ta=$('inqDetails'),h=$('inqHidden'),wa=$('waBtn');
+  if(ta)ta.value=t;if(h)h.value=t;
+  if(wa){wa.hidden=!WA_NUMBER;if(WA_NUMBER)wa.href='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(JT.waHead+'\n'+t);}
+}
+(function(){const fm=$('inqForm');if(!fm)return;
+  fm.addEventListener('submit',e=>{updateInquiry();
+    if(!fm.querySelector('input[name="form_type"]')){e.preventDefault();$('inqNote').hidden=false;}});   // not on Shopify: preview only
+})();
+function updateFit(){
+  updateStd();updateCus();updateInquiry();
+  if(!SIM.busy&&typeof refreshStatus==='function'&&sStatReady)refreshStatus();
+}
+function setActive(k){active=k;
+  $('tStd').setAttribute('aria-selected',k==='std');$('tCus').setAttribute('aria-selected',k==='cus');
+  $('calcStd').hidden=k!=='std';$('calcCus').hidden=k!=='cus';touched=true;updateFit();}
+$('tStd').onclick=()=>setActive('std');$('tCus').onclick=()=>setActive('cus');
+for(const k of ['s','c']){const c=calc[k];
+  [c.L,c.W,c.H].forEach(el=>el.addEventListener('input',()=>{touched=true;updateFit();}));
+  let prevU=c.U.value;
+  c.U.addEventListener('change',()=>{const f0=factor(prevU),f1=factor(c.U.value);prevU=c.U.value;
+    [c.L,c.W,c.H].forEach(el=>el.value=Math.round((+el.value||0)*f0/f1*10)/10);updateFit();});
+}
+document.querySelectorAll('.presets').forEach(g=>{const c=calc[g.dataset.for];
+  g.querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=b.dataset.p.split(',').map(Number);
+    c.U.value='cm';c.U.dispatchEvent(new Event('change'));c.L.value=v[0];c.W.value=v[1];c.H.value=v[2];touched=true;updateFit();});});
+const boxBtn=document.getElementById('boxBtn');
+boxBtn.onclick=()=>{showBox=!showBox;boxBtn.setAttribute('aria-pressed',String(showBox));updateFit();};
+updateFit();
+// ---- Litter simulation: refill from the top, drop into the box ----
+const grainMat=new THREE.MeshBasicMaterial({color:0x3E2614});
+const NP=600,grains=new THREE.InstancedMesh(new THREE.BoxGeometry(7,7,7),grainMat,NP);
+grains.frustumCulled=false;scene.add(grains);
+const P={x:new Float32Array(NP),y:new Float32Array(NP),z:new Float32Array(NP),vx:new Float32Array(NP),vy:new Float32Array(NP),vz:new Float32Array(NP),floor:new Float32Array(NP),live:new Uint8Array(NP)};
+const m4=new THREE.Matrix4(),zero=new THREE.Matrix4().makeScale(0,0,0);
+for(let i=0;i<NP;i++)grains.setMatrixAt(i,zero);
+let pNext=0;
+function spawn(x,y,z,vx,vy,vz,floor){const i=pNext;pNext=(pNext+1)%NP;
+  P.x[i]=x;P.y[i]=y;P.z[i]=z;P.vx[i]=vx;P.vy[i]=vy;P.vz[i]=vz;P.floor[i]=floor;P.live[i]=1;}
+const emitters=new Set();
+function stepGrains(dt){
+  emitters.forEach(em=>{em.acc+=em.rate*dt;while(em.acc>=1){em.acc--;em.fn();}});
+  const g=-5200;
+  for(let i=0;i<NP;i++){
+    if(!P.live[i])continue;
+    P.vy[i]+=g*dt;P.x[i]+=P.vx[i]*dt;P.y[i]+=P.vy[i]*dt;P.z[i]+=P.vz[i]*dt;
+    if(P.y[i]<=P.floor[i]){P.live[i]=0;grains.setMatrixAt(i,zero);continue;}
+    m4.makeTranslation(P.x[i],P.y[i],P.z[i]);grains.setMatrixAt(i,m4);
+  }
+  grains.instanceMatrix.needsUpdate=true;
+}
+const bagMat=new THREE.MeshStandardMaterial({color:0x7E93A6,roughness:0.7});
+const bag=new THREE.Mesh(new THREE.BoxGeometry(230,330,95),bagMat);bag.visible=false;bag.castShadow=true;scene.add(bag);
+function tween(ms,f){return new Promise(res=>{const t0=performance.now();
+  (function s(){const p=reduce?1:Math.min(1,(performance.now()-t0)/ms);const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;f(e);
+    p<1?requestAnimationFrame(s):res();})();});}
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const sPour=document.getElementById('sPour'),sDrop=document.getElementById('sDrop'),sStat=document.getElementById('sStat');
+const pct=f=>Math.round(f*100)+'%';
+function status(t){sStat.textContent=t;}
+const busyP={pour:false,drop:false};
+function refreshStatus(){if(!busyP.pour&&!busyP.drop)status('Try refilling and dropping litter with the buttons above.');}
+SIM.busy=false;
+
+// ① Refill: lid opens, bag pours, level rises a bit (stays below full), lid closes
+async function pourIn(){
+  if(busyP.pour)return;busyP.pour=true;if(!looping)sPour.disabled=true;const G=SIM.geo;
+  status('Sliding the bolt and opening the lid…');
+  await tween(400,p=>boltPin.position.z=-34*p);
+  await tween(650,p=>lidPivot.rotation.x=-1.8*p);
+  status('Pouring litter in…');
+  bag.visible=true;bag.position.set(0,H+470,G.lidCz+60);bag.rotation.set(0,0,0);
+  await tween(450,p=>{bag.rotation.x=-0.95*p;bag.position.y=H+470-60*p;});
+  const s0=SIM.store>0.8?0.35:SIM.store, s1=Math.min(0.85,s0+0.3);
+  setStore(s0);
+  const em={rate:230,acc:0,fn:()=>spawn((Math.random()-0.5)*90,H+260,G.lidCz+(Math.random()-0.5)*40,
+    (Math.random()-0.5)*60,-150-Math.random()*120,(Math.random()-0.5)*60,storeLevel())};
+  emitters.add(em);
+  await tween(2400,p=>setStore(s0+(s1-s0)*p));
+  emitters.delete(em);
+  await tween(400,p=>{bag.rotation.x=-0.95*(1-p);bag.position.y=H+410+60*p;});
+  bag.visible=false;await wait(350);
+  await tween(600,p=>lidPivot.rotation.x=-1.8*(1-p));
+  await tween(400,p=>boltPin.position.z=-34*(1-p));
+  busyP.pour=false;sPour.disabled=false;status('Refilled. Lid closed and bolted.');
+}
+// ② Drop: gate slides out, litter falls into the box, gate closes (storage level untouched)
+async function dropDown(){
+  if(busyP.drop)return;
+  busyP.drop=true;if(!looping)sDrop.disabled=true;const G=SIM.geo;
+  const hasBox=showBox&&boxInfo&&boxGroup.visible,floorY=plinth+T+3;
+  if(doorTarget<80){setDoorTarget(100);await wait(800);}
+  status(hasBox?'Gate open, litter dropping into the box…':'Gate open, litter dropping to the cabinet floor…');
+  await tween(500,p=>gate.position.z=G.zFront+70*p);
+  const top=hasBox?Math.min(boxInfo.maxFrac,0.6):0;
+  const b0=hasBox?(SIM.boxFrac>=top-0.05?0.15:SIM.boxFrac):0, b1=hasBox?Math.min(top,b0+0.3):0;
+  if(hasBox)setBoxFill(b0);
+  const em={rate:260,acc:0,fn:()=>{
+    const x=(Math.random()-0.5)*G.outW*0.75,z=G.outZ0+8+Math.random()*(G.outZ1-G.outZ0-20);
+    const inBox=hasBox&&Math.abs(x-boxInfo.cx)<boxInfo.bx/2-6&&Math.abs(z-boxInfo.cz)<boxInfo.bz/2-6;
+    spawn(x,shelfY-4,z,(Math.random()-0.5)*30,-40,(Math.random()-0.5)*30,
+      inBox?boxInfo.y0+BASE_T+boxInfo.w+boxInfo.bh*SIM.boxFrac:floorY);}};
+  emitters.add(em);
+  await tween(1900,p=>{if(hasBox)setBoxFill(b0+(b1-b0)*p);});
+  emitters.delete(em);
+  await tween(450,p=>gate.position.z=G.zFront+70*(1-p));
+  busyP.drop=false;sDrop.disabled=false;status('Done. Gate pushed back in.');
+}
+// ③ Loop: repeat ① then ② until the viewer presses ①, ② or ③ again
+const sLoop=document.getElementById('sLoop');let looping=false;
+const stepsEl=document.getElementById('steps'),stepLis=[...stepsEl.children];
+function setStep(i){stepLis.forEach((li,j)=>li.classList.toggle('on',j===i));}
+function stopLoop(){looping=false;sLoop.setAttribute('aria-pressed','false');sLoop.textContent='③ Loop: door + ① + ②';}
+async function runLoop(){
+  looping=true;sLoop.setAttribute('aria-pressed','true');sLoop.textContent='■ Stop loop';
+  stepsEl.hidden=false;
+  while(looping){
+    setStep(0);status('Opening the door…');setDoorTarget(100);await wait(1100);if(!looping)break;   // open door first
+    setStep(1);await pourIn();if(!looping)break;await wait(500);
+    setStep(2);await dropDown();if(!looping)break;await wait(700);
+    setStep(3);status('Closing the door…');setDoorTarget(0);await wait(1300);                        // close so the next round opens it again
+  }
+  stepsEl.hidden=true;setStep(-1);
+  if(!busyP.pour&&!busyP.drop)status('Loop stopped.');
+}
+sLoop.onclick=()=>looping?stopLoop():runLoop();
+sPour.onclick=()=>{if(looping){stopLoop();return;}pourIn();};
+sDrop.onclick=()=>{if(looping){stopLoop();return;}dropDown();};
+sStatReady=true;refreshStatus();
+document.getElementById('reset').onclick=resetView;
+
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;
+  renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(canvas);resize();
+let lastT=performance.now();
+(function loop(){
+  const now=performance.now(),dt=Math.min(0.05,(now-lastT)/1000);lastT=now;stepGrains(dt);
+  doorAngle=reduce?doorTarget:doorAngle+(doorTarget-doorAngle)*0.12;
+  if(Math.abs(doorTarget-doorAngle)<0.05)doorAngle=doorTarget;
+  doorPivot.rotation.y=-doorAngle*Math.PI/180;updateHinges();
+  controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);})();
+})();
+</script>
+
+</body></html>
